@@ -1,0 +1,63 @@
+version: 2.1
+
+
+##################################################################
+# WORFLOWS
+##################################################################
+workflows:
+
+  despliegue_a_master:
+    jobs:
+      - creacion_de_docker:
+          filters:
+            branches:
+              only: master
+
+      - despliegue_a_heroku:
+          requires:
+            - creacion_de_docker
+          filters:
+            branches:
+              only: master
+
+
+
+##################################################################
+# JOBS
+##################################################################
+jobs:
+
+  creacion_de_docker:
+    machine:
+      enabled: true
+    working_directory: ~/src
+    environment:
+      NUMERO_DESPLIEGUE: << pipeline.number >>
+    steps:
+      - checkout
+      - run:
+          name: build
+          command: ./scripts/docker/build.sh
+      - run:
+          name: push
+          command: ./scripts/docker/push.sh
+
+          
+  despliegue_a_heroku:
+    machine:
+        enabled: true
+    working_directory: ~/src
+    environment:
+      NUMERO_DESPLIEGUE: << pipeline.number >>
+    steps:
+      - checkout
+      - run:
+          name: instalar-heroku
+          command: wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+      - run:
+          name: generar-dockerfile
+          command: ./scripts/heroku/generar-dockerfile.sh
+      - run:
+          name: despliegue
+          command: ./scripts/heroku/despliegue.sh
+          

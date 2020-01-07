@@ -1,0 +1,398 @@
+{
+	"info": {
+		"_postman_id": "1cceef03-c7f7-4583-bc1e-9af720fb78d5",
+		"name": "json_reportes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "carpetas",
+			"item": [
+				{
+					"name": "archivos",
+					"item": [
+						{
+							"name": "contenido",
+							"item": [
+								{
+									"name": "reemplazar archivo contenido",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "file",
+											"file": {
+												"src": "/home/brian/workspace/json_reportes/backend/src/ejemplo_template/template.html"
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/contenido",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"api",
+												"v1",
+												"carpetas",
+												"prueba",
+												"archivos",
+												"template.html",
+												"contenido"
+											]
+										},
+										"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
+									},
+									"response": []
+								},
+								{
+									"name": "buscar archivo contenido",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/contenido",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"api",
+												"v1",
+												"carpetas",
+												"prueba",
+												"archivos",
+												"template.html",
+												"contenido"
+											]
+										},
+										"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
+									},
+									"response": []
+								}
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "buscar archivo",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html?base64=false",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1",
+										"carpetas",
+										"prueba",
+										"archivos",
+										"template.html"
+									],
+									"query": [
+										{
+											"key": "base64",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "buscar todos los archivos",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1",
+										"carpetas",
+										"prueba",
+										"archivos"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "nuevo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "template.html",
+									"type": "file",
+									"src": "/home/leafnoise/Workspace/UTN/json_reportes/src/ejemplo_template/template.html"
+								},
+								{
+									"key": "resume.css",
+									"type": "file",
+									"src": "/home/leafnoise/Workspace/UTN/json_reportes/src/ejemplo_template/resume.css"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/carpetas/prueba",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"carpetas",
+								"prueba"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listar carpetas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/carpetas",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"carpetas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reemplazar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "template.html",
+									"type": "file",
+									"src": "/home/brian/workspace/json_reportes/src/ejemplo_template/template.html"
+								},
+								{
+									"key": "resume.css",
+									"type": "file",
+									"src": "/home/brian/workspace/json_reportes/src/ejemplo_template/resume.css"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/carpetas/prueba",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"carpetas",
+								"prueba"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "buscar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/carpetas/prueba?base64=false",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"carpetas",
+								"prueba"
+							],
+							"query": [
+								{
+									"key": "base64",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "borrar",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/carpetas/prueba",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"carpetas",
+								"prueba"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "reportes",
+			"item": [
+				{
+					"name": "crear",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"LobezZzno\",\n    \"trabajo\": \"Feje de jefes\",\n    \"email\": \"lobezZzno@email.com\",\n    \"jobs\": [\n        {\n            \"nombre\": \"LA POSTA SA\",\n            \"puesto\": \"Jefe de jefes\",\n            \"anio\": \"2000 - 2019\",\n            \"descripcion\": \"Soy la posta no hay nada mas que decir :P\"\n        },\n        {\n            \"nombre\": \"Leafnoise SA\",\n            \"puesto\": \"Puteador de Java\",\n            \"anio\": \"2000 - 2020\",\n        \"descripcion\": \"Java, sos horrible y nadie te quiere\"\n}\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/reportes/carpeta/prueba/html/template/pdf/reporte_20-11-2019?guardar=true",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"reportes",
+								"carpeta",
+								"prueba",
+								"html",
+								"template",
+								"pdf",
+								"reporte_20-11-2019"
+							],
+							"query": [
+								{
+									"key": "guardar",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "archivos",
+			"item": [
+				{
+					"name": "descargar desde el navegador",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/v1/archivos/prueba/pdf/reporte_20-11-2019.pdf",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"archivos",
+								"prueba",
+								"pdf",
+								"reporte_20-11-2019.pdf"
+							]
+						},
+						"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/archivos/<carpeta_nombre>/<tipo_carpeta_nombre>/<archivo_nombre>`"
+					},
+					"response": []
+				},
+				{
+					"name": "borrado",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/v1/archivos/prueba/pdf/reporte_20-11-2019.pdf",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"archivos",
+								"prueba",
+								"pdf",
+								"reporte_20-11-2019.pdf"
+							]
+						},
+						"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/archivos/<carpeta_nombre>/<tipo_carpeta_nombre>/<archivo_nombre>`"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

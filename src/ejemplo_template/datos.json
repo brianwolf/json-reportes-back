@@ -1,0 +1,19 @@
+{
+    "nombre": "LobezZzno",
+    "trabajo": "Feje de jefes",
+    "email": "lobezZzno@email.com",
+    "jobs": [
+        {
+            "nombre": "LA POSTA SA",
+            "puesto": "Jefe de jefes",
+            "anio": "2000 - 2019",
+            "descripcion": "Soy la posta no hay nada mas que decir :P"
+        },
+        {
+            "nombre": "Leafnoise SA",
+            "puesto": "Puteador de Java",
+            "anio": "2000 - 2020",
+        "descripcion": "Java, sos horrible y nadie te quiere"
+}
+    ]
+}
