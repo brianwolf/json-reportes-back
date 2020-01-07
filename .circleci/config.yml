@@ -1,11 +1,9 @@
 version: 2.1
 
-
 ##################################################################
 # WORFLOWS
 ##################################################################
 workflows:
-
   despliegue_a_master:
     jobs:
       - creacion_de_docker:
@@ -20,13 +18,10 @@ workflows:
             branches:
               only: master
 
-
-
 ##################################################################
 # JOBS
 ##################################################################
 jobs:
-
   creacion_de_docker:
     machine:
       enabled: true
@@ -42,10 +37,9 @@ jobs:
           name: push
           command: ./scripts/docker/push.sh
 
-          
   despliegue_a_heroku:
     machine:
-        enabled: true
+      enabled: true
     working_directory: ~/src
     environment:
       NUMERO_DESPLIEGUE: << pipeline.number >>
@@ -60,4 +54,3 @@ jobs:
       - run:
           name: despliegue
           command: ./scripts/heroku/despliegue.sh
-          
