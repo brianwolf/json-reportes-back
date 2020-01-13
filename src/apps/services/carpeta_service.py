@@ -1,12 +1,12 @@
 from uuid import UUID
 
-import app.configs.variables as var
-import app.repositories.carpeta_repository as carpeta_repository
-import app.services.archivo_service as archivo_service
-import app.utils.archivos_util as archivos_util
-from app.configs.loggers import get_logger
-from app.models.carpeta import Archivo, Carpeta, TipoCarpeta
-from app.models.errores import AppException
+import apps.configs.variables as var
+import apps.repositories.carpeta_repository as carpeta_repository
+import apps.services.archivo_service as archivo_service
+import apps.utils.archivos_util as archivos_util
+from apps.configs.loggers import get_logger
+from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
+from apps.models.errores import AppException
 
 
 def listar_todas_las_carpetas() -> list:

@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 
-import app.configs.variables as var
-from app.configs.loggers import get_logger
-from app.models.errores import AppException
+import apps.configs.variables as var
+from apps.configs.loggers import get_logger
+from apps.models.errores import AppException
 
 blue_print = Blueprint('base', __name__, url_prefix='')
 

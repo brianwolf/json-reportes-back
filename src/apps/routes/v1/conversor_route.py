@@ -2,12 +2,12 @@ from io import BytesIO
 
 from flask import Blueprint, Response, jsonify, request, send_file
 
-import app.configs.variables as var
-import app.services.carpeta_service as carpeta_service
-import app.services.archivo_service as archivo_service
-import app.services.conversor_service as conversor_service
-from app.models.carpeta import TipoCarpeta
-from app.utils.archivos_util import nombre_con_extension
+import apps.configs.variables as var
+import apps.services.carpeta_service as carpeta_service
+import apps.services.archivo_service as archivo_service
+import apps.services.conversor_service as conversor_service
+from apps.models.carpeta import TipoCarpeta
+from apps.utils.archivos_util import nombre_con_extension
 
 blue_print = Blueprint('reportes', __name__, url_prefix='/api/v1/reportes')
 

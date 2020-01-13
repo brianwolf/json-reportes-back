@@ -3,10 +3,10 @@ from io import BytesIO
 
 from flask import Blueprint, Response, jsonify, request, send_file
 
-import app.services.archivo_service as archivo_service
-import app.services.carpeta_service as carpeta_service
-from app.models.carpeta import TipoCarpeta
-from app.models.errores import AppException
+import apps.services.archivo_service as archivo_service
+import apps.services.carpeta_service as carpeta_service
+from apps.models.carpeta import TipoCarpeta
+from apps.models.errores import AppException
 
 blue_print = Blueprint('archivos', __name__, url_prefix='/api/v1/archivos')
 

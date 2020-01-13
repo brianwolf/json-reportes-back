@@ -5,12 +5,12 @@ from enum import Enum
 import pdfkit
 from jinja2 import Template
 
-import app.configs.variables as var
-import app.services.archivo_service as archivo_service
-import app.utils.archivos_util as archivos_util
-from app.configs.loggers import get_logger
-from app.models.carpeta import Archivo, Carpeta, TipoCarpeta
-from app.models.errores import AppException
+import apps.configs.variables as var
+import apps.services.archivo_service as archivo_service
+import apps.utils.archivos_util as archivos_util
+from apps.configs.loggers import get_logger
+from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
+from apps.models.errores import AppException
 
 
 class Errores(Enum):
@@ -32,14 +32,13 @@ def html_to_pdf(carpeta: Carpeta, datos: dict, nombre_html: str,
 
     archivo_service.guardar_archivo(carpeta, html_renderizado)
 
-    directorio_pdf = archivos_util.ruta_tipo_carpeta(
-        TipoCarpeta.PDF.value, carpeta.nombre)
-    if not os.path.exists(directorio_pdf):
-        os.makedirs(directorio_pdf)
+    directorio_pdf = archivos_util.ruta_tipo_carpeta(TipoCarpeta.PDF.value,
+                                                     carpeta.nombre)
+    archivos_util.crear_directorio_si_no_existe(directorio_pdf)
 
     ruta_pdf = directorio_pdf + nombre_pdf
-    ruta_html = archivos_util.ruta_archivo(
-        carpeta.tipo.value, carpeta.nombre, html_renderizado.nombre)
+    ruta_html = archivos_util.ruta_archivo(carpeta.tipo.value, carpeta.nombre,
+                                           html_renderizado.nombre)
 
     pdfkit.from_file(ruta_html, ruta_pdf)
 

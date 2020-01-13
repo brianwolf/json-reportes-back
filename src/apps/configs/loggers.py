@@ -1,4 +1,4 @@
-import app.configs.variables as var
+import apps.configs.variables as var
 
 import logging
 import os

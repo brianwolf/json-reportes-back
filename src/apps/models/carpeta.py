@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from enum import Enum
 from uuid import UUID, uuid4
 
-import app.configs.variables as var
-import app.utils.archivos_util as util_archi
+import apps.configs.variables as var
+import apps.utils.archivos_util as util_archi
 
 
 class Archivo():

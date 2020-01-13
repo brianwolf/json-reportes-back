@@ -4,15 +4,12 @@ from enum import Enum
 from typing import List
 from uuid import UUID, uuid4
 
-import app.configs.variables as var
-import app.utils.archivos_util as archivos_util
-from app.configs.loggers import get_logger
-from app.models.carpeta import Archivo, Carpeta, TipoCarpeta
-from app.models.errores import AppException
+import apps.configs.variables as var
+import apps.utils.archivos_util as archivos_util
+from apps.configs.loggers import get_logger
+from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
+from apps.models.errores import AppException
 import json
-
-
-_DIRECTORIO_SISTEMA_ARCHIVOS = var.get('DIRECTORIO_SISTEMA_ARCHIVOS')
 
 
 class Errores(Enum):
@@ -24,11 +21,10 @@ def guardar(carpeta: Carpeta) -> UUID:
     '''
     Guarda un Carpeta en la base local de archivos
     '''
-    ruta_carpeta = archivos_util.ruta_tipo_carpeta(
-        carpeta.tipo.value, carpeta.nombre)
+    ruta_carpeta = archivos_util.ruta_tipo_carpeta(carpeta.tipo.value,
+                                                   carpeta.nombre)
 
-    nombre_en_uso = carpeta.nombre in archivos_util.listado_archivos(
-        _DIRECTORIO_SISTEMA_ARCHIVOS)
+    nombre_en_uso = carpeta.nombre in archivos_util.listado_archivos_directorio_base()
     if nombre_en_uso:
         mensaje = f'El nombre {carpeta.nombre} ya esta en uso'
         raise AppException(Errores.NOMBRE_EN_USO, mensaje)
@@ -41,8 +37,8 @@ def guardar(carpeta: Carpeta) -> UUID:
 
     contenido = json.dumps(carpeta_dict).encode('utf8')
 
-    archivos_util.guardar_archivo(
-        ruta_carpeta, _nombre_meta_data(carpeta.nombre), contenido)
+    archivos_util.guardar_archivo(ruta_carpeta,
+                                  _nombre_meta_data(carpeta.nombre), contenido)
 
     return carpeta.id
 

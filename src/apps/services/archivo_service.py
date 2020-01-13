@@ -3,11 +3,11 @@ import shutil
 from uuid import UUID
 from enum import Enum
 
-import app.configs.variables as var
-import app.utils.archivos_util as util
-from app.configs.loggers import get_logger
-from app.models.carpeta import Archivo, Carpeta, TipoCarpeta
-from app.models.errores import AppException
+import apps.configs.variables as var
+import apps.utils.archivos_util as util
+from apps.configs.loggers import get_logger
+from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
+from apps.models.errores import AppException
 
 
 class Errores(Enum):

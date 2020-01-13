@@ -3,13 +3,13 @@ from io import BytesIO
 
 from flask import Blueprint, jsonify, request, send_file
 
-import app.configs.variables as var
-import app.services.archivo_service as archivo_service
-import app.services.carpeta_service as carpeta_service
-import app.utils.archivos_util as archivos_util
-from app.configs.loggers import get_logger
-from app.models.carpeta import Archivo, Carpeta, TipoCarpeta
-from app.models.errores import AppException
+import apps.configs.variables as var
+import apps.services.archivo_service as archivo_service
+import apps.services.carpeta_service as carpeta_service
+import apps.utils.archivos_util as archivos_util
+from apps.configs.loggers import get_logger
+from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
+from apps.models.errores import AppException
 
 blue_print = Blueprint('carpetas', __name__, url_prefix='/api/v1/carpetas')
 

@@ -1,9 +1,9 @@
 import os
 from uuid import UUID
 
-import app.configs.variables as var
-from app.configs.loggers import get_logger
-from app.models.errores import AppException
+import apps.configs.variables as var
+from apps.configs.loggers import get_logger
+from apps.models.errores import AppException
 
 _DIRECTORIO_SISTEMA_ARCHIVOS = var.get('DIRECTORIO_SISTEMA_ARCHIVOS')
 

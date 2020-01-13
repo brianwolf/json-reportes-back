@@ -3,8 +3,8 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 from werkzeug.exceptions import HTTPException
 
-from app.configs.loggers import get_logger
-from app.models.errores import AppException
+from apps.configs.loggers import get_logger
+from apps.models.errores import AppException
 
 error_handler_bp = Blueprint('handlers', __name__)
 

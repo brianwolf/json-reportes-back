@@ -3,7 +3,7 @@ from functools import wraps
 
 from flask import jsonify
 
-from app.configs.loggers import get_logger
+from apps.configs.loggers import get_logger
 
 HTTP_STATUS_ERROR_NEGOCIO = 409
 
