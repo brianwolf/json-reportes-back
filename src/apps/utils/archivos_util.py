@@ -8,11 +8,13 @@ from apps.models.errores import AppException
 _DIRECTORIO_SISTEMA_ARCHIVOS = var.get('DIRECTORIO_SISTEMA_ARCHIVOS')
 
 
-def ruta_archivo(tipo_carpeta_value: str, nombre_carpeta: str, nombre_archivo: str) -> str:
+def ruta_archivo(tipo_carpeta_value: str, nombre_carpeta: str,
+                 nombre_archivo: str) -> str:
     '''
     Devuelve la ruta completa del archivo
     '''
-    return ruta_tipo_carpeta(tipo_carpeta_value, nombre_carpeta) + nombre_archivo
+    return ruta_tipo_carpeta(tipo_carpeta_value,
+                             nombre_carpeta) + nombre_archivo
 
 
 def ruta_tipo_carpeta(tipo_carpeta_value: str, nombre_carpeta: str) -> str:
@@ -50,11 +52,11 @@ def guardar_archivo(directorio: str, nombre: str, contenido: bytes):
         archivo_python.write(contenido)
 
 
-def obtener_archivo(ruta_completa: str) -> bytes:
+def obtener_archivo(directorio: str, nombre: str) -> bytes:
     '''
     Recupera el contenido de un archivo con el nombre y en el directorio indicados
     '''
-    with open(ruta_completa, 'rb') as archivo:
+    with open(directorio + nombre, 'rb') as archivo:
         contenido = archivo.read()
 
     return contenido
@@ -91,3 +93,12 @@ def crear_directorio_si_no_existe(directorio: str):
     '''
     if not os.path.exists(directorio):
         os.makedirs(directorio, exist_ok=True)
+
+
+def borrar_archivo(directorio: str, nombre: str):
+    '''
+    Borra un archivo ubicada en la ruta enviada
+    '''
+    ruta_carpeta = os.remove(ruta_completa)
+    if os.path.exists(ruta_carpeta):
+        os.remove(ruta_completa)

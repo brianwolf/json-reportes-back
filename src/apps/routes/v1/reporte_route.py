@@ -8,7 +8,7 @@ import apps.services.carpeta_service as carpeta_service
 from apps.models.carpeta import TipoCarpeta
 from apps.models.errores import AppException
 
-blue_print = Blueprint('archivos', __name__, url_prefix='/api/v1/archivos')
+blue_print = Blueprint('archivos', __name__, url_prefix='/api/v1/reportes')
 
 
 class Errores(Enum):

@@ -44,7 +44,7 @@ def html_to_pdf(carpeta: Carpeta, datos: dict, nombre_html: str,
 
     archivo_service.borrar_contenido(carpeta, html_renderizado.nombre)
 
-    return archivos_util.obtener_archivo(ruta_pdf)
+    return archivos_util.obtener_archivo(directorio_pdf + nombre_pdf)
 
 
 def _renderizar_archivo(archivo: Archivo, datos: dict) -> Archivo:

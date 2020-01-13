@@ -9,7 +9,7 @@ import apps.services.conversor_service as conversor_service
 from apps.models.carpeta import TipoCarpeta
 from apps.utils.archivos_util import nombre_con_extension
 
-blue_print = Blueprint('reportes', __name__, url_prefix='/api/v1/reportes')
+blue_print = Blueprint('reportes', __name__, url_prefix='/api/v1/conversor')
 
 
 @blue_print.route('/carpeta/<nombre_carpeta>/html/<nombre_html>/pdf/<nombre_pdf>',

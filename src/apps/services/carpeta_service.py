@@ -33,6 +33,32 @@ def guardar(carpeta: Carpeta) -> UUID:
     return id_generada
 
 
+def actualizar(carpeta: Carpeta) -> None:
+    '''
+    Actualiza una carpeta en la base de datos y en el sistema de archivos
+    '''
+    carpeta_vieja = obtener_por_nombre(carpeta.nombre)
+
+    archivos_a_borrar = [
+        archivo for archivo in carpeta_vieja.archivos
+        if archivo not in carpeta.archivos
+    ]
+    archivos_a_crear = [
+        archivo for archivo in carpeta.archivos
+        if archivo not in carpeta_vieja.archivos
+    ]
+
+    carpeta_repository.actualizar(carpeta)
+
+    for archivo in archivos_a_borrar:
+        archivo_service.borrar_contenido(carpeta, archivo.nombre)
+
+    for archivo in archivos_a_crear:
+        archivo_service.guardar_archivo(carpeta, archivo)
+
+    return id_generada
+
+
 def borrar_por_nombre(nombre: str):
     """
     Borra una carpeta en la base de datos y en el sistema de archivos buscando por nombre
@@ -43,7 +69,8 @@ def borrar_por_nombre(nombre: str):
     archivo_service.borrar_carpeta_y_archivos(carpeta)
 
 
-def obtener_por_nombre(nombre: str, contenidos_tambien: bool = False) -> Carpeta:
+def obtener_por_nombre(nombre: str,
+                       contenidos_tambien: bool = False) -> Carpeta:
     '''
     Obtiene una carpeta de la base de datos y del sistema de archivos
     '''
