@@ -1,4 +1,5 @@
 from enum import Enum
+from http import HTTPStatus
 from io import BytesIO
 from typing import Tuple
 
@@ -84,7 +85,20 @@ def nuevo_contenido_archivo(nombre_carpeta, nombre_archivo):
     carpeta.agregar_archivo(archivo_nuevo)
 
     carpeta_service.actualizar(carpeta)
-    archivo_service.guardar_archivo(carpeta, archivo_nuevo)
+
+    return '', HTTPStatus.CREATED
+
+
+@blue_print.route('/<nombre_archivo>/contenido', methods=['DELETE'])
+def borrar_contenido_archivo(nombre_carpeta, nombre_archivo):
+
+    carpeta, archivo = _obtener_carpeta_y_archivo(nombre_carpeta,
+                                                  nombre_archivo)
+
+    archivo_nuevo = Archivo(nombre_archivo, request.get_data())
+    carpeta.borrar_archivo(archivo_nuevo)
+
+    carpeta_service.actualizar(carpeta)
 
     return ''
 
@@ -102,7 +116,7 @@ def _obtener_contenido(nombre_carpeta: str, nombre_archivo: str) -> bytes:
 def _obtener_carpeta_y_archivo(nombre_carpeta: str,
                                nombre_archivo: str) -> Tuple[Carpeta, Archivo]:
     '''
-    Obtiene la carpeta y archivos correspondientes
+    Obtiene la carpeta y el archivo correspondiente
     '''
     carpeta = carpeta_service.obtener_por_nombre(nombre_carpeta, False)
     archivo = carpeta.buscar_archivo(nombre_archivo)

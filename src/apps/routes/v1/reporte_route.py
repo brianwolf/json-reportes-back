@@ -49,5 +49,4 @@ def borrar_contenido(carpeta_nombre: str, tipo_carpeta_nombre: str,
 
     archivo_service.borrar_contenido_por_tipo(tipo_carpeta, carpeta_nombre,
                                               archivo_nombre)
-
     return ''

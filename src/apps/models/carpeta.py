@@ -87,6 +87,9 @@ class Carpeta():
     def agregar_archivo(self, archivo: Archivo):
         self.archivos.append(archivo)
 
+    def borrar_archivo(self, archivo: Archivo):
+        self.archivos.remove(archivo)
+
     @staticmethod
     def from_dict(d: dict):
         instancia = Carpeta(**d)
