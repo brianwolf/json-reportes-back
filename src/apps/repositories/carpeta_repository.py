@@ -82,6 +82,17 @@ def buscar_por_nombre(nombre: str) -> Carpeta:
     return Carpeta.from_dict(metadata_dict)
 
 
+def buscar(id: UUID) -> Carpeta:
+    '''
+    Busca un Carpeta por id
+    '''
+    for nombre_carpeta in archivos_util.listado_archivos_directorio_base():
+
+        carpeta = buscar_por_nombre(nombre_carpeta)
+        if carpeta.id == id:
+            return carpeta
+
+
 def borrar(carpeta: Carpeta):
     '''
     Borra un Carpeta

@@ -37,7 +37,7 @@ def actualizar(carpeta: Carpeta) -> None:
     '''
     Actualiza una carpeta en la base de datos y en el sistema de archivos
     '''
-    carpeta_vieja = obtener_por_nombre(carpeta.nombre)
+    carpeta_vieja = obtener(carpeta.nombre)
 
     archivos_a_borrar = [
         archivo for archivo in carpeta_vieja.archivos
@@ -75,6 +75,17 @@ def obtener_por_nombre(nombre: str,
     Obtiene una carpeta de la base de datos y del sistema de archivos
     '''
     carpeta = carpeta_repository.buscar_por_nombre(nombre)
+    carpeta.archivos = _obtener_archivos(carpeta, contenidos_tambien)
+
+    return carpeta
+
+
+def obtener(id: UUID,
+            contenidos_tambien: bool = False) -> Carpeta:
+    '''
+    Obtiene una carpeta de la base de datos y del sistema de archivos
+    '''
+    carpeta = carpeta_repository.buscar(id)
     carpeta.archivos = _obtener_archivos(carpeta, contenidos_tambien)
 
     return carpeta

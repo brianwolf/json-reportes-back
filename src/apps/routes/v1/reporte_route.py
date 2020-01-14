@@ -35,7 +35,7 @@ def borrar_contenido(carpeta_nombre: str, tipo_carpeta_nombre: str, archivo_nomb
     try:
         tipo_carpeta = TipoCarpeta[tipo_carpeta_nombre.upper()]
 
-    except Exception as e:
+    except Exception:
         mensaje = f'No se reconoce el tipo de carpeta {tipo_carpeta_nombre}'
         raise AppException(Errores.TIPO_CARPETA_NO_VALIDO, mensaje)
 

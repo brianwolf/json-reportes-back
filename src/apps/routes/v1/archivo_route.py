@@ -30,7 +30,8 @@ def obtener_archivo(nombre_carpeta, nombre_archivo):
 
     contenidos_tambien = request.args.get('base64') == 'true'
 
-    carpeta, archivo = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
+    carpeta, archivo = _obtener_carpeta_y_archivo(
+        nombre_carpeta, nombre_archivo)
     if contenidos_tambien:
         archivo.contenido = archivo_service.obtener_contenido_por_nombre(
             carpeta, nombre_archivo)
@@ -59,7 +60,7 @@ def obtener_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
 def reemplazar_contenido_archivo(nombre_carpeta, nombre_archivo):
 
     archivo_nuevo = Archivo(nombre_archivo, request.get_data())
-    
+
     carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
     archivo_service.reemplazar_archivo(carpeta, archivo_nuevo)
 
@@ -71,7 +72,7 @@ def reemplazar_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
 
     contenido = request.get_data().encode('utf-8')
     archivo_nuevo = Archivo(nombre_archivo, contenido)
-    
+
     carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
     archivo_service.reemplazar_archivo(carpeta, archivo_nuevo)
 
@@ -81,10 +82,10 @@ def reemplazar_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
 @blue_print.route('/<nombre_archivo>/contenido', methods=['POST'])
 def nuevo_contenido_archivo(nombre_carpeta, nombre_archivo):
 
-    carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
-    carpeta.agregar_archivo(archivo_nuevo)
-
     archivo_nuevo = Archivo(nombre_archivo, request.get_data())
+
+    carpeta = carpeta_service.obtener_por_nombre(nombre_carpeta, False)
+    carpeta.agregar_archivo(archivo_nuevo)
 
     carpeta_service.actualizar(carpeta)
     archivo_service.guardar_archivo(carpeta, archivo_nuevo)
@@ -97,7 +98,7 @@ def reemplazar_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
 
     contenido = request.get_data().encode('utf-8')
     archivo_nuevo = Archivo(nombre_archivo, contenido)
-    
+
     carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
     archivo_service.reemplazar_archivo(carpeta, archivo_nuevo)
 
@@ -113,7 +114,7 @@ def _obtener_contenido(nombre_carpeta: str, nombre_archivo: str) -> bytes:
     return archivo_service.obtener_contenido_por_nombre(carpeta, nombre_archivo)
 
 
-def _obtener_carpeta_y_archivo(nombre_carpeta:str, nombre_archivo:str) -> Carpeta, Archivo:
+def _obtener_carpeta_y_archivo(nombre_carpeta: str, nombre_archivo: str) -> Carpeta, Archivo:
     '''
     Obtiene la carpeta y archivos correspondientes
     '''
