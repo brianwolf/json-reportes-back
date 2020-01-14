@@ -1,5 +1,6 @@
 from http import HTTPStatus
 from io import BytesIO
+from typing import Tuple
 
 from flask import Blueprint, jsonify, request, send_file
 
@@ -11,7 +12,7 @@ from apps.configs.loggers import get_logger
 from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
 from apps.models.errores import AppException
 
-blue_print = Blueprint('carpetas',
+blue_print = Blueprint('archivos',
                        __name__,
                        url_prefix='/api/v1/carpetas/<nombre_carpeta>/archivos')
 
@@ -30,8 +31,8 @@ def obtener_archivo(nombre_carpeta, nombre_archivo):
 
     contenidos_tambien = request.args.get('base64') == 'true'
 
-    carpeta, archivo = _obtener_carpeta_y_archivo(
-        nombre_carpeta, nombre_archivo)
+    carpeta, archivo = _obtener_carpeta_y_archivo(nombre_carpeta,
+                                                  nombre_archivo)
     if contenidos_tambien:
         archivo.contenido = archivo_service.obtener_contenido_por_nombre(
             carpeta, nombre_archivo)
@@ -82,10 +83,10 @@ def reemplazar_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
 @blue_print.route('/<nombre_archivo>/contenido', methods=['POST'])
 def nuevo_contenido_archivo(nombre_carpeta, nombre_archivo):
 
-    archivo_nuevo = Archivo(nombre_archivo, request.get_data())
-
-    carpeta = carpeta_service.obtener_por_nombre(nombre_carpeta, False)
+    carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
     carpeta.agregar_archivo(archivo_nuevo)
+
+    archivo_nuevo = Archivo(nombre_archivo, request.get_data())
 
     carpeta_service.actualizar(carpeta)
     archivo_service.guardar_archivo(carpeta, archivo_nuevo)
@@ -94,7 +95,7 @@ def nuevo_contenido_archivo(nombre_carpeta, nombre_archivo):
 
 
 @blue_print.route('/<nombre_archivo>/texto', methods=['POST'])
-def reemplazar_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
+def nuevo_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
 
     contenido = request.get_data().encode('utf-8')
     archivo_nuevo = Archivo(nombre_archivo, contenido)
@@ -111,10 +112,12 @@ def _obtener_contenido(nombre_carpeta: str, nombre_archivo: str) -> bytes:
     '''
     carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
 
-    return archivo_service.obtener_contenido_por_nombre(carpeta, nombre_archivo)
+    return archivo_service.obtener_contenido_por_nombre(
+        carpeta, nombre_archivo)
 
 
-def _obtener_carpeta_y_archivo(nombre_carpeta: str, nombre_archivo: str) -> Carpeta, Archivo:
+def _obtener_carpeta_y_archivo(nombre_carpeta: str,
+                               nombre_archivo: str) -> Tuple[Carpeta, Archivo]:
     '''
     Obtiene la carpeta y archivos correspondientes
     '''

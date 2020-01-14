@@ -8,11 +8,14 @@ from apps.models.carpeta import TipoCarpeta
 from apps.utils.archivos_util import nombre_con_extension
 from flask import Blueprint, Response, jsonify, request, send_file
 
-blue_print = Blueprint('reportes', __name__, url_prefix='/api/v1/conversor')
+blue_print = Blueprint('conversores',
+                       __name__,
+                       url_prefix='/api/v1/conversores')
 
 
-@blue_print.route('/carpeta/<nombre_carpeta>/html/<nombre_html>/pdf/<nombre_pdf>',
-                  methods=['POST'])
+@blue_print.route(
+    '/carpeta/<nombre_carpeta>/html/<nombre_html>/pdf/<nombre_pdf>',
+    methods=['POST'])
 def html_to_pdf(nombre_carpeta, nombre_html, nombre_pdf):
 
     json_body = request.json
@@ -22,13 +25,13 @@ def html_to_pdf(nombre_carpeta, nombre_html, nombre_pdf):
 
     modelo = carpeta_service.obtener_por_nombre(nombre_carpeta, True)
 
-    contenido_pdf = conversor_service.html_to_pdf(modelo, json_body, nombre_html,
-                                                  nombre_pdf)
+    contenido_pdf = conversor_service.html_to_pdf(modelo, json_body,
+                                                  nombre_html, nombre_pdf)
 
     guardar_pdf = request.args.get('guardar') == 'true'
     if not guardar_pdf:
-        archivo_service.borrar_contenido_por_tipo(
-            TipoCarpeta.PDF, nombre_carpeta, nombre_pdf)
+        archivo_service.borrar_contenido_por_tipo(TipoCarpeta.PDF,
+                                                  nombre_carpeta, nombre_pdf)
 
     return send_file(BytesIO(contenido_pdf),
                      mimetype='application/octet-stream',

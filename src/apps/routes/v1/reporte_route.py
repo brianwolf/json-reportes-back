@@ -8,7 +8,7 @@ import apps.services.carpeta_service as carpeta_service
 from apps.models.carpeta import TipoCarpeta
 from apps.models.errores import AppException
 
-blue_print = Blueprint('archivos', __name__, url_prefix='/api/v1/reportes')
+blue_print = Blueprint('reportes', __name__, url_prefix='/api/v1/reportes')
 
 
 class Errores(Enum):
@@ -16,8 +16,10 @@ class Errores(Enum):
     BORRADO_DE_MODELO_NO_PERMITIDO = 'BORRADO_DE_MODELO_NO_PERMITIDO'
 
 
-@blue_print.route('/<carpeta_nombre>/<tipo_carpeta_nombre>/<archivo_nombre>', methods=['GET'])
-def obtener_archivo(carpeta_nombre: str, tipo_carpeta_nombre: str, archivo_nombre: str):
+@blue_print.route('/<carpeta_nombre>/<tipo_carpeta_nombre>/<archivo_nombre>',
+                  methods=['GET'])
+def obtener_archivo(carpeta_nombre: str, tipo_carpeta_nombre: str,
+                    archivo_nombre: str):
 
     tipo_carpeta = TipoCarpeta[tipo_carpeta_nombre.upper()]
 
@@ -30,8 +32,10 @@ def obtener_archivo(carpeta_nombre: str, tipo_carpeta_nombre: str, archivo_nombr
                      attachment_filename=archivo_nombre)
 
 
-@blue_print.route('/<carpeta_nombre>/<tipo_carpeta_nombre>/<archivo_nombre>', methods=['DELETE'])
-def borrar_contenido(carpeta_nombre: str, tipo_carpeta_nombre: str, archivo_nombre: str):
+@blue_print.route('/<carpeta_nombre>/<tipo_carpeta_nombre>/<archivo_nombre>',
+                  methods=['DELETE'])
+def borrar_contenido(carpeta_nombre: str, tipo_carpeta_nombre: str,
+                     archivo_nombre: str):
     try:
         tipo_carpeta = TipoCarpeta[tipo_carpeta_nombre.upper()]
 
@@ -43,7 +47,7 @@ def borrar_contenido(carpeta_nombre: str, tipo_carpeta_nombre: str, archivo_nomb
         mensaje = f'No esta permitido el borrado manual de los archivos del tipo MODELO'
         raise AppException(Errores.BORRADO_DE_MODELO_NO_PERMITIDO, mensaje)
 
-    archivo_service.borrar_contenido_por_tipo(
-        tipo_carpeta, carpeta_nombre, archivo_nombre)
+    archivo_service.borrar_contenido_por_tipo(tipo_carpeta, carpeta_nombre,
+                                              archivo_nombre)
 
     return ''
