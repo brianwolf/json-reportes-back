@@ -1,20 +1,22 @@
-from http import HTTPStatus
+from enum import Enum
 from io import BytesIO
 from typing import Tuple
 
 from flask import Blueprint, jsonify, request, send_file
 
-import apps.configs.variables as var
 import apps.services.archivo_service as archivo_service
 import apps.services.carpeta_service as carpeta_service
 import apps.utils.archivos_util as archivos_util
-from apps.configs.loggers import get_logger
 from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
 from apps.models.errores import AppException
 
 blue_print = Blueprint('archivos',
                        __name__,
                        url_prefix='/api/v1/carpetas/<nombre_carpeta>/archivos')
+
+
+class Errores(Enum):
+    ARCHIVO_YA_EXISTENTE = 'ARCHIVO_YA_EXISTENTE'
 
 
 @blue_print.route('', methods=['GET'])
@@ -54,7 +56,7 @@ def obtener_contenido_archivo(nombre_carpeta, nombre_archivo):
 def obtener_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
 
     contenido = _obtener_contenido(nombre_carpeta, nombre_archivo)
-    return contenido.decode('utf-8')
+    return {'contenido': contenido.decode('utf-8')}
 
 
 @blue_print.route('/<nombre_archivo>/contenido', methods=['PUT'])
@@ -62,19 +64,7 @@ def reemplazar_contenido_archivo(nombre_carpeta, nombre_archivo):
 
     archivo_nuevo = Archivo(nombre_archivo, request.get_data())
 
-    carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
-    archivo_service.reemplazar_archivo(carpeta, archivo_nuevo)
-
-    return ''
-
-
-@blue_print.route('/<nombre_archivo>/texto', methods=['PUT'])
-def reemplazar_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
-
-    contenido = request.get_data().encode('utf-8')
-    archivo_nuevo = Archivo(nombre_archivo, contenido)
-
-    carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
+    carpeta, _ = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
     archivo_service.reemplazar_archivo(carpeta, archivo_nuevo)
 
     return ''
@@ -83,25 +73,18 @@ def reemplazar_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
 @blue_print.route('/<nombre_archivo>/contenido', methods=['POST'])
 def nuevo_contenido_archivo(nombre_carpeta, nombre_archivo):
 
-    carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
-    carpeta.agregar_archivo(archivo_nuevo)
+    carpeta = carpeta_service.obtener_por_nombre(nombre_carpeta, False)
+    archivo = carpeta.buscar_archivo(nombre_archivo)
+
+    if archivo != None:
+        mensaje = f'El archivo con nombre {nombre_archivo}, ya existe'
+        raise AppException(Errores.ARCHIVO_YA_EXISTENTE, mensaje)
 
     archivo_nuevo = Archivo(nombre_archivo, request.get_data())
+    carpeta.agregar_archivo(archivo_nuevo)
 
     carpeta_service.actualizar(carpeta)
     archivo_service.guardar_archivo(carpeta, archivo_nuevo)
-
-    return ''
-
-
-@blue_print.route('/<nombre_archivo>/texto', methods=['POST'])
-def nuevo_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
-
-    contenido = request.get_data().encode('utf-8')
-    archivo_nuevo = Archivo(nombre_archivo, contenido)
-
-    carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
-    archivo_service.reemplazar_archivo(carpeta, archivo_nuevo)
 
     return ''
 
@@ -110,7 +93,7 @@ def _obtener_contenido(nombre_carpeta: str, nombre_archivo: str) -> bytes:
     '''
     Obtiene el contenido del archivo
     '''
-    carpeta = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
+    carpeta, _ = _obtener_carpeta_y_archivo(nombre_carpeta, nombre_archivo)
 
     return archivo_service.obtener_contenido_por_nombre(
         carpeta, nombre_archivo)

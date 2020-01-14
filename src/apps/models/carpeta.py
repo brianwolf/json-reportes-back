@@ -18,6 +18,7 @@ class Archivo():
         self.fecha_creacion = fecha_creacion
 
     def __eq__(self, value):
+        if value == None: return False
         return self.nombre == value.nombre
 
     def to_dict(self):
@@ -66,6 +67,7 @@ class Carpeta():
         self.fecha_creacion = fecha_creacion
 
     def __eq__(self, value):
+        if value == None: return False
         return self.id == value.id
 
     def to_dict(self):

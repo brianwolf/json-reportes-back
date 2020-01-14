@@ -48,15 +48,16 @@ def actualizar(carpeta: Carpeta) -> UUID:
     '''
     Actualiza una Carpeta en la base local de archivos
     '''
-    ruta_carpeta = archivos_util.ruta_tipo_carpeta(carpeta.tipo.value,
-                                                   carpeta.nombre)
-
     carpeta_dict = carpeta.to_dict()
     for archivo in carpeta_dict['archivos']:
-        del archivo['contenido']
+        if 'contenido' in archivo:
+            del archivo['contenido']
 
     contenido = json.dumps(carpeta_dict).encode('utf8')
     nombre_archivo_metada = _nombre_meta_data(carpeta.nombre)
+
+    ruta_carpeta = archivos_util.ruta_tipo_carpeta(carpeta.tipo.value,
+                                                   carpeta.nombre)
 
     archivos_util.borrar_archivo(ruta_carpeta, nombre_archivo_metada)
     archivos_util.guardar_archivo(ruta_carpeta, nombre_archivo_metada,

@@ -99,6 +99,6 @@ def borrar_archivo(directorio: str, nombre: str):
     '''
     Borra un archivo ubicada en la ruta enviada
     '''
-    ruta_carpeta = os.remove(ruta_completa)
-    if os.path.exists(ruta_carpeta):
+    ruta_completa = directorio + nombre
+    if os.path.exists(ruta_completa):
         os.remove(ruta_completa)
