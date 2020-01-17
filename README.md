@@ -1,4 +1,4 @@
-# Json_reportes
+# json-reportes-back
 
 > Servicio para convertir datos en *json* a un template customizable para generar *reportes*, por ahora solo genera pdfs
 

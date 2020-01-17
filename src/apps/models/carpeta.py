@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from enum import Enum
 from uuid import UUID, uuid4
 
-import app.configs.variables as var
-import app.utils.archivos_util as util_archi
+import apps.configs.variables as var
+import apps.utils.archivos_util as util_archi
 
 
 class Archivo():
@@ -17,11 +17,12 @@ class Archivo():
         self.contenido = contenido
         self.fecha_creacion = fecha_creacion
 
+    def __eq__(self, value):
+        if value == None: return False
+        return self.nombre == value.nombre
+
     def to_dict(self):
-        d = {
-            'nombre': self.nombre,
-            'fecha_creacion': str(self.fecha_creacion)
-        }
+        d = {'nombre': self.nombre, 'fecha_creacion': str(self.fecha_creacion)}
 
         if self.contenido:
             d['contenido'] = self.contenido_base64()
@@ -65,6 +66,10 @@ class Carpeta():
         self.id = id
         self.fecha_creacion = fecha_creacion
 
+    def __eq__(self, value):
+        if value == None: return False
+        return self.id == value.id
+
     def to_dict(self):
         return {
             'nombre': self.nombre,
@@ -78,6 +83,12 @@ class Carpeta():
         for archivo in self.archivos:
             if nombre == archivo.nombre:
                 return archivo
+
+    def agregar_archivo(self, archivo: Archivo):
+        self.archivos.append(archivo)
+
+    def borrar_archivo(self, archivo: Archivo):
+        self.archivos.remove(archivo)
 
     @staticmethod
     def from_dict(d: dict):

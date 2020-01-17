@@ -16,7 +16,7 @@ export DOCKER_ARCHIVO_AMBIENTE=./config/ambiente.env
 
 export DOCKER_DOCKERFILE=dockerfile
 
-export DOCKER_NOMBRE_IMAGEN=json_reportes_back
+export DOCKER_NOMBRE_IMAGEN=json-reportes-back
 export DOCKER_TAG=${CIRCLE_SHA1:-latest}
 
 export DOCKER_NETWORK=docker_red

@@ -3,7 +3,7 @@ from functools import wraps
 
 from flask import jsonify
 
-from app.configs.loggers import get_logger
+from apps.configs.loggers import get_logger
 
 HTTP_STATUS_ERROR_NEGOCIO = 409
 
@@ -19,7 +19,6 @@ class AppException(Exception):
     mensaje: contiene informacion extra en formato texto para una mayor informacion, esto es mas para quien use la api,
     un ejemplo puede ser: 'el usuario ya existe en la base de datos'
     '''
-
     def __init__(self, codigo, mensaje):
         self.codigo = codigo.value if isinstance(codigo, Enum) else codigo
         self.mensaje = mensaje

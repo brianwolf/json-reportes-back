@@ -1,88 +1,29 @@
 {
 	"info": {
-		"_postman_id": "1cceef03-c7f7-4583-bc1e-9af720fb78d5",
+		"_postman_id": "12b71d9b-ac1e-4466-87e4-3fbcf8b29c1b",
 		"name": "json_reportes",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "carpetas",
+			"name": "archivos",
 			"item": [
 				{
-					"name": "archivos",
+					"name": "contenido",
 					"item": [
 						{
-							"name": "contenido",
-							"item": [
-								{
-									"name": "reemplazar archivo contenido",
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "file",
-											"file": {
-												"src": "/home/brian/workspace/json_reportes/backend/src/ejemplo_template/template.html"
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/contenido",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"api",
-												"v1",
-												"carpetas",
-												"prueba",
-												"archivos",
-												"template.html",
-												"contenido"
-											]
-										},
-										"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
-									},
-									"response": []
-								},
-								{
-									"name": "buscar archivo contenido",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/contenido",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"api",
-												"v1",
-												"carpetas",
-												"prueba",
-												"archivos",
-												"template.html",
-												"contenido"
-											]
-										},
-										"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
-									},
-									"response": []
-								}
-							],
-							"protocolProfileBehavior": {},
-							"_postman_isSubFolder": true
-						},
-						{
-							"name": "buscar archivo",
+							"name": "reemplazar contenido",
 							"request": {
-								"method": "GET",
+								"method": "PUT",
 								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "/home/brian/workspace/json_reportes/backend/src/ejemplo_template/template.html"
+									}
+								},
 								"url": {
-									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html?base64=false",
+									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/contenido",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -94,25 +35,27 @@
 										"carpetas",
 										"prueba",
 										"archivos",
-										"template.html"
-									],
-									"query": [
-										{
-											"key": "base64",
-											"value": "false"
-										}
+										"template.html",
+										"contenido"
 									]
-								}
+								},
+								"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
 							},
 							"response": []
 						},
 						{
-							"name": "buscar todos los archivos",
+							"name": "borrar contenido",
 							"request": {
-								"method": "GET",
+								"method": "DELETE",
 								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": ""
+									}
+								},
 								"url": {
-									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos",
+									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/data.json/contenido",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -123,9 +66,158 @@
 										"v1",
 										"carpetas",
 										"prueba",
-										"archivos"
+										"archivos",
+										"data.json",
+										"contenido"
 									]
-								}
+								},
+								"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
+							},
+							"response": []
+						},
+						{
+							"name": "reemplazar contenido texto",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<head>\n\n\t<title>{{nombre}} | {{trabajo}} | {{email}}</title>\n\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n\n\t<meta name=\"keywords\" content=\"\" />\n\t<meta name=\"description\" content=\"\" />\n\n\t<link rel=\"stylesheet\" type=\"text/css\"\n\t\thref=\"http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css\" media=\"all\" />\n\t<link rel=\"stylesheet\" type=\"text/css\" href=\"resume.css\" media=\"all\" />\n\n</head>"
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/contenido",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1",
+										"carpetas",
+										"prueba",
+										"archivos",
+										"template.html",
+										"contenido"
+									]
+								},
+								"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
+							},
+							"response": []
+						},
+						{
+							"name": "nuevo contenido",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "/home/leafnoise/Workspace/UTN/json_reportes_back/src/ejemplo_template/datos.json"
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/data.json/contenido",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1",
+										"carpetas",
+										"prueba",
+										"archivos",
+										"data.json",
+										"contenido"
+									]
+								},
+								"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
+							},
+							"response": []
+						},
+						{
+							"name": "nuevo contenido texto",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "/home/leafnoise/Workspace/UTN/json_reportes_back/src/ejemplo_template/datos.json"
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/data.json/contenido",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1",
+										"carpetas",
+										"prueba",
+										"archivos",
+										"data.json",
+										"contenido"
+									]
+								},
+								"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
+							},
+							"response": []
+						},
+						{
+							"name": "buscar contenido",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/contenido",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1",
+										"carpetas",
+										"prueba",
+										"archivos",
+										"template.html",
+										"contenido"
+									]
+								},
+								"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
+							},
+							"response": []
+						},
+						{
+							"name": "buscar contenido texto",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/texto",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1",
+										"carpetas",
+										"prueba",
+										"archivos",
+										"template.html",
+										"texto"
+									]
+								},
+								"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
 							},
 							"response": []
 						}
@@ -133,6 +225,65 @@
 					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
+				{
+					"name": "buscar archivo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html?base64=false",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"carpetas",
+								"prueba",
+								"archivos",
+								"template.html"
+							],
+							"query": [
+								{
+									"key": "base64",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "buscar todos los archivos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"carpetas",
+								"prueba",
+								"archivos"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "carpetas",
+			"item": [
 				{
 					"name": "nuevo",
 					"request": {
@@ -144,12 +295,12 @@
 								{
 									"key": "template.html",
 									"type": "file",
-									"src": "/home/leafnoise/Workspace/UTN/json_reportes/src/ejemplo_template/template.html"
+									"src": "/home/leafnoise/Workspace/UTN/json_reportes_back/src/ejemplo_template/template.html"
 								},
 								{
 									"key": "resume.css",
 									"type": "file",
-									"src": "/home/leafnoise/Workspace/UTN/json_reportes/src/ejemplo_template/resume.css"
+									"src": "/home/leafnoise/Workspace/UTN/json_reportes_back/src/ejemplo_template/resume.css"
 								}
 							]
 						},
@@ -286,7 +437,7 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "reportes",
+			"name": "conversores",
 			"item": [
 				{
 					"name": "crear",
@@ -337,10 +488,32 @@
 					"response": []
 				}
 			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "68f6ab71-5bb6-4293-8d20-33a47617d713",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "37089072-f302-46f6-9c42-1afd3870f99f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "archivos",
+			"name": "reportes",
 			"item": [
 				{
 					"name": "descargar desde el navegador",
@@ -389,6 +562,28 @@
 						"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/archivos/<carpeta_nombre>/<tipo_carpeta_nombre>/<archivo_nombre>`"
 					},
 					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b6bbfe88-9dac-4f7c-a1dd-871bf3b97de4",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b9816f64-c928-466f-9786-cde86965a8c9",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			],
 			"protocolProfileBehavior": {}
