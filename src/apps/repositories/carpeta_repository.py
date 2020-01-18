@@ -11,6 +11,8 @@ from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
 from apps.models.errores import AppException
 import json
 
+_METADATA_NOMBRE = '.metadata.json'
+
 
 class Errores(Enum):
     NOMBRE_EN_USO = 'NOMBRE_EN_USO'
@@ -39,7 +41,7 @@ def guardar(carpeta: Carpeta) -> UUID:
     contenido = json.dumps(carpeta_dict).encode('utf8')
 
     archivos_util.guardar_archivo(ruta_carpeta,
-                                  _nombre_meta_data(carpeta.nombre), contenido)
+                                  _METADATA_NOMBRE, contenido)
 
     return carpeta.id
 
@@ -54,13 +56,12 @@ def actualizar(carpeta: Carpeta) -> UUID:
             del archivo['contenido']
 
     contenido = json.dumps(carpeta_dict).encode('utf8')
-    nombre_archivo_metada = _nombre_meta_data(carpeta.nombre)
 
     ruta_carpeta = archivos_util.ruta_tipo_carpeta(carpeta.tipo.value,
                                                    carpeta.nombre)
 
-    archivos_util.borrar_archivo(ruta_carpeta, nombre_archivo_metada)
-    archivos_util.guardar_archivo(ruta_carpeta, nombre_archivo_metada,
+    archivos_util.borrar_archivo(ruta_carpeta, _METADATA_NOMBRE)
+    archivos_util.guardar_archivo(ruta_carpeta, _METADATA_NOMBRE,
                                   contenido)
 
 
@@ -70,14 +71,13 @@ def buscar_por_nombre(nombre: str) -> Carpeta:
     '''
     directorio = archivos_util.ruta_tipo_carpeta(TipoCarpeta.MODELO.value,
                                                  nombre)
-    nombre_archivo = _nombre_meta_data(nombre)
 
-    if not os.path.exists(directorio + nombre_archivo):
+    if not os.path.exists(directorio + _METADATA_NOMBRE):
         mensaje = f'La carpeta {nombre} NO existe'
         raise AppException(Errores.CARPETA_NO_EXISTE, mensaje)
 
     metadata_contenido = archivos_util.obtener_archivo(directorio,
-                                                       nombre_archivo)
+                                                       _METADATA_NOMBRE)
     metadata_dict = json.loads(metadata_contenido.decode('utf8'))
 
     return Carpeta.from_dict(metadata_dict)
@@ -99,7 +99,7 @@ def borrar(carpeta: Carpeta):
     Borra un Carpeta
     '''
     ruta_completa = archivos_util.ruta_tipo_carpeta(
-        carpeta.tipo.value, carpeta.nombre) + _nombre_meta_data(carpeta.nombre)
+        carpeta.tipo.value, carpeta.nombre) + _METADATA_NOMBRE
 
     os.remove(ruta_completa)
 
@@ -112,7 +112,3 @@ def agregar_archivo(carpeta: Carpeta, archivo: Archivo):
     carpeta.archivos.append(archivo)
 
     guardar(carpeta)
-
-
-def _nombre_meta_data(nombre_carpeta: str):
-    return f'.{nombre_carpeta}.json'
