@@ -56,7 +56,7 @@ class TipoCarpeta(Enum):
     GENERICO = 'GENERICO'
 
     @staticmethod
-    def desde_str(tipo_carpeta: str) -> TipoCarpeta:
+    def desde_str(tipo_carpeta: str) -> 'TipoCarpeta':
         try:
             return TipoCarpeta[tipo_carpeta.upper()]
 
