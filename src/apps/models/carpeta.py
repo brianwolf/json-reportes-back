@@ -5,6 +5,7 @@ from uuid import UUID, uuid4
 
 import apps.configs.variables as var
 import apps.utils.archivos_util as util_archi
+from apps.configs.loggers import get_logger
 
 
 class Archivo():
@@ -18,7 +19,8 @@ class Archivo():
         self.fecha_creacion = fecha_creacion
 
     def __eq__(self, value):
-        if value == None: return False
+        if value == None:
+            return False
         return self.nombre == value.nombre
 
     def to_dict(self):
@@ -50,7 +52,19 @@ class Archivo():
 class TipoCarpeta(Enum):
     MODELO = 'MODELO'
     PDF = 'PDF'
-    MARKDOWN = 'MARCKDOWN'
+    MD = 'MD'
+    GENERICO = 'GENERICO'
+
+    @staticmethod
+    def desde_str(tipo_carpeta: str) -> TipoCarpeta:
+        try:
+            return TipoCarpeta[tipo_carpeta.upper()]
+
+        except Exception as e:
+            mensaje = f'Error al convertir el tipo de carpeta {tipo_carpeta} -> {e}'
+            get_logger().error(mensaje)
+
+            return TipoCarpeta.GENERICO
 
 
 class Carpeta():
@@ -67,7 +81,8 @@ class Carpeta():
         self.fecha_creacion = fecha_creacion
 
     def __eq__(self, value):
-        if value == None: return False
+        if value == None:
+            return False
         return self.id == value.id
 
     def to_dict(self):

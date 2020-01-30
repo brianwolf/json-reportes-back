@@ -17,11 +17,11 @@ class Errores(Enum):
     ARCHIVO_NO_EXISTE = 'ARCHIVO_NO_EXISTE'
 
 
-def html_to_pdf(carpeta: Carpeta, datos: dict, nombre_html: str,
-                nombre_pdf: str) -> bytes:
+def html_a_pdf(carpeta: Carpeta, datos: dict, nombre_html: str,
+               nombre_pdf: str) -> bytes:
     '''
     Genera un reporte en pdf aplicando los datos al modelo
-    Devuelve la ruta interna de donde guardo el archivo
+    Devuelve el contenido del archivo generado
     '''
     html = carpeta.buscar_archivo(nombre_html)
     if html is None:
@@ -47,13 +47,28 @@ def html_to_pdf(carpeta: Carpeta, datos: dict, nombre_html: str,
     return archivos_util.obtener_archivo(directorio_pdf, nombre_pdf)
 
 
-def _renderizar_archivo(archivo: Archivo, datos: dict) -> Archivo:
+def texto_a_texto(carpeta: Carpeta, datos: dict, nombre_entrada: str, nombre_salida: str) -> bytes:
+    '''
+    Genera un reporte en pdf aplicando los datos al modelo.
+    Devuelve el contenido del archivo generado
+    '''
+    entrada = carpeta.buscar_archivo(nombre_archivo)
+    if entrada is None:
+        mensaje = f'El archivo {nombre_entrada} no existe'
+        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
+
+    archivo_salida = _renderizar_archivo(entrada, datos, nombre_salida)
+
+    archivo_service.guardar_archivo_generado(
+        carpeta, TipoCarpeta.GENERICO, archivo_salida)
+
+    return archivo_salida.contenido
+
+
+def _renderizar_archivo(archivo: Archivo, datos: dict, nombre_salida: str = uuid.uuid4()) -> Archivo:
 
     template_renderizado = Template(archivo.contenido_str()).render(datos)
 
-    nombre = str(uuid.uuid4()) + '.html'
     contenido = bytes(template_renderizado, 'utf-8')
 
-    html_temporal = Archivo(nombre, contenido)
-
-    return html_temporal
+    return Archivo(nombre_salida, contenido)
