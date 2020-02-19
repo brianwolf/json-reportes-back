@@ -21,7 +21,7 @@ class Errores(Enum):
 def obtener_archivo(carpeta_nombre: str, tipo_carpeta_nombre: str,
                     archivo_nombre: str):
 
-    tipo_carpeta = TipoCarpeta[tipo_carpeta_nombre.upper()]
+    tipo_carpeta = TipoCarpeta.desde_str(tipo_carpeta_nombre)
 
     contenido = archivo_service.obtener_contenido_por_tipo_y_nombre(
         tipo_carpeta, carpeta_nombre, archivo_nombre)
@@ -37,7 +37,7 @@ def obtener_archivo(carpeta_nombre: str, tipo_carpeta_nombre: str,
 def borrar_contenido(carpeta_nombre: str, tipo_carpeta_nombre: str,
                      archivo_nombre: str):
     try:
-        tipo_carpeta = TipoCarpeta[tipo_carpeta_nombre.upper()]
+        tipo_carpeta = TipoCarpeta.desde_str(tipo_carpeta_nombre)
 
     except Exception:
         mensaje = f'No se reconoce el tipo de carpeta {tipo_carpeta_nombre}'

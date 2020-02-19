@@ -44,7 +44,7 @@ def nombre_con_extension(nombre: str, extension: ''):
 
 def guardar_archivo(directorio: str, nombre: str, contenido: bytes):
     '''
-    Guarda un archivo en el directorio indicado, en caso de que no exista, el crea
+    Guarda un archivo en el directorio indicado, en caso de que no exista la crea
     '''
     crear_directorio_si_no_existe(directorio)
 

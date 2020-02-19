@@ -1,7 +1,7 @@
 import os
 import shutil
-from uuid import UUID
 from enum import Enum
+from uuid import UUID
 
 import apps.configs.variables as var
 import apps.utils.archivos_util as util
@@ -16,7 +16,7 @@ class Errores(Enum):
 
 def guardar_archivo(carpeta: Carpeta, archivo: Archivo):
     '''
-    Crea el arachivo en el sistema de archivos, la estructura que maneja
+    Crea el archivo en el sistema de archivos, la estructura que maneja
     es:
 
     {carpeta.nombre}/{carpeta.tipo}/{archivo.nombre}
@@ -29,6 +29,27 @@ def guardar_archivo(carpeta: Carpeta, archivo: Archivo):
 
     ruta = util.ruta_archivo(
         carpeta.tipo.value, carpeta.nombre, archivo.nombre)
+
+    with open(ruta, 'wb+') as archivo_python:
+        archivo_python.write(archivo.contenido)
+
+
+def guardar_archivo_generado(carpeta_origen: Carpeta, tipo_generado: TipoCarpeta, archivo: Archivo):
+    '''
+    Crea el archivo en el sistema de archivos, la estructura que maneja
+    es:
+
+    {carpeta_origen.nombre}/{tipo_generado}/{carpeta_origen.nombre}
+
+    IMPORTANTE: el nombre debe incluir la extension del archivo
+    '''
+    directorio = util.ruta_tipo_carpeta(
+        tipo_generado.value, carpeta_origen.nombre)
+    if not os.path.exists(directorio):
+        os.makedirs(directorio)
+
+    ruta = util.ruta_archivo(
+        tipo_generado.value, carpeta_origen.nombre, archivo.nombre)
 
     with open(ruta, 'wb+') as archivo_python:
         archivo_python.write(archivo.contenido)
