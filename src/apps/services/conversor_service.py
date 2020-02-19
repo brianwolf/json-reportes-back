@@ -60,7 +60,7 @@ def texto_a_texto(carpeta: Carpeta, datos: dict, nombre_entrada: str, nombre_sal
     archivo_salida = _renderizar_archivo(entrada, datos, nombre_salida)
 
     archivo_service.guardar_archivo_generado(
-        carpeta, TipoCarpeta.MD, archivo_salida)
+        carpeta, TipoCarpeta.TEXTO, archivo_salida)
 
     return archivo_salida.contenido
 
