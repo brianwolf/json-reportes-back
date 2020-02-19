@@ -8,8 +8,6 @@ from apps.models.errores import AppException
 
 error_handler_bp = Blueprint('handlers', __name__)
 
-logger = get_logger()
-
 
 @error_handler_bp.app_errorhandler(HTTPException)
 def handle_exception(httpe):

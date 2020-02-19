@@ -1,7 +1,7 @@
 mapa_variables = {
     'VERSION': 'v1',
     'PYTHON_HOST': 'localhost',
-    'PYTHON_PORT': 5000,
+    'PYTHON_PORT': 5001,
 
     'NIVEL_LOGS': 'INFO',
     'DIRECTORIO_LOGS': 'logs/',
