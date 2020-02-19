@@ -57,7 +57,7 @@ def md_a_md(nombre_carpeta, nombre_entrada, nombre_salida):
 
     guardar_resultado = request.args.get('guardar') == 'true'
     if not guardar_resultado:
-        archivo_service.borrar_contenido_por_tipo(TipoCarpeta.MD,
+        archivo_service.borrar_contenido_por_tipo(TipoCarpeta.TEXTO,
                                                   nombre_carpeta, nombre_salida)
 
     return send_file(BytesIO(contenido_resultado),
