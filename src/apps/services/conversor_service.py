@@ -52,7 +52,7 @@ def texto_a_texto(carpeta: Carpeta, datos: dict, nombre_entrada: str, nombre_sal
     Genera un reporte en pdf aplicando los datos al modelo.
     Devuelve el contenido del archivo generado
     '''
-    entrada = carpeta.buscar_archivo(nombre_archivo)
+    entrada = carpeta.buscar_archivo(nombre_entrada)
     if entrada is None:
         mensaje = f'El archivo {nombre_entrada} no existe'
         raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
@@ -60,7 +60,7 @@ def texto_a_texto(carpeta: Carpeta, datos: dict, nombre_entrada: str, nombre_sal
     archivo_salida = _renderizar_archivo(entrada, datos, nombre_salida)
 
     archivo_service.guardar_archivo_generado(
-        carpeta, TipoCarpeta.GENERICO, archivo_salida)
+        carpeta, TipoCarpeta.MD, archivo_salida)
 
     return archivo_salida.contenido
 

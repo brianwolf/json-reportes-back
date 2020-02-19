@@ -53,7 +53,7 @@ class TipoCarpeta(Enum):
     MODELO = 'MODELO'
     PDF = 'PDF'
     MD = 'MD'
-    GENERICO = 'GENERICO'
+    TEXTO = 'TEXTO'
 
     @staticmethod
     def desde_str(tipo_carpeta: str) -> 'TipoCarpeta':
@@ -64,7 +64,7 @@ class TipoCarpeta(Enum):
             mensaje = f'Error al convertir el tipo de carpeta {tipo_carpeta} -> {e}'
             get_logger().error(mensaje)
 
-            return TipoCarpeta.GENERICO
+            return TipoCarpeta.TEXTO
 
 
 class Carpeta():
