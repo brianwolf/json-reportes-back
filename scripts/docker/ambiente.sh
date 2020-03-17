@@ -18,7 +18,7 @@ export DOCKER_DOCKERFILE=dockerfile
 
 export CIRCLE_SHA1_SHORT=${CIRCLE_SHA1:0:7}
 
-export DOCKER_NOMBRE_IMAGEN=circleci
+export DOCKER_NOMBRE_IMAGEN=json-reportes-back
 export DOCKER_TAG=${CIRCLE_SHA1_SHORT:-latest}
 
 export DOCKER_NETWORK=docker_red
