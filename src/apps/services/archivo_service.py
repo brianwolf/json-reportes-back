@@ -3,9 +3,7 @@ import shutil
 from enum import Enum
 from uuid import UUID
 
-import apps.configs.variables as var
 import apps.utils.archivos_util as util
-from apps.configs.loggers import get_logger
 from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
 from apps.models.errores import AppException
 

@@ -1,11 +1,12 @@
 import os
 from uuid import UUID
 
-import apps.configs.variables as var
+from apps.configs.lector_variables import dame
 from apps.configs.loggers import get_logger
+from apps.configs.variables import Variable
 from apps.models.errores import AppException
 
-_DIRECTORIO_SISTEMA_ARCHIVOS = var.get('DIRECTORIO_SISTEMA_ARCHIVOS')
+_DIRECTORIO_SISTEMA_ARCHIVOS = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
 
 
 def ruta_archivo(tipo_carpeta_value: str, nombre_carpeta: str,

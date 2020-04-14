@@ -1,4 +1,4 @@
-source ./scripts/docker/ambiente.sh
+. ./scripts/docker/ambiente.env
 
 docker network create $DOCKER_NETWORK
 

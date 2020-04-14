@@ -1,8 +1,13 @@
-source ./scripts/docker/ambiente.sh
+. ./scripts/docker/ambiente.env
 
-echo "$DOCKER_TOKEN" | docker login --username $DOCKER_USER --password-stdin
+echo "$DOCKER_TOKEN" | docker login $DOCKER_REGISTRY --username $DOCKER_USER --password-stdin
 
-docker push $DOCKER_USER/$DOCKER_NOMBRE_IMAGEN:$DOCKER_TAG
+printf "\n\nSubiendo imagen con TAG:$DOCKER_TAG\n"
+docker push $DOCKER_REGISTRY/$DOCKER_NAMESPACE/$DOCKER_NOMBRE_IMAGEN:$DOCKER_TAG
 
-docker tag $DOCKER_USER/$DOCKER_NOMBRE_IMAGEN:$DOCKER_TAG $DOCKER_USER/$DOCKER_NOMBRE_IMAGEN:latest
-docker push $DOCKER_USER/$DOCKER_NOMBRE_IMAGEN:latest
+docker tag \
+$DOCKER_REGISTRY/$DOCKER_NAMESPACE/$DOCKER_NOMBRE_IMAGEN:$DOCKER_TAG \
+$DOCKER_REGISTRY/$DOCKER_NAMESPACE/$DOCKER_NOMBRE_IMAGEN:latest
+
+printf "\n\nSubiendo imagen con TAG:latest\n"
+docker push $DOCKER_REGISTRY/$DOCKER_NAMESPACE/$DOCKER_NOMBRE_IMAGEN:latest

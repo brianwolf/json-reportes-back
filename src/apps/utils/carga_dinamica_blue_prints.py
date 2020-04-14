@@ -1,8 +1,14 @@
+'''
+Herramienta que carga de formma dinamica los blueprints de flask recursivamente
+que se encuentren en un directorio
+'''
 import imp
-import os
 import re
+from os import path, listdir
 
 from flask import Flask
+
+__version__ = '1.1.0'
 
 
 def _nombre_archivo(ruta: str, extension=''):
@@ -12,30 +18,25 @@ def _nombre_archivo(ruta: str, extension=''):
     return re.split('/', ruta)[-1].replace(extension, '')
 
 
-def _es_directorio(ruta: str):
-    '''
-    Devuelve si la ruta no termina con .py
-    '''
-    return not ruta.endswith('.py')
-
-
 def _cargar_rutas_de_archivos(ruta_base: str):
     '''
     Obtiene las rutas de todos los archivos .py dentro del directorio parametro, 
     es recursivo por lo que si hay carpetas dentro tambien busca ahi
     '''
-    if not ruta_base.endswith('/'):
-        ruta_base += '/'
-
-    sub_rutas = os.listdir(ruta_base)
+    sub_rutas = listdir(ruta_base)
     if '__pycache__' in sub_rutas:
         sub_rutas.remove('__pycache__')
 
-    rutas_archivos = [
-        f'{ruta_base}{a}' for a in sub_rutas if not _es_directorio(a)
-    ]
+    rutas_archivos = []
+    directorios = []
+    for i in sub_rutas:
+        ruta_completa = path.join(ruta_base, i)
 
-    directorios = [f'{ruta_base}{d}' for d in sub_rutas if _es_directorio(d)]
+        if path.isfile(ruta_completa):
+            rutas_archivos.append(ruta_completa)
+
+        if path.isdir(ruta_completa):
+            directorios.append(ruta_completa)
 
     for d in directorios:
         rutas_archivos.extend(_cargar_rutas_de_archivos(d))

@@ -61,7 +61,7 @@ class TipoCarpeta(Enum):
             return TipoCarpeta[tipo_carpeta.upper()]
 
         except Exception as e:
-            mensaje = f'Error al convertir el tipo de carpeta {tipo_carpeta} -> {e}'
+            mensaje = f'Error al convertir el tipo de carpeta {tipo_carpeta} -> {e}, se usara el predefinido TEXTO'
             get_logger().error(mensaje)
 
             return TipoCarpeta.TEXTO
