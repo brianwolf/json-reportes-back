@@ -1,4 +1,4 @@
-export HEROKU_APP=-json-reportes-back-heroku
+export HEROKU_APP=json-reportes-back-heroku
 export DOCKER_NOMBRE_IMAGEN=json-reportes-back
 
 
