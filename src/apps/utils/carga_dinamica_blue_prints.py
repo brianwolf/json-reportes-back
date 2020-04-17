@@ -2,20 +2,20 @@
 Herramienta que carga de formma dinamica los blueprints de flask recursivamente
 que se encuentren en un directorio
 '''
-import imp
 import re
-from os import path, listdir
+from importlib.util import module_from_spec, spec_from_file_location
+from os import listdir, path
 
 from flask import Flask
 
 __version__ = '1.1.0'
 
 
-def _nombre_archivo(ruta: str, extension=''):
+def _nombre_archivo(ruta: str):
     '''
     Devuelve el nombre del archivo al final de la ruta sin la extension
     '''
-    return re.split('/', ruta)[-1].replace(extension, '')
+    return path.basename(ruta).split(".")[0]
 
 
 def _cargar_rutas_de_archivos(ruta_base: str):
@@ -46,17 +46,22 @@ def _cargar_rutas_de_archivos(ruta_base: str):
 
 def registrar_blue_prints(app: Flask, directorio_rutas: str):
     '''
-    Registra todos los archivos .py del directorio como rutas para Flask,
-    para esto los modulos deben tener estos 2 atributos:
+    Registra los archivos dentro de `directorio_rutas` recursivamente como Blueprints para Flask,
+    pera esto es necesario que se defina un atributo llamado `blue_print` en cada archivo python. \n
+    Ejemplo:
 
-    from flask import Blueprint\n
-    blue_print = Blueprint('tu_nombre_de_ruta', __name__, url_prefix='/ejemplos')\n
+    ```
+    from flask import Blueprint
+    blue_print = Blueprint('nombre_unico_de_ruta', __name__, url_prefix='/api/v1/ejemplos')
+    ```
     '''
     rutas = _cargar_rutas_de_archivos(directorio_rutas)
 
     for ruta_archivo in rutas:
+        nombre_modulo = _nombre_archivo(ruta_archivo)
 
-        nombre_archivo = _nombre_archivo(ruta_archivo, '.py')
-        modulo = imp.load_source(nombre_archivo, ruta_archivo)
+        spec = spec_from_file_location(nombre_modulo, ruta_archivo)
+        modulo = module_from_spec(spec)
+        spec.loader.exec_module(modulo)
 
         app.register_blueprint(modulo.blue_print)

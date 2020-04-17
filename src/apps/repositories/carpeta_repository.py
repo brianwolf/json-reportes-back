@@ -19,15 +19,14 @@ class Errores(Enum):
     CARPETA_NO_EXISTE = 'CARPETA_NO_EXISTE'
 
 
-def guardar(carpeta: Carpeta) -> UUID:
+def crear(carpeta: Carpeta) -> UUID:
     '''
-    Guarda una Carpeta en la base local de archivos
+    Crea una Carpeta en la base local de archivos
     '''
     ruta_carpeta = archivos_util.ruta_tipo_carpeta(carpeta.tipo.value,
                                                    carpeta.nombre)
 
-    nombre_en_uso = carpeta.nombre in archivos_util.listado_archivos_directorio_base(
-    )
+    nombre_en_uso = carpeta.nombre in archivos_util.listado_archivos_directorio_base()
     if nombre_en_uso:
         mensaje = f'El nombre {carpeta.nombre} ya esta en uso'
         raise AppException(Errores.NOMBRE_EN_USO, mensaje)
@@ -72,7 +71,7 @@ def buscar_por_nombre(nombre: str) -> Carpeta:
     directorio = archivos_util.ruta_tipo_carpeta(TipoCarpeta.MODELO.value,
                                                  nombre)
 
-    if not os.path.exists(directorio + _METADATA_NOMBRE):
+    if not os.path.exists(directorio):
         mensaje = f'La carpeta {nombre} NO existe'
         raise AppException(Errores.CARPETA_NO_EXISTE, mensaje)
 
@@ -98,9 +97,8 @@ def borrar(carpeta: Carpeta):
     '''
     Borra un Carpeta
     '''
-    ruta_completa = archivos_util.ruta_tipo_carpeta(
-        carpeta.tipo.value, carpeta.nombre) + _METADATA_NOMBRE
-
+    ruta_completa = archivos_util.ruta_archivo(
+        carpeta.tipo.value, carpeta.nombre, _METADATA_NOMBRE)
     os.remove(ruta_completa)
 
 
@@ -111,4 +109,4 @@ def agregar_archivo(carpeta: Carpeta, archivo: Archivo):
     carpeta = buscar_por_nombre(carpeta.nombre)
     carpeta.archivos.append(archivo)
 
-    guardar(carpeta)
+    crear(carpeta)

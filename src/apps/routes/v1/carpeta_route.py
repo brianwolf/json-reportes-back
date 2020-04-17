@@ -40,7 +40,7 @@ def guardar(nombre):
         archivos.append(archivo)
 
     carpeta = Carpeta(nombre, TipoCarpeta.MODELO, archivos=archivos)
-    carpeta_service.guardar(carpeta)
+    carpeta_service.crear(carpeta)
 
     return '', HTTPStatus.CREATED
 

@@ -51,11 +51,11 @@ jobs:
           at: ~/proyect
       - checkout
       - run:
-          name: instalar-heroku
-          command: wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+          name: instalar heroku
+          command: ./scripts/heroku-docker/instalar-heroku.sh
       - run:
           name: generar-dockerfile
-          command: ./scripts/heroku/generar-dockerfile.sh
+          command: ./scripts/heroku-docker/generar-dockerfile.sh
       - run:
           name: despliegue
-          command: ./scripts/heroku/despliegue.sh
+          command: ./scripts/heroku-docker/despliegue.sh

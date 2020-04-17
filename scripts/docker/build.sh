@@ -1,4 +1,4 @@
-. ./scripts/docker/ambiente.env
+. ./scripts/docker/ambiente.sh
 
 docker build \
 --build-arg TAG=$DOCKER_TAG \

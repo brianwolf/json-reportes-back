@@ -1,4 +1,4 @@
-. ./scripts/docker/ambiente.env
+. ./scripts/docker/ambiente.sh
 
 docker logs \
 $DOCKER_NOMBRE_IMAGEN \

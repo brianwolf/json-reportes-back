@@ -8,7 +8,7 @@ import apps.utils.archivos_util as util_archi
 from apps.configs.loggers import get_logger
 
 
-class Archivo():
+class Archivo:
     def __init__(self,
                  nombre: str,
                  contenido: bytes = bytes('', 'utf-8'),
@@ -67,7 +67,7 @@ class TipoCarpeta(Enum):
             return TipoCarpeta.TEXTO
 
 
-class Carpeta():
+class Carpeta:
     def __init__(self,
                  nombre: str,
                  tipo: TipoCarpeta,

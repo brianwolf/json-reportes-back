@@ -14,22 +14,21 @@ def ruta_archivo(tipo_carpeta_value: str, nombre_carpeta: str,
     '''
     Devuelve la ruta completa del archivo
     '''
-    return ruta_tipo_carpeta(tipo_carpeta_value,
-                             nombre_carpeta) + nombre_archivo
+    return os.path.join(ruta_tipo_carpeta(tipo_carpeta_value, nombre_carpeta), nombre_archivo)
 
 
 def ruta_tipo_carpeta(tipo_carpeta_value: str, nombre_carpeta: str) -> str:
     '''
     Devuelve la ruta completa del archivo
     '''
-    return f'{ruta_carpeta(nombre_carpeta)}/{tipo_carpeta_value}/'
+    return os.path.join(ruta_carpeta(nombre_carpeta), tipo_carpeta_value)
 
 
 def ruta_carpeta(nombre_carpeta: str) -> str:
     '''
     Devuelve la ruta completa del archivo
     '''
-    return ruta_completa(_DIRECTORIO_SISTEMA_ARCHIVOS, nombre_carpeta)
+    return os.path.join(_DIRECTORIO_SISTEMA_ARCHIVOS, nombre_carpeta)
 
 
 def nombre_con_extension(nombre: str, extension: ''):
@@ -49,7 +48,7 @@ def guardar_archivo(directorio: str, nombre: str, contenido: bytes):
     '''
     crear_directorio_si_no_existe(directorio)
 
-    with open(ruta_completa(directorio, nombre), 'wb+') as archivo_python:
+    with open(os.path.join(directorio, nombre), 'wb+') as archivo_python:
         archivo_python.write(contenido)
 
 
@@ -57,20 +56,10 @@ def obtener_archivo(directorio: str, nombre: str) -> bytes:
     '''
     Recupera el contenido de un archivo con el nombre y en el directorio indicados
     '''
-    with open(directorio + nombre, 'rb') as archivo:
+    with open(os.path.join(directorio, nombre), 'rb') as archivo:
         contenido = archivo.read()
 
     return contenido
-
-
-def ruta_completa(directorio: str, nombre: str):
-    '''
-    Devuelve la ruta completa de un directorio y un nombre de archivo validando debidamente
-    '''
-    if not directorio.endswith('/'):
-        directorio += '/'
-
-    return directorio + nombre
 
 
 def listado_archivos(directorio: str) -> list:
@@ -100,6 +89,6 @@ def borrar_archivo(directorio: str, nombre: str):
     '''
     Borra un archivo ubicada en la ruta enviada
     '''
-    ruta_completa = directorio + nombre
+    ruta_completa = os.path.join(directorio, nombre)
     if os.path.exists(ruta_completa):
         os.remove(ruta_completa)

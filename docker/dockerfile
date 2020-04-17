@@ -1,6 +1,6 @@
 FROM python:3.8
 
-ARG TAG=v1
+ARG TAG=local
 
 WORKDIR /usr/src/
 
@@ -14,6 +14,7 @@ ENV PYTHON_GUNICORN_WORKERS=1
 ENV PYTHON_GUNICORN_CONNECTIONS=1000
 ENV PYTHON_NOMBRE_APP=app
 ENV PYTHON_NOMBRE_FUNCION_APP=app
+
 
 # EJECUCION
 CMD gunicorn \
@@ -32,11 +33,19 @@ RUN apt-get install wkhtmltopdf -y
 
 
 # DEPENDENCIAS
+RUN pip install compile --upgrade pip
+
 COPY ./src/requirements.txt .
-RUN pip install -r requirements.txt --upgrade pip
+RUN pip install -r requirements.txt
+RUN rm requirements.txt
 
 
-# CODIGO FUENTE
-COPY ./src/app.py .
-COPY ./src/apps ./apps
+# COMPILACION
+COPY ./src/apps ./src/apps
+COPY ./src/app.py ./src
+
+RUN python -m compile -b -f -o ./dist ./src
+RUN mv -f ./dist/src/* .
+
 COPY ./src/resources ./resources
+RUN rm -fr ./src ./dist
