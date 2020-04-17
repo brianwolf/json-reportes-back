@@ -1,25 +1,26 @@
-import os
-from apps.configs.mapa_variables import mapa_variables, no_mostrar
+from enum import Enum
 
 
-def get(variable: str) -> str:
-    '''
-    Obtiene el valor de la variable de entorno correspondiente, en caso de no obtenerla, 
-    la saca del archivo de configuracion
-    '''
-    valor_de_diccionario = mapa_variables[variable]
-    return os.environ.get(variable, valor_de_diccionario)
+class Variable(Enum):
+    VERSION = 'VERSION'
+    PYTHON_HOST = 'PYTHON_HOST'
+    PYTHON_PORT = 'PYTHON_PORT'
+    NIVEL_LOGS = 'NIVEL_LOGS'
+    DIRECTORIO_LOGS = 'DIRECTORIO_LOGS'
+    NOMBRE_LOG_PREDEFINIDO = 'NOMBRE_LOG_PREDEFINIDO'
+    NOMBRE_LOG_REST = 'NOMBRE_LOG_REST'
+    DIRECTORIO_SISTEMA_ARCHIVOS = 'DIRECTORIO_SISTEMA_ARCHIVOS'
 
 
-def variables_cargadas() -> dict:
-    '''
-    Devuelve el mapa de variables con sus valores instanciados y filtrados por la lista de no mostrados
-    '''
-    resultado = {}
-    for key in mapa_variables.keys():
-        if key in no_mostrar:
-            continue
+_predefinidas = {
+    'VERSION': 'local',
+    'PYTHON_HOST': 'localhost',
+    'PYTHON_PORT': 5000,
+    'NIVEL_LOGS': 'INFO',
+    'DIRECTORIO_LOGS': 'logs/',
+    'NOMBRE_LOG_PREDEFINIDO': 'app',
+    'NOMBRE_LOG_REST': 'rest',
+    'DIRECTORIO_SISTEMA_ARCHIVOS': 'resources/templates'
+}
 
-        resultado[key] = get(key)
-
-    return resultado
+_no_mostrar = []

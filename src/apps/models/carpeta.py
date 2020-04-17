@@ -8,7 +8,7 @@ import apps.utils.archivos_util as util_archi
 from apps.configs.loggers import get_logger
 
 
-class Archivo():
+class Archivo:
     def __init__(self,
                  nombre: str,
                  contenido: bytes = bytes('', 'utf-8'),
@@ -61,13 +61,13 @@ class TipoCarpeta(Enum):
             return TipoCarpeta[tipo_carpeta.upper()]
 
         except Exception as e:
-            mensaje = f'Error al convertir el tipo de carpeta {tipo_carpeta} -> {e}'
+            mensaje = f'Error al convertir el tipo de carpeta {tipo_carpeta} -> {e}, se usara el predefinido TEXTO'
             get_logger().error(mensaje)
 
             return TipoCarpeta.TEXTO
 
 
-class Carpeta():
+class Carpeta:
     def __init__(self,
                  nombre: str,
                  tipo: TipoCarpeta,

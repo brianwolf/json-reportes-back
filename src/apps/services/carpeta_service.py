@@ -16,11 +16,11 @@ def listar_todas_las_carpetas() -> list:
     return archivos_util.listado_archivos_directorio_base()
 
 
-def guardar(carpeta: Carpeta) -> UUID:
+def crear(carpeta: Carpeta) -> UUID:
     '''
-    Guarda un modelo en la base de datos y en el sistema de archivos
+    Crea un modelo en la base de datos y en el sistema de archivos
     '''
-    id_generada = carpeta_repository.guardar(carpeta)
+    id_generada = carpeta_repository.crear(carpeta)
     try:
         for archivo in carpeta.archivos:
             archivo_service.guardar_archivo(carpeta, archivo)
@@ -97,10 +97,8 @@ def _obtener_archivos(carpeta: Carpeta,
     for archivo in carpeta.archivos:
 
         if contenidos_tambien:
-            contenido = archivo_service.obtener_contenido_por_nombre(
+            archivo.contenido = archivo_service.obtener_contenido_por_nombre(
                 carpeta, archivo.nombre)
-
-            archivo.contenido = contenido
 
         archivos.append(archivo)
 

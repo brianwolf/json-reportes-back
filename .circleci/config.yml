@@ -31,26 +31,6 @@ executors:
 # JOBS
 ##################################################################
 jobs:
-  nueva_version:
-    executor: ejecutor-base
-    steps:
-      - attach_workspace:
-          at: ~/proyect
-      - checkout
-      - run:
-          name: generar_nueva_version
-          command: ./scripts/versionado/actualizar-version.sh
-
-  descargar_configuracion:
-    executor: ejecutor-base
-    steps:
-      - attach_workspace:
-          at: ~/proyect
-      - checkout
-      - run:
-          name: reemplazar-config
-          command: ./scripts/ambiente/reemplazar-config.sh
-
   creacion_de_docker:
     executor: ejecutor-base
     steps:
@@ -71,11 +51,11 @@ jobs:
           at: ~/proyect
       - checkout
       - run:
-          name: instalar-heroku
-          command: wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+          name: instalar heroku
+          command: ./scripts/heroku-docker/instalar-heroku.sh
       - run:
           name: generar-dockerfile
-          command: ./scripts/heroku/generar-dockerfile.sh
+          command: ./scripts/heroku-docker/generar-dockerfile.sh
       - run:
           name: despliegue
-          command: ./scripts/heroku/despliegue.sh
+          command: ./scripts/heroku-docker/despliegue.sh

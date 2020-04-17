@@ -11,6 +11,7 @@ import apps.utils.archivos_util as archivos_util
 from apps.configs.loggers import get_logger
 from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
 from apps.models.errores import AppException
+from apps.utils.archivos_util import nombre_con_extension
 
 
 class Errores(Enum):
@@ -28,7 +29,7 @@ def html_a_pdf(carpeta: Carpeta, datos: dict, nombre_html: str,
         mensaje = f'El archivo {nombre_html} no existe'
         raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
 
-    html_renderizado = _renderizar_archivo(html, datos)
+    html_renderizado = _renderizar_archivo(html, datos, f'{uuid.uuid4()}.html')
 
     archivo_service.guardar_archivo(carpeta, html_renderizado)
 
@@ -36,7 +37,7 @@ def html_a_pdf(carpeta: Carpeta, datos: dict, nombre_html: str,
                                                      carpeta.nombre)
     archivos_util.crear_directorio_si_no_existe(directorio_pdf)
 
-    ruta_pdf = directorio_pdf + nombre_pdf
+    ruta_pdf = os.path.join(directorio_pdf, nombre_pdf)
     ruta_html = archivos_util.ruta_archivo(carpeta.tipo.value, carpeta.nombre,
                                            html_renderizado.nombre)
 
@@ -60,15 +61,14 @@ def texto_a_texto(carpeta: Carpeta, datos: dict, nombre_entrada: str, nombre_sal
     archivo_salida = _renderizar_archivo(entrada, datos, nombre_salida)
 
     archivo_service.guardar_archivo_generado(
-        carpeta, TipoCarpeta.TEXTO, archivo_salida)
+        carpeta, TipoCarpeta.MD, archivo_salida)
 
     return archivo_salida.contenido
 
 
-def _renderizar_archivo(archivo: Archivo, datos: dict, nombre_salida: str = uuid.uuid4()) -> Archivo:
+def _renderizar_archivo(archivo: Archivo, datos: dict, nombre_salida: str) -> Archivo:
 
     template_renderizado = Template(archivo.contenido_str()).render(datos)
-
     contenido = bytes(template_renderizado, 'utf-8')
 
     return Archivo(nombre_salida, contenido)

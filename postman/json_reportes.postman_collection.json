@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "12b71d9b-ac1e-4466-87e4-3fbcf8b29c1b",
+		"_postman_id": "f063b9d6-cbed-4d49-a9ac-78137366e648",
 		"name": "json_reportes",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -23,12 +23,10 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/contenido",
-									"protocol": "http",
+									"raw": "{{url}}/api/v1/carpetas/prueba/archivos/template.html/contenido",
 									"host": [
-										"localhost"
+										"{{url}}"
 									],
-									"port": "5000",
 									"path": [
 										"api",
 										"v1",
@@ -55,12 +53,10 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/data.json/contenido",
-									"protocol": "http",
+									"raw": "{{url}}/api/v1/carpetas/prueba/archivos/data.json/contenido",
 									"host": [
-										"localhost"
+										"{{url}}"
 									],
-									"port": "5000",
 									"path": [
 										"api",
 										"v1",
@@ -85,12 +81,10 @@
 									"raw": "<head>\n\n\t<title>{{nombre}} | {{trabajo}} | {{email}}</title>\n\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n\n\t<meta name=\"keywords\" content=\"\" />\n\t<meta name=\"description\" content=\"\" />\n\n\t<link rel=\"stylesheet\" type=\"text/css\"\n\t\thref=\"http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css\" media=\"all\" />\n\t<link rel=\"stylesheet\" type=\"text/css\" href=\"resume.css\" media=\"all\" />\n\n</head>"
 								},
 								"url": {
-									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/contenido",
-									"protocol": "http",
+									"raw": "{{url}}/api/v1/carpetas/prueba/archivos/template.html/contenido",
 									"host": [
-										"localhost"
+										"{{url}}"
 									],
-									"port": "5000",
 									"path": [
 										"api",
 										"v1",
@@ -117,12 +111,10 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/data.json/contenido",
-									"protocol": "http",
+									"raw": "{{url}}/api/v1/carpetas/prueba/archivos/data.json/contenido",
 									"host": [
-										"localhost"
+										"{{url}}"
 									],
-									"port": "5000",
 									"path": [
 										"api",
 										"v1",
@@ -145,16 +137,14 @@
 								"body": {
 									"mode": "file",
 									"file": {
-										"src": "/home/leafnoise/Workspace/UTN/json_reportes_back/src/ejemplo_template/datos.json"
+										"src": "/home/brian/workspace/json-reportes-back/src/ejemplo_template/datos.json"
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/data.json/contenido",
-									"protocol": "http",
+									"raw": "{{url}}/api/v1/carpetas/prueba/archivos/data.json/contenido",
 									"host": [
-										"localhost"
+										"{{url}}"
 									],
-									"port": "5000",
 									"path": [
 										"api",
 										"v1",
@@ -175,12 +165,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/contenido",
-									"protocol": "http",
+									"raw": "{{url}}/api/v1/carpetas/prueba/archivos/template.html/contenido",
 									"host": [
-										"localhost"
+										"{{url}}"
 									],
-									"port": "5000",
 									"path": [
 										"api",
 										"v1",
@@ -196,17 +184,41 @@
 							"response": []
 						},
 						{
-							"name": "buscar contenido texto",
+							"name": "buscar contenido base64",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/texto",
+									"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html/base64",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "5000",
+									"path": [
+										"api",
+										"v1",
+										"carpetas",
+										"prueba",
+										"archivos",
+										"template.html",
+										"base64"
+									]
+								},
+								"description": "Se maneja la siguiente estructura en el backend:\n\n`/api/v1/carpetas/<nombre_carpeta>/archivos/<nombre_archivo>/contenido`"
+							},
+							"response": []
+						},
+						{
+							"name": "buscar contenido texto",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/v1/carpetas/prueba/archivos/template.html/texto",
+									"host": [
+										"{{url}}"
+									],
 									"path": [
 										"api",
 										"v1",
@@ -231,12 +243,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos/template.html?base64=false",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/carpetas/prueba/archivos/template.html?base64=false",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
@@ -261,18 +271,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/api/v1/carpetas/prueba/archivos",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/carpetas/prueba/archivos?base64=true",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
 								"carpetas",
 								"prueba",
 								"archivos"
+							],
+							"query": [
+								{
+									"key": "base64",
+									"value": "true"
+								}
 							]
 						}
 					},
@@ -295,21 +309,20 @@
 								{
 									"key": "template.html",
 									"type": "file",
-									"src": "/home/leafnoise/Workspace/UTN/json_reportes_back/src/ejemplo_template/template.html"
+									"src": "/home/brian/workspace/json-reportes-back/src/ejemplo_template/template.html"
 								},
 								{
 									"key": "resume.css",
 									"type": "file",
-									"src": "/home/leafnoise/Workspace/UTN/json_reportes_back/src/ejemplo_template/resume.css"
+									"src": "/home/brian/workspace/json-reportes-back/src/ejemplo_template/resume.css"
 								}
 							]
 						},
 						"url": {
-							"raw": "localhost:5000/api/v1/carpetas/prueba",
+							"raw": "{{url}}/api/v1/carpetas/prueba",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
@@ -333,11 +346,10 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "localhost:5000/api/v1/carpetas",
+							"raw": "{{url}}/api/v1/carpetas",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
@@ -358,21 +370,20 @@
 								{
 									"key": "template.html",
 									"type": "file",
-									"src": "/home/brian/workspace/json_reportes/src/ejemplo_template/template.html"
+									"src": "/home/brian/workspace/json-reportes-back/src/ejemplo_template/template.html"
 								},
 								{
 									"key": "resume.css",
 									"type": "file",
-									"src": "/home/brian/workspace/json_reportes/src/ejemplo_template/resume.css"
+									"src": "/home/brian/workspace/json-reportes-back/src/ejemplo_template/resume.css"
 								}
 							]
 						},
 						"url": {
-							"raw": "localhost:5000/api/v1/carpetas/prueba",
+							"raw": "{{url}}/api/v1/carpetas/prueba",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
@@ -389,12 +400,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/api/v1/carpetas/prueba?base64=false",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/carpetas/prueba?base64=false",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
@@ -417,12 +426,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/api/v1/carpetas/prueba",
-							"protocol": "http",
+							"raw": "{{url}}/api/v1/carpetas/prueba",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
@@ -437,7 +444,7 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "conversores",
+			"name": "reportes",
 			"item": [
 				{
 					"name": "crear",
@@ -461,11 +468,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:5000/api/v1/reportes/carpeta/prueba/html/template/pdf/reporte_20-11-2019?guardar=true",
+							"raw": "{{url}}/api/v1/reportes/carpeta/prueba/html/template/pdf/reporte_20-11-2019?guardar=true",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
@@ -486,50 +492,22 @@
 						}
 					},
 					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "68f6ab71-5bb6-4293-8d20-33a47617d713",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
 				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "37089072-f302-46f6-9c42-1afd3870f99f",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "reportes",
-			"item": [
 				{
 					"name": "descargar desde el navegador",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:5000/api/v1/archivos/prueba/pdf/reporte_20-11-2019.pdf",
+							"raw": "{{url}}/api/v1/reportes/carpeta/prueba/pdf/reporte_20-11-2019.pdf",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
-								"archivos",
+								"reportes",
+								"carpeta",
 								"prueba",
 								"pdf",
 								"reporte_20-11-2019.pdf"
@@ -545,15 +523,15 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:5000/api/v1/archivos/prueba/pdf/reporte_20-11-2019.pdf",
+							"raw": "{{url}}/api/v1/reportes/carpeta/prueba/pdf/reporte_20-11-2019.pdf",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
-								"archivos",
+								"reportes",
+								"carpeta",
 								"prueba",
 								"pdf",
 								"reporte_20-11-2019.pdf"
@@ -587,6 +565,36 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "f80d3b8d-c708-45c4-b3f3-93c8d87b8ad9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "bf748960-5393-4880-91a6-0d533de314d1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "8532615d-0c76-48f2-83cc-62afc321a74a",
+			"key": "url",
+			"value": "http://localhost:5000",
+			"type": "string"
 		}
 	],
 	"protocolProfileBehavior": {}

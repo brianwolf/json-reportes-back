@@ -1,3 +1,4 @@
+import base64
 from enum import Enum
 from http import HTTPStatus
 from io import BytesIO
@@ -23,7 +24,10 @@ class Errores(Enum):
 @blue_print.route('', methods=['GET'])
 def obtener_todos_los_archivos(nombre_carpeta):
 
-    carpeta = carpeta_service.obtener_por_nombre(nombre_carpeta, False)
+    contenidos_tambien = request.args.get('base64') == 'true'
+
+    carpeta = carpeta_service.obtener_por_nombre(
+        nombre_carpeta, contenidos_tambien)
 
     archivos_dict = [archivo.to_dict() for archivo in carpeta.archivos]
     return jsonify(archivos_dict)
@@ -57,7 +61,14 @@ def obtener_contenido_archivo(nombre_carpeta, nombre_archivo):
 def obtener_contenido_texto_archivo(nombre_carpeta, nombre_archivo):
 
     contenido = _obtener_contenido(nombre_carpeta, nombre_archivo)
-    return {'contenido': contenido.decode('utf-8')}
+    return contenido.decode('utf-8')
+
+
+@blue_print.route('/<nombre_archivo>/base64', methods=['GET'])
+def obtener_contenido_base64_archivo(nombre_carpeta, nombre_archivo):
+
+    contenido = _obtener_contenido(nombre_carpeta, nombre_archivo)
+    return base64.b64encode(contenido)
 
 
 @blue_print.route('/<nombre_archivo>/contenido', methods=['PUT'])
