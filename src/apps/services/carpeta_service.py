@@ -1,7 +1,7 @@
 from uuid import UUID
 
 import apps.configs.variables as var
-import apps.repositories.carpeta_repository as carpeta_repository
+import apps.repositories.archivo.carpeta_repository as carpeta_repository
 import apps.services.archivo_service as archivo_service
 import apps.utils.archivos_util as archivos_util
 from apps.configs.loggers import get_logger

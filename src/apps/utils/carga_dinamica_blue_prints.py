@@ -11,7 +11,7 @@ from flask import Flask
 __version__ = '1.1.0'
 
 
-def _nombre_archivo(ruta: str):
+def _nombre_modulo(ruta: str):
     '''
     Devuelve el nombre del archivo al final de la ruta sin la extension
     '''
@@ -58,7 +58,7 @@ def registrar_blue_prints(app: Flask, directorio_rutas: str):
     rutas = _cargar_rutas_de_archivos(directorio_rutas)
 
     for ruta_archivo in rutas:
-        nombre_modulo = _nombre_archivo(ruta_archivo)
+        nombre_modulo = _nombre_modulo(ruta_archivo)
 
         spec = spec_from_file_location(nombre_modulo, ruta_archivo)
         modulo = module_from_spec(spec)

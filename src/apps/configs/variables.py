@@ -5,22 +5,30 @@ class Variable(Enum):
     VERSION = 'VERSION'
     PYTHON_HOST = 'PYTHON_HOST'
     PYTHON_PORT = 'PYTHON_PORT'
+    PYTHON_EXTENSION = 'PYTHON_EXTENSION'
     NIVEL_LOGS = 'NIVEL_LOGS'
     DIRECTORIO_LOGS = 'DIRECTORIO_LOGS'
     NOMBRE_LOG_PREDEFINIDO = 'NOMBRE_LOG_PREDEFINIDO'
     NOMBRE_LOG_REST = 'NOMBRE_LOG_REST'
     DIRECTORIO_SISTEMA_ARCHIVOS = 'DIRECTORIO_SISTEMA_ARCHIVOS'
+    DB_TIPO = 'DB_TIPO'
+    DB_SQLITE_SCRIPT = 'DB_SQLITE_SCRIPT'
+    DB_SQLITE_RUTA = 'DB_SQLITE_RUTA'
 
 
 _predefinidas = {
     'VERSION': 'local',
     'PYTHON_HOST': 'localhost',
     'PYTHON_PORT': 5000,
+    'PYTHON_EXTENSION': 'py',
     'NIVEL_LOGS': 'INFO',
     'DIRECTORIO_LOGS': 'logs/',
     'NOMBRE_LOG_PREDEFINIDO': 'app',
     'NOMBRE_LOG_REST': 'rest',
-    'DIRECTORIO_SISTEMA_ARCHIVOS': 'resources/templates'
+    'DIRECTORIO_SISTEMA_ARCHIVOS': 'resources/templates',
+    'DB_TIPO': 'sqlite',
+    'DB_SQLITE_SCRIPT': './db/script.sql',
+    'DB_SQLITE_RUTA': './db/sqlite.db'
 }
 
 _no_mostrar = []
