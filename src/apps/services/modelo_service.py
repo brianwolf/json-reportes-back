@@ -1,11 +1,11 @@
+from typing import List
 from uuid import UUID
 
 import apps.configs.variables as var
 import apps.repositories.archivo.carpeta_repository as carpeta_repository
 import apps.services.archivo_service as archivo_service
 import apps.utils.archivos_util as archivos_util
-from apps.configs.loggers import get_logger
-from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
+from apps.models.archivos import Archivo, Modelo, Reporte, TipoCreador
 from apps.models.errores import AppException
 
 
@@ -16,9 +16,10 @@ def listar_todas_las_carpetas() -> list:
     return archivos_util.listado_archivos_directorio_base()
 
 
-def crear(carpeta: Carpeta) -> UUID:
+def crear(modelo: Modelo) -> Modelo:
     '''
-    Crea un modelo en la base de datos y en el sistema de archivos
+    Crea un modelo en la base de datos y en el sistema de archivos,
+    devuelve el id del modelo y los ids de los archivos generados
     '''
     id_generada = carpeta_repository.crear(carpeta)
     try:

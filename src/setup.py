@@ -1,24 +1,38 @@
 import sqlite3
 
-from apps.configs.lector_variables import dame
-from apps.configs.variables import Variable
+from apps.configs.logger.logger import obtener_logger
+from apps.configs.variables.claves import Variable
+from apps.configs.variables.lector import dame
 
-_RUTA_ARCHIVO_BD_SQLITE = dame(Variable.DB_SQLITE_RUTA)
-_RUTA_ARCHIVO_SCRIPT = dame(Variable.DB_SQLITE_SCRIPT)
+_logger = obtener_logger('setup')
 
 
-def iniciar_db(script: str):
+def iniciar_db():
     '''
     Crea la base de datos de SQLite mediante el script
     '''
-    conn = sqlite3.connect(_RUTA_ARCHIVO_BD_SQLITE)
+
+    ruta_script = dame(Variable.DB_SQLITE_SCRIPT)
+    _logger.info(
+        f'iniciar_db() -> Cargando script SQL ubicado en {ruta_script}')
+
+    with open(ruta_script, mode='r') as script_archivo:
+        contenido_script = script_archivo.read()
+
+    ruta_db_sqlite = dame(Variable.DB_SQLITE_RUTA)
+    _logger.info(
+        f'iniciar_db() -> Conectando con la base de datos SQLite ubicado en {ruta_db_sqlite}')
+    conn = sqlite3.connect(ruta_db_sqlite)
 
     c = conn.cursor()
-    c.executescript(script)
+    c.executescript(contenido_script)
 
     conn.commit()
     conn.close()
 
+    _logger.info(
+        f'iniciar_db() -> Terminado')
 
-with open(_RUTA_ARCHIVO_SCRIPT, mode='r') as script_archivo:
-    iniciar_db(script_archivo.read())
+
+if __name__ == "__main__":
+    iniciar_db()

@@ -8,10 +8,10 @@ from os import listdir, path
 
 from flask import Flask
 
-__version__ = '1.1.0'
+__version__ = '1.2.1'
 
 
-def _nombre_modulo(ruta: str):
+def _nombre_archivo(ruta: str):
     '''
     Devuelve el nombre del archivo al final de la ruta sin la extension
     '''
@@ -44,7 +44,7 @@ def _cargar_rutas_de_archivos(ruta_base: str):
     return rutas_archivos
 
 
-def registrar_blue_prints(app: Flask, directorio_rutas: str):
+def carga_dinamica_de_bps(app: Flask, directorio_rutas: str):
     '''
     Registra los archivos dentro de `directorio_rutas` recursivamente como Blueprints para Flask,
     pera esto es necesario que se defina un atributo llamado `blue_print` en cada archivo python. \n
@@ -58,10 +58,11 @@ def registrar_blue_prints(app: Flask, directorio_rutas: str):
     rutas = _cargar_rutas_de_archivos(directorio_rutas)
 
     for ruta_archivo in rutas:
-        nombre_modulo = _nombre_modulo(ruta_archivo)
+        nombre_modulo = _nombre_archivo(ruta_archivo)
 
         spec = spec_from_file_location(nombre_modulo, ruta_archivo)
         modulo = module_from_spec(spec)
         spec.loader.exec_module(modulo)
 
-        app.register_blueprint(modulo.blue_print)
+        if modulo.blue_print:
+            app.register_blueprint(modulo.blue_print)

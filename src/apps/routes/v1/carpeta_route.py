@@ -7,7 +7,7 @@ import apps.configs.variables as var
 import apps.services.archivo_service as archivo_service
 import apps.services.carpeta_service as carpeta_service
 import apps.utils.archivos_util as archivos_util
-from apps.configs.loggers import get_logger
+from apps.configs.loggers import log
 from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
 from apps.models.errores import AppException
 

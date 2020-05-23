@@ -2,8 +2,10 @@ from datetime import date
 
 from flask.json import JSONEncoder
 
+__version__ = '1.0.0'
 
-class CustomJSONEncoder(JSONEncoder):
+
+class JSONEncoderPersonalizado(JSONEncoder):
     def default(self, obj):
         try:
             if isinstance(obj, date):

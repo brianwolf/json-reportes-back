@@ -2,8 +2,8 @@ import os
 from uuid import UUID
 
 from apps.configs.lector_variables import dame
-from apps.configs.loggers import get_logger
-from apps.configs.variables import Variable
+from apps.configs.loggers import log
+from apps.configs.variables.claves import Variable
 from apps.models.errores import AppException
 
 _DIRECTORIO_SISTEMA_ARCHIVOS = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
