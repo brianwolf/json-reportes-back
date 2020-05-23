@@ -23,7 +23,10 @@ class AppException(Exception):
     error: Exception = None
 
     def to_json(self) -> dict:
-        return {'codigo': self.codigo, 'mensaje': self.mensaje}
+        d = {'codigo': self.codigo.value, 'mensaje': self.mensaje}
+        if self.error:
+            d['error'] = str(self.error)
+        return d
 
     def respuesta_json(self) -> (dict, int):
         return jsonify(self.to_json()), HTTP_STATUS_ERROR_NEGOCIO

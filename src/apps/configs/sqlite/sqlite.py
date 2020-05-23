@@ -27,7 +27,6 @@ def select(consulta: str, parametros: Iterable = [], conexion: sqlite3.Connectio
 def insert(consulta: str, parametros: Iterable = [], conexion: sqlite3.Connection = obtener_conexion()) -> any:
     '''
     Ejecuta un insert en la conexion parametro.
-    En caso de hacer inserts o updates asegurarse de pasar commit=True.
     Devuelve el id insertado
     '''
     cursor = conexion.cursor()
@@ -37,3 +36,19 @@ def insert(consulta: str, parametros: Iterable = [], conexion: sqlite3.Connectio
     conexion.commit()
     conexion.close()
     return id
+
+
+def ejecutar(consulta: str, parametros: Iterable = [], commit: bool = False, conexion: sqlite3.Connection = obtener_conexion()) -> List[any]:
+    '''
+    Ejecuta una consulta SQL en la conexion parametro.
+    En caso de hacer inserts o updates asegurarse de pasar commit=True
+    '''
+    cursor = conexion.cursor()
+    cursor.execute(consulta, parametros)
+    resultado = cursor.fetchall()
+
+    if commit:
+        conexion.commit()
+
+    conexion.close()
+    return resultado

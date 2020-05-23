@@ -22,5 +22,3 @@ SELECT * FROM MODELOS
 resultado = sqlite.select(consulta)
 print(resultado)
 
-
-print(resultado[0]['NOMBRE'])
