@@ -4,6 +4,7 @@ from typing import List
 from apps.configs.sqlite import sqlite
 from apps.models.archivos import Archivo, Carpeta, Modelo, TipoCarpeta
 from apps.models.errores import AppException
+from apps.repositories import archivo_repository
 
 _TABLA = 'MODELOS'
 
@@ -18,6 +19,13 @@ def crear(m: Modelo) -> Modelo:
     '''
     parametros = [m.nombre, m.fecha_creacion, m.descripcion]
     m.id = sqlite.insert(consulta, parametros=parametros)
+
+    archivos_insertados = []
+    for a in m.archivos:
+        a.id_creador = m.id
+        archivos_insertados.append(archivo_repository.crear(a))
+
+    m.archivos = archivos_insertados
     return m
 
 
@@ -65,9 +73,9 @@ def buscar_por_filtros(filtros: dict = None) -> List[Modelo]:
             parametros.append(v)
 
     consulta = consulta[:-len(' AND ')]
-    r = sqlite.select(consulta, parametros=parametros)
+    resultados = sqlite.select(consulta, parametros=parametros)
 
-    return Modelo(id=r[0], nombre=r[1], fecha_creacion=r[2], descripcion=[3])
+    return [Modelo(id=r[0], nombre=r[1], fecha_creacion=r[2], descripcion=r[3]) for r in resultados]
 
 
 def borrar(id: any):
@@ -79,4 +87,3 @@ def borrar(id: any):
         WHERE ID = ?
     '''
     r = sqlite.ejecutar(consulta, parametros=[id], commit=True)
-    return Modelo(id=r[0], nombre=r[1], fecha_creacion=r[2], descripcion=[3])

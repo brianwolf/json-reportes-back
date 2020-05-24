@@ -5,16 +5,25 @@ from enum import Enum
 from typing import List
 
 
-class TipoCreador(Enum):
+class TipoCreadorEnum(Enum):
     MODELO = 'MODELO'
     REPORTE = 'REPORTE'
+
+
+@dataclass
+class TipoCreador:
+    nombre: str
+    id: int = None
+
+    def to_enum(self) -> TipoCreadorEnum:
+        return TipoCreadorEnum[self.nombre]
 
 
 @dataclass
 class Archivo:
     nombre: str
     ruta_relativa: str
-    tipo_creador: TipoCreador
+    tipo_creador: TipoCreadorEnum
     contenido: bytes = bytes('', 'utf-8')
     fecha_creacion: datetime = datetime.now()
 
