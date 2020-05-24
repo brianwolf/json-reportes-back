@@ -97,7 +97,7 @@ class Modelo:
         return {
             'nombre': self.nombre,
             'descripcion': self.descripcion,
-            'fecha_creacion': self.fecha,
+            'fecha_creacion': self.fecha_creacion,
             'archivos:': [a.to_json(contenidos_tambien) for a in self.archivos],
             'id': self.id
         }

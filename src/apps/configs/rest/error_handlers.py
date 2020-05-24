@@ -26,5 +26,5 @@ def handle_exception(e):
 
 @error_handler_bp.app_errorhandler(AppException)
 def handle_business_exception(ae: AppException):
-    _logger.warning(ae.to_dict())
+    _logger.warning(ae.to_json())
     return ae.respuesta_json()

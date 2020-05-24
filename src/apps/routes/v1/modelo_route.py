@@ -36,8 +36,9 @@ def guardar(nombre):
 
     archivos = []
     for nombre, archivo_python in request.files.to_dict().items():
-        archivos.append(Archivo(nombre, m.directorio_relativo(
-            TipoArchivo.MODELO), archivo_python.read()))
+        dir_relativo = m.directorio_relativo(TipoArchivo.MODELO)
+        archivos.append(Archivo(nombre, dir_relativo,
+                                TipoArchivo.MODELO, archivo_python.read()))
 
     m.archivos = archivos
     modelo_service.crear(m)

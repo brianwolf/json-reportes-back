@@ -9,7 +9,7 @@ def obtener_conexion() -> sqlite3.Connection:
     '''
     Obtiene la conexion con la base de datos SQLite
     '''
-    return sqlite3.connect(dame(Variable.DB_SQLITE_RUTA))
+    return sqlite3.connect(dame(Variable.DB_SQLITE_RUTA), check_same_thread=False)
 
 
 def select(consulta: str, parametros: Iterable = [], conexion: sqlite3.Connection = obtener_conexion()) -> List[any]:
@@ -20,7 +20,7 @@ def select(consulta: str, parametros: Iterable = [], conexion: sqlite3.Connectio
     cursor.execute(consulta, parametros)
     resultado = cursor.fetchall()
 
-    conexion.close()
+    cursor.close()
     return resultado
 
 
@@ -34,7 +34,7 @@ def insert(consulta: str, parametros: Iterable = [], conexion: sqlite3.Connectio
     id = cursor.lastrowid
 
     conexion.commit()
-    conexion.close()
+    cursor.close()
     return id
 
 
@@ -50,5 +50,5 @@ def ejecutar(consulta: str, parametros: Iterable = [], commit: bool = False, con
     if commit:
         conexion.commit()
 
-    conexion.close()
+    cursor.close()
     return resultado

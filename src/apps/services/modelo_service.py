@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import List
 
 import apps.utils.archivos_util as archivos_util
@@ -6,6 +7,10 @@ from apps.configs.variables.lector import dame
 from apps.models.errores import AppException
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
 from apps.repositories import archivo_repository, modelo_repository
+
+
+class Errores(Enum):
+    NOMBRE_EN_USO = 'NOMBRE_EN_USO'
 
 
 def listar_todas_los_modelos() -> List[str]:
@@ -20,6 +25,10 @@ def crear(m: Modelo) -> Modelo:
     Crea un modelo en la base de datos y en el sistema de archivos,
     devuelve el id del modelo y los ids de los archivos generados
     '''
+    if modelo_repository.buscar_por_nombre(m.nombre):
+        mensaje = f'El nombre {m.nombre} ya esta en uso'
+        raise AppException(Errores.NOMBRE_EN_USO, mensaje)
+
     m = modelo_repository.crear(m)
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
 
