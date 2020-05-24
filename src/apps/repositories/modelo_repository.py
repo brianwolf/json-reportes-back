@@ -9,6 +9,15 @@ from apps.repositories import archivo_repository
 _TABLA = 'MODELOS'
 
 
+def listado_modelos() -> List[str]:
+    '''
+    Crea un modelo con sus archivos en la base de datos
+    '''
+    consulta = f'SELECT NOMBRE FROM {_TABLA}'
+    resultado = sqlite.select(consulta, parametros=[])
+    return [r[0] for r in resultado]
+
+
 def crear(m: Modelo) -> Modelo:
     '''
     Crea un modelo con sus archivos en la base de datos

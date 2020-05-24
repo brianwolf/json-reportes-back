@@ -13,11 +13,11 @@ class Errores(Enum):
     NOMBRE_EN_USO = 'NOMBRE_EN_USO'
 
 
-def listar_todas_los_modelos() -> List[str]:
+def listado_modelos() -> List[str]:
     '''
     Devuelve una lista con los nombres de todas las modelos en la app
     '''
-    return archivos_util.listado_archivos_directorio_base()
+    return modelo_repository.listado_modelos()
 
 
 def crear(m: Modelo) -> Modelo:

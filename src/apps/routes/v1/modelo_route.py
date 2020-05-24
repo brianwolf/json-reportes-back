@@ -15,7 +15,7 @@ blue_print = Blueprint('modelos', __name__, url_prefix='/api/v1/modelos')
 @blue_print.route('', methods=['GET'])
 def listar_todas_las_carpetas():
 
-    nombres_carpetas = modelo_service.listar_todas_los_modelos()
+    nombres_carpetas = modelo_service.listado_modelos()
     return jsonify(nombres_carpetas)
 
 
