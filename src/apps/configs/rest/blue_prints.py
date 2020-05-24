@@ -64,5 +64,5 @@ def carga_dinamica_de_bps(app: Flask, directorio_rutas: str):
         modulo = module_from_spec(spec)
         spec.loader.exec_module(modulo)
 
-        if modulo.blue_print:
+        if hasattr(modulo, 'blue_print'):
             app.register_blueprint(modulo.blue_print)

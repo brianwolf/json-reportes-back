@@ -1,106 +1,100 @@
 from typing import List
-from uuid import UUID
 
-import apps.configs.variables as var
-import apps.repositories.archivo.carpeta_repository as carpeta_repository
-import apps.services.archivo_service as archivo_service
 import apps.utils.archivos_util as archivos_util
-from apps.models.archivos import Archivo, Modelo, Reporte, TipoCreador
+from apps.configs.variables.claves import Variable
+from apps.configs.variables.lector import dame
 from apps.models.errores import AppException
+from apps.models.modelos import Archivo, Modelo, TipoArchivo
+from apps.repositories import archivo_repository, modelo_repository
 
 
-def listar_todas_las_carpetas() -> list:
+def listar_todas_los_modelos() -> List[str]:
     '''
-    Devuelve una lista con los nombres de todas las carpetas en la app
+    Devuelve una lista con los nombres de todas las modelos en la app
     '''
     return archivos_util.listado_archivos_directorio_base()
 
 
-def crear(modelo: Modelo) -> Modelo:
+def crear(m: Modelo) -> Modelo:
     '''
     Crea un modelo en la base de datos y en el sistema de archivos,
     devuelve el id del modelo y los ids de los archivos generados
     '''
-    id_generada = carpeta_repository.crear(carpeta)
-    try:
-        for archivo in carpeta.archivos:
-            archivo_service.guardar_archivo(carpeta, archivo)
+    m = modelo_repository.crear(m)
+    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
 
-    except AppException as ae:
-        archivo_service.borrar_carpeta_y_archivos(carpeta.tipo, carpeta.nombre)
-        carpeta_repository.borrar(carpeta)
-        raise ae
+    for a in m.archivos:
+        directorio_absoluto = a.directorio_absoluto(dir_base)
+        archivos_util.crear(directorio_absoluto, a.nombre, a.contenido)
 
-    return id_generada
+    return m
 
 
-def actualizar(carpeta: Carpeta) -> None:
+def actualizar(m: Modelo) -> None:
     '''
-    Actualiza una carpeta en la base de datos y en el sistema de archivos
+    Actualiza una modelo en la base de datos y en el sistema de archivos
     '''
-    carpeta_vieja = obtener(carpeta.id)
+    m_viejo = obtener(m.id)
 
     archivos_a_borrar = [
-        archivo for archivo in carpeta_vieja.archivos
-        if archivo not in carpeta.archivos
+        archivo for archivo in m_viejo.archivos
+        if archivo not in m.archivos
     ]
     archivos_a_crear = [
-        archivo for archivo in carpeta.archivos
-        if archivo not in carpeta_vieja.archivos
+        archivo for archivo in m.archivos
+        if archivo not in m_viejo.archivos
     ]
 
-    carpeta_repository.actualizar(carpeta)
+    m = modelo_repository.actualizar(m)
 
-    for archivo in archivos_a_borrar:
-        archivo_service.borrar_contenido(carpeta, archivo.nombre)
+    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
+
+    for a in archivos_a_borrar:
+        directorio_absoluto = a.directorio_absoluto(dir_base)
+        archivos_util.borrar(directorio_absoluto, a.nombre)
 
     for archivo in archivos_a_crear:
-        archivo_service.guardar_archivo(carpeta, archivo)
+        directorio_absoluto = a.directorio_absoluto(dir_base)
+        archivos_util.crear(directorio_absoluto, a.nombre, a.contenido)
 
 
 def borrar_por_nombre(nombre: str):
     """
-    Borra una carpeta en la base de datos y en el sistema de archivos buscando por nombre
+    Borra una modelo en la base de datos y en el sistema de archivos buscando por nombre
     """
-    carpeta = carpeta_repository.buscar_por_nombre(nombre)
-    carpeta_repository.borrar(carpeta)
-
-    archivo_service.borrar_carpeta_y_archivos(carpeta)
+    m = modelo_repository.buscar_por_nombre(nombre)
+    modelo_repository.borrar(m.id)
 
 
-def obtener_por_nombre(nombre: str,
-                       contenidos_tambien: bool = False) -> Carpeta:
+def obtener_por_nombre(nombre: str, contenidos_tambien: bool = False) -> Modelo:
     '''
-    Obtiene una carpeta de la base de datos y del sistema de archivos
+    Obtiene una modelo de la base de datos y del sistema de archivos
     '''
-    carpeta = carpeta_repository.buscar_por_nombre(nombre)
-    carpeta.archivos = _obtener_archivos(carpeta, contenidos_tambien)
+    m = modelo_repository.buscar_por_nombre(nombre)
+    if contenidos_tambien:
+        m.archivos = [_cargar_contenido(a) for a in m.archivos]
 
-    return carpeta
+    return m
 
 
-def obtener(id: UUID, contenidos_tambien: bool = False) -> Carpeta:
+def obtener(id: int, contenidos_tambien: bool = False) -> Modelo:
     '''
-    Obtiene una carpeta de la base de datos y del sistema de archivos
+    Obtiene una modelo de la base de datos y del sistema de archivos
     '''
-    carpeta = carpeta_repository.buscar(id)
-    carpeta.archivos = _obtener_archivos(carpeta, contenidos_tambien)
+    m = modelo_repository.buscar(id)
+    if contenidos_tambien:
+        m.archivos = [_cargar_contenido(a) for a in m.archivos]
 
-    return carpeta
+    return m
 
 
-def _obtener_archivos(carpeta: Carpeta,
-                      contenidos_tambien: bool = False) -> list:
+def _cargar_contenido(a: Archivo) -> Archivo:
     '''
-    Obtiene los archivos de una carpeta
+    Obtiene los contenidos de los arhivos
     '''
-    archivos = []
-    for archivo in carpeta.archivos:
+    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
 
-        if contenidos_tambien:
-            archivo.contenido = archivo_service.obtener_contenido_por_nombre(
-                carpeta, archivo.nombre)
+    directorio_absoluto = a.directorio_absoluto(dir_base)
+    a.contenido = archivos_util.obtener(directorio_absoluto, a.nombre)
 
-        archivos.append(archivo)
-
-    return archivos
+    return a

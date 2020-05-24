@@ -1,34 +1,7 @@
 import os
-from uuid import UUID
+from typing import List
 
-from apps.configs.lector_variables import dame
-from apps.configs.loggers import log
-from apps.configs.variables.claves import Variable
-from apps.models.errores import AppException
-
-_DIRECTORIO_SISTEMA_ARCHIVOS = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-
-
-def ruta_archivo(tipo_carpeta_value: str, nombre_carpeta: str,
-                 nombre_archivo: str) -> str:
-    '''
-    Devuelve la ruta completa del archivo
-    '''
-    return os.path.join(ruta_tipo_carpeta(tipo_carpeta_value, nombre_carpeta), nombre_archivo)
-
-
-def ruta_tipo_carpeta(tipo_carpeta_value: str, nombre_carpeta: str) -> str:
-    '''
-    Devuelve la ruta completa del archivo
-    '''
-    return os.path.join(ruta_carpeta(nombre_carpeta), tipo_carpeta_value)
-
-
-def ruta_carpeta(nombre_carpeta: str) -> str:
-    '''
-    Devuelve la ruta completa del archivo
-    '''
-    return os.path.join(_DIRECTORIO_SISTEMA_ARCHIVOS, nombre_carpeta)
+__version__ = '1.0.0'
 
 
 def nombre_con_extension(nombre: str, extension: ''):
@@ -42,7 +15,7 @@ def nombre_con_extension(nombre: str, extension: ''):
     return nombre
 
 
-def guardar_archivo(directorio: str, nombre: str, contenido: bytes):
+def crear(directorio: str, nombre: str, contenido: bytes):
     '''
     Guarda un archivo en el directorio indicado, en caso de que no exista la crea
     '''
@@ -52,7 +25,7 @@ def guardar_archivo(directorio: str, nombre: str, contenido: bytes):
         archivo_python.write(contenido)
 
 
-def obtener_archivo(directorio: str, nombre: str) -> bytes:
+def obtener(directorio: str, nombre: str) -> bytes:
     '''
     Recupera el contenido de un archivo con el nombre y en el directorio indicados
     '''
@@ -62,19 +35,11 @@ def obtener_archivo(directorio: str, nombre: str) -> bytes:
     return contenido
 
 
-def listado_archivos(directorio: str) -> list:
+def listado(directorio: str) -> List[str]:
     '''
     Comando 'ls' de linux sobre el directorio
     '''
     return os.listdir(directorio)
-
-
-def listado_archivos_directorio_base() -> list:
-    '''
-    Comando 'ls' de linux sobre el directorio base del sistema de archivos
-    '''
-    crear_directorio_si_no_existe(_DIRECTORIO_SISTEMA_ARCHIVOS)
-    return os.listdir(_DIRECTORIO_SISTEMA_ARCHIVOS)
 
 
 def crear_directorio_si_no_existe(directorio: str):
@@ -85,10 +50,10 @@ def crear_directorio_si_no_existe(directorio: str):
         os.makedirs(directorio, exist_ok=True)
 
 
-def borrar_archivo(directorio: str, nombre: str):
+def borrar(directorio: str, nombre: str):
     '''
     Borra un archivo ubicada en la ruta enviada
     '''
-    ruta_completa = os.path.join(directorio, nombre)
-    if os.path.exists(ruta_completa):
-        os.remove(ruta_completa)
+    crear = os.path.join(directorio, nombre)
+    if os.path.exists(crear):
+        os.remove(crear)

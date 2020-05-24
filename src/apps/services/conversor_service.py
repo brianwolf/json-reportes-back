@@ -1,74 +1,48 @@
 import os
-import uuid
-from enum import Enum
+from uuid import uuid4
 
 import pdfkit
 from jinja2 import Template
 
-import apps.configs.variables as var
-import apps.services.archivo_service as archivo_service
 import apps.utils.archivos_util as archivos_util
-from apps.configs.loggers import log
-from apps.models.carpeta import Archivo, Carpeta, TipoCarpeta
-from apps.models.errores import AppException
-from apps.utils.archivos_util import nombre_con_extension
+from apps.configs.logger.logger import obtener_logger
+from apps.configs.variables.claves import Variable
+from apps.configs.variables.lector import dame
 
 
-class Errores(Enum):
-    ARCHIVO_NO_EXISTE = 'ARCHIVO_NO_EXISTE'
-
-
-def html_a_pdf(carpeta: Carpeta, datos: dict, nombre_html: str,
-               nombre_pdf: str) -> bytes:
+def html_a_pdf(html_jinja: str, datos: dict) -> bytes:
     '''
-    Genera un reporte en pdf aplicando los datos al modelo
-    Devuelve el contenido del archivo generado
+    Genera un reporte en pdf aplicando jinja con los datos al archivo html_jinja.
+    Devuelve el contenido del archivo generado.
     '''
-    html = carpeta.buscar_archivo(nombre_html)
-    if html is None:
-        mensaje = f'El archivo {nombre_html} no existe'
-        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
+    nombre_html_temp = f'{uuid4()}.html'
+    nombre_pdf_temp = f'{uuid4()}.pdf'
+    dir_temp = dame(Variable.DIRECTORIO_TEMP)
 
-    html_renderizado = _renderizar_archivo(html, datos, f'{uuid.uuid4()}.html')
+    contenido_html = _renderizar_archivo(html_jinja, datos)
+    archivos_util.crear(dir_temp, nombre_html_temp, contenido_html)
 
-    archivo_service.guardar_archivo(carpeta, html_renderizado)
-
-    directorio_pdf = archivos_util.ruta_tipo_carpeta(TipoCarpeta.PDF.value,
-                                                     carpeta.nombre)
-    archivos_util.crear_directorio_si_no_existe(directorio_pdf)
-
-    ruta_pdf = os.path.join(directorio_pdf, nombre_pdf)
-    ruta_html = archivos_util.ruta_archivo(carpeta.tipo.value, carpeta.nombre,
-                                           html_renderizado.nombre)
+    ruta_html = os.path(dir_temp, nombre_html_temp)
+    ruta_pdf = os.path(dir_temp, nombre_pdf_temp)
 
     pdfkit.from_file(ruta_html, ruta_pdf)
+    contenido_pdf = archivos_util.obtener(dir_temp, nombre_pdf_temp)
 
-    archivo_service.borrar_contenido(carpeta, html_renderizado.nombre)
+    archivos_util.borrar(dir_temp, nombre_pdf_temp)
+    archivos_util.borrar(dir_temp, nombre_html_temp)
 
-    return archivos_util.obtener_archivo(directorio_pdf, nombre_pdf)
+    return contenido_pdf
 
 
-def texto_a_texto(carpeta: Carpeta, datos: dict, nombre_entrada: str, nombre_salida: str) -> bytes:
+def texto_a_texto(archivo_jinja: str, datos: dict) -> bytes:
     '''
-    Genera un reporte en pdf aplicando los datos al modelo.
+    Genera un reporte aplicando jinja con los datos al archivo archivo_jinja.
     Devuelve el contenido del archivo generado
     '''
-    entrada = carpeta.buscar_archivo(nombre_entrada)
-    if entrada is None:
-        mensaje = f'El archivo {nombre_entrada} no existe'
-        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
-
-    archivo_salida = _renderizar_archivo(entrada, datos, nombre_salida)
-
-    archivo_service.guardar_archivo_generado(
-        carpeta, TipoCarpeta.MD, archivo_salida)
-
-    return archivo_salida.contenido
+    return _renderizar_archivo(archivo_jinja, datos)
 
 
-def _renderizar_archivo(archivo: Archivo, datos: dict, nombre_salida: str) -> Archivo:
+def _renderizar_archivo(contenido_jinja: str, datos: dict) -> bytes:
 
-    template_renderizado = Template(archivo.contenido_str()).render(datos)
-    contenido = bytes(template_renderizado, 'utf-8')
-
-    return Archivo(nombre_salida, contenido)
+    template_renderizado = Template(contenido_jinja).render(datos)
+    return bytes(template_renderizado, 'utf-8')

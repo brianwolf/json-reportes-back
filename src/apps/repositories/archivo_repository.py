@@ -2,8 +2,8 @@ from enum import Enum
 from typing import List
 
 from apps.configs.sqlite import sqlite
-from apps.models.archivos import Archivo, TipoCreador
 from apps.models.errores import AppException
+from apps.models.modelos import Archivo, TipoArchivo
 
 _TABLA = 'ARCHIVOS'
 
@@ -13,29 +13,28 @@ def crear(a: Archivo) -> Archivo:
     Crea un Archivo con sus archivos en la base de datos
     '''
     consulta = f'''
-        INSERT INTO {_TABLA} (NOMBRE, FECHA_CREACION, RUTA_RELATIVA, TIPO_CREADOR, ID_CREADOR)
+        INSERT INTO {_TABLA} (NOMBRE, FECHA_CREACION, RUTA_RELATIVA, TIPO, ID_MODELO)
         VALUES (?,?,?,?,?)
     '''
     parametros = [a.nombre, a.fecha_creacion,
-                  a.ruta_relativa, a.tipo_creador.value, a.id_creador]
+                  a.ruta_relativa, a.tipo.value, a.id_modelo]
 
     a.id = sqlite.insert(consulta, parametros=parametros)
     return a
 
 
-def actualizar(id: any, a: Archivo) -> Archivo:
+def actualizar(a: Archivo) -> Archivo:
     '''
     Actualiza un Archivo en la base de datos
     '''
     consulta = f'''
         UPDATE {_TABLA}
-        SET NOMBRE=?, FECHA_CREACION=?, RUTA_RELATIVA=?, TIPO_CREADOR=?, ID_CREADOR=?
+        SET NOMBRE=?, FECHA_CREACION=?, RUTA_RELATIVA=?, TIPO=?, ID_MODELO=?
         WHERE ID = ?
     '''
     parametros = [a.nombre, a.fecha_creacion,
-                  a.ruta_relativa, a.tipo_creador.value, a.id_creador, id]
+                  a.ruta_relativa, a.tipo.value, a.id_modelo, a.id]
     sqlite.ejecutar(consulta, parametros=parametros, commit=True)
-    a.id = id
     return a
 
 
@@ -50,7 +49,7 @@ def buscar(id: any) -> Archivo:
     '''
     r = sqlite.select(consulta, parametros=[id])
     a = Archivo(id=r[0], nombre=r[1], fecha_creacion=r[2],
-                ruta_relativa=r[3], tipo_creador=TipoCreador[r[4]], id_creador=r[5])
+                ruta_relativa=r[3], tipo=TipoArchivo[r[4]], id_modelo=r[5])
     return a
 
 
@@ -74,7 +73,7 @@ def buscar_por_filtros(filtros: dict = None) -> List[Archivo]:
     archivos = []
     for r in resultados:
         archivos.append(Archivo(id=r[0], nombre=r[1], fecha_creacion=r[2],
-                                ruta_relativa=r[3], tipo_creador=TipoCreador[r[4]], id_creador=r[5]))
+                                ruta_relativa=r[3], tipo=TipoArchivo[r[4]], id_modelo=r[5]))
 
     return archivos
 

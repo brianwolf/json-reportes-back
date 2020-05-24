@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify, render_template
 
-from apps.configs.lector_variables import variables_cargadas
-from apps.configs.loggers import log
+from apps.configs.logger.logger import obtener_logger
+from apps.configs.variables.lector import variables_cargadas
 
 blue_print = Blueprint('api', __name__, url_prefix='',
                        template_folder='resources/web/', static_folder='resources/web/')
 
-logger = log()
+_logger = obtener_logger()
 
 
 @blue_print.route('/variables')
@@ -16,7 +16,7 @@ def variables():
 
 @blue_print.route('/vivo')
 def vivo():
-    logger.info("VIVO")
+    _logger.info("VIVO")
     return jsonify({"estado": "vivo"})
 
 

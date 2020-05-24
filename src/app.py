@@ -1,10 +1,10 @@
 from flask import Flask
 
-from apps.configs.lector_variables import _cargar_variables_predefinidas, dame
 from apps.configs.rest.blue_prints import carga_dinamica_de_bps
 from apps.configs.rest.error_handlers import error_handler_bp
 from apps.configs.rest.json import JSONEncoderPersonalizado
 from apps.configs.variables.claves import Variable
+from apps.configs.variables.lector import dame
 
 app = Flask(__name__)
 app.register_blueprint(error_handler_bp)

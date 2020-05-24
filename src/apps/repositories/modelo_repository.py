@@ -2,8 +2,8 @@ from enum import Enum
 from typing import List
 
 from apps.configs.sqlite import sqlite
-from apps.models.archivos import Archivo, Carpeta, Modelo, TipoCarpeta
 from apps.models.errores import AppException
+from apps.models.modelos import Archivo, Modelo
 from apps.repositories import archivo_repository
 
 _TABLA = 'MODELOS'
@@ -22,14 +22,14 @@ def crear(m: Modelo) -> Modelo:
 
     archivos_insertados = []
     for a in m.archivos:
-        a.id_creador = m.id
+        a.id_modelo = m.id
         archivos_insertados.append(archivo_repository.crear(a))
 
     m.archivos = archivos_insertados
     return m
 
 
-def actualizar(id: any, m: Modelo) -> Modelo:
+def actualizar(m: Modelo) -> Modelo:
     '''
     Actualiza un modelo en la base de datos
     '''
@@ -38,10 +38,20 @@ def actualizar(id: any, m: Modelo) -> Modelo:
         SET NOMBRE=?, FECHA_CREACION=?, DESCRIPCION=?
         WHERE ID = ?
     '''
-    parametros = [m.nombre, m.fecha_creacion, m.descripcion, id]
+    parametros = [m.nombre, m.fecha_creacion, m.descripcion, m.id]
     sqlite.ejecutar(consulta, parametros=parametros, commit=True)
 
-    m.id = id
+    archivos_viejos = archivo_repository.buscar_por_filtros(
+        {'ID_MODELO': m.id})
+    for av in archivos_viejos:
+        archivo_repository.borrar(av.id)
+
+    archivos_nuevos = []
+    for a in m.archivos:
+        a.id_modelo = m.id
+        archivos_nuevos.append(archivo_repository.crear(a))
+
+    m.archivos = archivos_nuevos
     return m
 
 
@@ -55,7 +65,10 @@ def buscar(id: any) -> Modelo:
         WHERE ID = ?
     '''
     r = sqlite.select(consulta, parametros=[id])
-    return Modelo(id=r[0], nombre=r[1], fecha_creacion=r[2], descripcion=[3])
+    m = Modelo(id=r[0], nombre=r[1], fecha_creacion=r[2], descripcion=[3])
+
+    m.archivos = archivo_repository.buscar_por_filtros({'ID_MODELO': m.id})
+    return m
 
 
 def buscar_por_filtros(filtros: dict = None) -> List[Modelo]:
@@ -75,7 +88,23 @@ def buscar_por_filtros(filtros: dict = None) -> List[Modelo]:
     consulta = consulta[:-len(' AND ')]
     resultados = sqlite.select(consulta, parametros=parametros)
 
-    return [Modelo(id=r[0], nombre=r[1], fecha_creacion=r[2], descripcion=r[3]) for r in resultados]
+    modelos = [Modelo(id=r[0], nombre=r[1], fecha_creacion=r[2],
+                      descripcion=r[3]) for r in resultados]
+    for m in modelos:
+        m.archivos = archivo_repository.buscar_por_filtros(
+            {'ID_MODELO': m.id})
+    return modelos
+
+
+def buscar_por_nombre(nombre: str) -> Modelo:
+    '''
+    Busca un modelo por su nombre
+    '''
+    resultado = buscar_por_filtros({'NOMBRE': nombre})
+    if not resultado:
+        return None
+
+    return resultado[0]
 
 
 def borrar(id: any):
@@ -87,3 +116,6 @@ def borrar(id: any):
         WHERE ID = ?
     '''
     r = sqlite.ejecutar(consulta, parametros=[id], commit=True)
+
+    for a in archivo_repository.buscar_por_filtros({'ID_MODELO': id}):
+        archivo_repository.borrar(a.id)
