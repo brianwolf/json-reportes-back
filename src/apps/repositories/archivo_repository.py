@@ -8,6 +8,15 @@ from apps.models.modelos import Archivo, TipoArchivo
 _TABLA = 'ARCHIVOS'
 
 
+def listado_archivos(id_modelo: any) -> List[str]:
+    '''
+    Muestra los nombres de los archivos de ese modelo
+    '''
+    consulta = f'SELECT NOMBRE FROM {_TABLA} WHERE ID_MODELO = ?'
+    resultado = sqlite.select(consulta, parametros=[id_modelo])
+    return [r[0] for r in resultado]
+
+
 def crear(a: Archivo) -> Archivo:
     '''
     Crea un Archivo con sus archivos en la base de datos

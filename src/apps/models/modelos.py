@@ -80,6 +80,7 @@ class Modelo:
         for archivo in self.archivos:
             if nombre == archivo.nombre:
                 return archivo
+        return None
 
     def agregar_archivo(self, archivo: Archivo):
         self.archivos.append(archivo)
