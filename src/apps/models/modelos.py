@@ -14,7 +14,7 @@ class TipoArchivo(Enum):
 @dataclass
 class Archivo:
     nombre: str
-    ruta_relativa: str
+    directorio_relativo: str
     tipo: TipoArchivo
     contenido: bytes = bytes('', 'utf-8')
     fecha_creacion: datetime = datetime.now()
@@ -26,7 +26,7 @@ class Archivo:
             return False
         if self.id and value.id:
             return self.id == value.id
-        return self.nombre == value.nombre and self.ruta_relativa == value.ruta_relativa
+        return self.nombre == value.nombre and self.directorio_relativo == value.directorio_relativo
 
     def contenido_base64(self) -> str:
         if not self.contenido:
@@ -42,7 +42,7 @@ class Archivo:
         return ''
 
     def directorio_absoluto(self, ruta_base: str) -> str:
-        return path.join(ruta_base, self.ruta_relativa)
+        return path.join(ruta_base, self.directorio_relativo)
 
     def ruta_absoluta(self, ruta_base: str) -> str:
         return path.join(self.directorio_absoluto(ruta_base), self.nombre)
@@ -50,7 +50,7 @@ class Archivo:
     def to_json(self, contenidos_tambien: bool = False) -> dict:
         d = {
             'nombre': self.nombre,
-            'ruta_relativa': self.ruta_relativa,
+            'directorio_relativo': self.directorio_relativo,
             'tipo': self.tipo.value,
             'fecha_creacion': self.fecha_creacion,
             'id_modelo': self.id_modelo,

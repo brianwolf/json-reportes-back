@@ -2,8 +2,7 @@ from enum import Enum
 from typing import List
 
 import apps.utils.archivos_util as archivos_util
-from apps.configs.variables.claves import Variable
-from apps.configs.variables.lector import dame
+from apps.configs.variables.lector import Variable, dame
 from apps.models.errores import AppException
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
 from apps.repositories import archivo_repository, modelo_repository
@@ -11,6 +10,7 @@ from apps.repositories import archivo_repository, modelo_repository
 
 class Errores(Enum):
     NOMBRE_EN_USO = 'NOMBRE_EN_USO'
+    MODELO_NO_EXISTE = 'MODELO_NO_EXISTE'
 
 
 def listado_modelos() -> List[str]:
@@ -44,6 +44,9 @@ def actualizar(m: Modelo) -> None:
     Actualiza una modelo en la base de datos y en el sistema de archivos
     '''
     m_viejo = obtener(m.id)
+    if not m_viejo:
+        mensaje = f'El modelo con id {m.id} no fue encontrado'
+        raise AppException(Errores.MODELO_NO_EXISTE, mensaje)
 
     archivos_a_borrar = [
         archivo for archivo in m_viejo.archivos
@@ -64,7 +67,7 @@ def actualizar(m: Modelo) -> None:
 
     for archivo in archivos_a_crear:
         directorio_absoluto = a.directorio_absoluto(dir_base)
-        archivos_util.crear(directorio_absoluto, a.nombre, a.contenido)
+        archivos_util.crear(dir_base, a.nombre, a.contenido)
 
 
 def borrar_por_nombre(nombre: str):
@@ -72,7 +75,15 @@ def borrar_por_nombre(nombre: str):
     Borra una modelo en la base de datos y en el sistema de archivos buscando por nombre
     """
     m = modelo_repository.buscar_por_nombre(nombre)
+    if not m:
+        mensaje = f'El modelo con nombre {nombre} no fue encontrado'
+        raise AppException(Errores.MODELO_NO_EXISTE, mensaje)
+
     modelo_repository.borrar(m.id)
+
+    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
+    for a in m.archivos:
+        archivos_util.borrar(a.directorio_absoluto(dir_base), a.nombre)
 
 
 def obtener_por_nombre(nombre: str, contenidos_tambien: bool = False) -> Modelo:

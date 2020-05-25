@@ -24,7 +24,10 @@ def obtener(nombre):
 
     contenidos_tambien = request.args.get('base64') == 'true'
     modelo = modelo_service.obtener_por_nombre(nombre, contenidos_tambien)
-    return jsonify(modelo.to_json()), 200
+    if not modelo:
+        return '', 204
+
+    return jsonify(modelo.to_json(contenidos_tambien)), 200
 
 
 @blue_print.route('/<nombre>', methods=['POST'])
