@@ -2,7 +2,7 @@ from enum import Enum
 from typing import List
 
 from apps.configs.sqlite import sqlite
-from apps.models.errores import AppException
+from apps.models.errors.app import AppException
 from apps.models.modelos import Archivo, TipoArchivo
 
 _TABLA = 'ARCHIVOS'

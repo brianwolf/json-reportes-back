@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request
 from werkzeug.exceptions import HTTPException
 
 from apps.configs.logger.logger import obtener_logger
-from apps.models.errores import AppException
+from apps.models.errors.app import AppException
 
 __version__ = '1.1.0'
 

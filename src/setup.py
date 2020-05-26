@@ -1,10 +1,15 @@
 import sqlite3
+from os import path
 
 from apps.configs.logger.logger import obtener_logger
 from apps.configs.variables.claves import Variable
 from apps.configs.variables.lector import dame
 
 _logger = obtener_logger('setup')
+
+
+def db_iniciada() -> bool:
+    return path.exists(dame(Variable.DB_SQLITE_RUTA))
 
 
 def iniciar_db():

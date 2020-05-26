@@ -2,7 +2,7 @@ from enum import Enum
 from typing import List
 
 from apps.configs.variables.lector import Variable, dame
-from apps.models.errores import AppException
+from apps.models.errors.app import AppException
 from apps.models.modelos import Archivo, Modelo
 from apps.repositories import modelo_repository
 from apps.services import archivo_service

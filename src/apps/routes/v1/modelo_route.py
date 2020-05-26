@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request, send_file
 import apps.configs.variables as var
 import apps.services.modelo_service as modelo_service
 from apps.configs.logger.logger import obtener_logger
-from apps.models.errores import AppException
+from apps.models.errors.app import AppException
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
 from apps.services import reporte_service
 

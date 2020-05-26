@@ -6,7 +6,7 @@ from typing import Tuple
 
 from flask import Blueprint, jsonify, request, send_file
 
-from apps.models.errores import AppException
+from apps.models.errors.app import AppException
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
 from apps.services import archivo_service, modelo_service
 
