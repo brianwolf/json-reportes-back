@@ -1,0 +1,12 @@
+from enum import Enum
+
+
+class ArchivoErrors(Enum):
+    NOMBRE_EN_USO = 'NOMBRE_EN_USO'
+    ARCHIVO_NO_EXISTE = 'MODELO_NO_EXISTE'
+    ARCHIVO_YA_EXISTENTE = 'ARCHIVO_YA_EXISTENTE'
+
+
+class ModelosErrors(Enum):
+    NOMBRE_EN_USO = 'NOMBRE_EN_USO'
+    MODELO_NO_EXISTE = 'MODELO_NO_EXISTE'

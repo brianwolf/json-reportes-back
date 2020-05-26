@@ -3,15 +3,10 @@ from typing import List
 
 import apps.utils.archivos_util as archivos_util
 from apps.configs.variables.lector import Variable, dame
-from apps.models.errors.app import AppException
+from apps.errors.app_errors import AppException
+from apps.errors.modelos_errors import ArchivoErrors
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
 from apps.repositories import archivo_repository, modelo_repository
-
-
-class Errores(Enum):
-    NOMBRE_EN_USO = 'NOMBRE_EN_USO'
-    ARCHIVO_NO_EXISTE = 'MODELO_NO_EXISTE'
-    ARCHIVO_YA_EXISTENTE = 'ARCHIVO_YA_EXISTENTE'
 
 
 def listado_archivos(nombre_modelo: str) -> List[str]:
@@ -22,7 +17,7 @@ def listado_archivos(nombre_modelo: str) -> List[str]:
         {'NOMBRE': nombre_modelo})
     if not resultado_modelo:
         mensaje = f'El nombre modelo con nombre {nombre_modelo} no fue encontrado'
-        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
+        raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
     id_modelo = resultado_modelo[0].id
     return archivo_repository.listado_archivos(id_modelo)
@@ -34,7 +29,7 @@ def crear(a: Archivo) -> Archivo:
     '''
     if archivo_repository.buscar_por_filtros({'NOMBRE': a.nombre}):
         mensaje = f'El nombre {a.nombre} ya esta en uso'
-        raise AppException(Errores.ARCHIVO_YA_EXISTENTE, mensaje)
+        raise AppException(ArchivoErrors.ARCHIVO_YA_EXISTENTE, mensaje)
 
     a = archivo_repository.crear(a)
 
@@ -52,7 +47,7 @@ def actualizar(a: Archivo) -> Archivo:
     a_viejo = obtener(a.id)
     if not a_viejo:
         mensaje = f'El archivo con id {id} no fue encontrado'
-        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
+        raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
     archivos_util.borrar(a_viejo.directorio_absoluto(dir_base), a_viejo.nombre)
@@ -68,7 +63,7 @@ def borrar(id: Archivo):
     a = obtener(id)
     if not a:
         mensaje = f'El archivo con id {id} no fue encontrado'
-        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
+        raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
     archivo_repository.borrar(id)
 
@@ -83,7 +78,7 @@ def obtener_por_nombre(nombre_modelo: str, nombre_archivo: str, contenidos_tambi
     m = modelo_repository.buscar_por_nombre(nombre_modelo)
     if not m:
         mensaje = f'El nombre modelo con nombre {nombre_modelo} no fue encontrado'
-        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
+        raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
     a = m.buscar_archivo(nombre_archivo)
 

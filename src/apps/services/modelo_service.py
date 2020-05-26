@@ -2,15 +2,11 @@ from enum import Enum
 from typing import List
 
 from apps.configs.variables.lector import Variable, dame
-from apps.models.errors.app import AppException
+from apps.errors.app_errors import AppException
+from apps.errors.modelos_errors import ModelosErrors
 from apps.models.modelos import Archivo, Modelo
 from apps.repositories import modelo_repository
 from apps.services import archivo_service
-
-
-class Errores(Enum):
-    NOMBRE_EN_USO = 'NOMBRE_EN_USO'
-    MODELO_NO_EXISTE = 'MODELO_NO_EXISTE'
 
 
 def listado_modelos() -> List[str]:
@@ -27,7 +23,7 @@ def crear(m: Modelo) -> Modelo:
     '''
     if modelo_repository.buscar_por_nombre(m.nombre):
         mensaje = f'El nombre {m.nombre} ya esta en uso'
-        raise AppException(Errores.NOMBRE_EN_USO, mensaje)
+        raise AppException(ModelosErrors.NOMBRE_EN_USO, mensaje)
 
     m = modelo_repository.crear(m)
 
@@ -47,7 +43,7 @@ def actualizar(m: Modelo) -> Modelo:
     m_viejo = obtener(m.id)
     if not m_viejo:
         mensaje = f'El modelo con id {m.id} no fue encontrado'
-        raise AppException(Errores.MODELO_NO_EXISTE, mensaje)
+        raise AppException(ModelosErrors.MODELO_NO_EXISTE, mensaje)
 
     archivos_a_borrar = [
         archivo for archivo in m_viejo.archivos
@@ -78,7 +74,7 @@ def borrar_por_nombre(nombre: str):
     m = modelo_repository.buscar_por_nombre(nombre)
     if not m:
         mensaje = f'El modelo con nombre {nombre} no fue encontrado'
-        raise AppException(Errores.MODELO_NO_EXISTE, mensaje)
+        raise AppException(ModelosErrors.MODELO_NO_EXISTE, mensaje)
 
     modelo_repository.borrar(m.id)
 
