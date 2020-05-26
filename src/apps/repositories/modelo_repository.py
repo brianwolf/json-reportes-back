@@ -29,12 +29,6 @@ def crear(m: Modelo) -> Modelo:
     parametros = [m.nombre, m.fecha_creacion, m.descripcion]
     m.id = sqlite.insert(consulta, parametros=parametros)
 
-    archivos_insertados = []
-    for a in m.archivos:
-        a.id_modelo = m.id
-        archivos_insertados.append(archivo_repository.crear(a))
-
-    m.archivos = archivos_insertados
     return m
 
 
@@ -50,17 +44,17 @@ def actualizar(m: Modelo) -> Modelo:
     parametros = [m.nombre, m.fecha_creacion, m.descripcion, m.id]
     sqlite.ejecutar(consulta, parametros=parametros, commit=True)
 
-    archivos_viejos = archivo_repository.buscar_por_filtros(
-        {'ID_MODELO': m.id})
-    for av in archivos_viejos:
-        archivo_repository.borrar(av.id)
+    # archivos_viejos = archivo_repository.buscar_por_filtros(
+    #     {'ID_MODELO': m.id})
+    # for av in archivos_viejos:
+    #     archivo_repository.borrar(av.id)
 
-    archivos_nuevos = []
-    for a in m.archivos:
-        a.id_modelo = m.id
-        archivos_nuevos.append(archivo_repository.crear(a))
+    # archivos_nuevos = []
+    # for a in m.archivos:
+    #     a.id_modelo = m.id
+    #     archivos_nuevos.append(archivo_repository.crear(a))
 
-    m.archivos = archivos_nuevos
+    # m.archivos = archivos_nuevos
     return m
 
 

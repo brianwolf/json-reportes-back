@@ -10,7 +10,8 @@ from apps.repositories import archivo_repository, modelo_repository
 
 class Errores(Enum):
     NOMBRE_EN_USO = 'NOMBRE_EN_USO'
-    MODELO_NO_EXISTE = 'MODELO_NO_EXISTE'
+    ARCHIVO_NO_EXISTE = 'MODELO_NO_EXISTE'
+    ARCHIVO_YA_EXISTENTE = 'ARCHIVO_YA_EXISTENTE'
 
 
 def listado_archivos(nombre_modelo: str) -> List[str]:
@@ -21,76 +22,58 @@ def listado_archivos(nombre_modelo: str) -> List[str]:
         {'NOMBRE': nombre_modelo})
     if not resultado_modelo:
         mensaje = f'El nombre modelo con nombre {nombre_modelo} no fue encontrado'
-        raise AppException(Errores.MODELO_NO_EXISTE, mensaje)
+        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
 
     id_modelo = resultado_modelo[0].id
     return archivo_repository.listado_archivos(id_modelo)
 
 
-# def crear(m: Modelo) -> Modelo:
-#     '''
-#     Crea un modelo en la base de datos y en el sistema de archivos,
-#     devuelve el id del modelo y los ids de los archivos generados
-#     '''
-#     if modelo_repository.buscar_por_nombre(m.nombre):
-#         mensaje = f'El nombre {m.nombre} ya esta en uso'
-#         raise AppException(Errores.NOMBRE_EN_USO, mensaje)
+def crear(a: Archivo) -> Archivo:
+    '''
+    Crea un archivo en la base de datos y en el sistema de archivos
+    '''
+    if archivo_repository.buscar_por_filtros({'NOMBRE': a.nombre}):
+        mensaje = f'El nombre {a.nombre} ya esta en uso'
+        raise AppException(Errores.ARCHIVO_YA_EXISTENTE, mensaje)
 
-#     m = modelo_repository.crear(m)
-#     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
+    a = archivo_repository.crear(a)
 
-#     for a in m.archivos:
-#         directorio_absoluto = a.directorio_absoluto(dir_base)
-#         archivos_util.crear(directorio_absoluto, a.nombre, a.contenido)
+    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
+    directorio_absoluto = a.directorio_absoluto(dir_base)
+    archivos_util.crear(directorio_absoluto, a.nombre, a.contenido)
 
-#     return m
+    return a
 
 
-# def actualizar(m: Modelo) -> None:
-#     '''
-#     Actualiza una modelo en la base de datos y en el sistema de archivos
-#     '''
-#     m_viejo = obtener(m.id)
-#     if not m_viejo:
-#         mensaje = f'El modelo con id {m.id} no fue encontrado'
-#         raise AppException(Errores.MODELO_NO_EXISTE, mensaje)
+def actualizar(a: Archivo) -> Archivo:
+    '''
+    Actualiza un archivo en la base de datos y en el sistema de archivos
+    '''
+    a_viejo = obtener(a.id)
+    if not a_viejo:
+        mensaje = f'El archivo con id {id} no fue encontrado'
+        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
 
-#     archivos_a_borrar = [
-#         archivo for archivo in m_viejo.archivos
-#         if archivo not in m.archivos
-#     ]
-#     archivos_a_crear = [
-#         archivo for archivo in m.archivos
-#         if archivo not in m_viejo.archivos
-#     ]
+    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
+    archivos_util.borrar(a_viejo.directorio_absoluto(dir_base), a_viejo.nombre)
 
-#     m = modelo_repository.actualizar(m)
-
-#     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-
-#     for a in archivos_a_borrar:
-#         directorio_absoluto = a.directorio_absoluto(dir_base)
-#         archivos_util.borrar(directorio_absoluto, a.nombre)
-
-#     for archivo in archivos_a_crear:
-#         directorio_absoluto = a.directorio_absoluto(dir_base)
-#         archivos_util.crear(dir_base, a.nombre, a.contenido)
+    a = archivo_repository.actualizar(a)
+    archivos_util.crear(a.directorio_absoluto(dir_base), a.nombre)
 
 
-# def borrar_por_nombre(nombre: str):
-#     """
-#     Borra una modelo en la base de datos y en el sistema de archivos buscando por nombre
-#     """
-#     m = modelo_repository.buscar_por_nombre(nombre)
-#     if not m:
-#         mensaje = f'El modelo con nombre {nombre} no fue encontrado'
-#         raise AppException(Errores.MODELO_NO_EXISTE, mensaje)
+def borrar(id: Archivo):
+    """
+    Borra un archivo en la base de datos y en el sistema de archivos buscando por nombre
+    """
+    a = obtener(id)
+    if not a:
+        mensaje = f'El archivo con id {id} no fue encontrado'
+        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
 
-#     modelo_repository.borrar(m.id)
+    archivo_repository.borrar(id)
 
-#     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-#     for a in m.archivos:
-#         archivos_util.borrar(a.directorio_absoluto(dir_base), a.nombre)
+    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
+    archivos_util.borrar(a.directorio_absoluto(dir_base), a.nombre)
 
 
 def obtener_por_nombre(nombre_modelo: str, nombre_archivo: str, contenidos_tambien: bool = False) -> Archivo:
@@ -100,12 +83,12 @@ def obtener_por_nombre(nombre_modelo: str, nombre_archivo: str, contenidos_tambi
     m = modelo_repository.buscar_por_nombre(nombre_modelo)
     if not m:
         mensaje = f'El nombre modelo con nombre {nombre_modelo} no fue encontrado'
-        raise AppException(Errores.MODELO_NO_EXISTE, mensaje)
+        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
 
     a = m.buscar_archivo(nombre_archivo)
 
     if contenidos_tambien:
-        return _cargar_contenido(a)
+        a.contenido = obtener_contenido(a)
     return a
 
 
@@ -115,12 +98,12 @@ def obtener(id: int, contenidos_tambien: bool = False) -> Archivo:
     '''
     a = archivo_repository.buscar(id)
     if contenidos_tambien:
-        return _cargar_contenido(a)
+        a.contenido = obtener_contenido(a)
 
     return a
 
 
-def _cargar_contenido(a: Archivo) -> Archivo:
+def obtener_contenido(a: Archivo) -> bytes:
     '''
     Obtiene los contenidos de los arhivos
     '''
@@ -130,6 +113,18 @@ def _cargar_contenido(a: Archivo) -> Archivo:
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
 
     directorio_absoluto = a.directorio_absoluto(dir_base)
-    a.contenido = archivos_util.obtener(directorio_absoluto, a.nombre)
+    return archivos_util.obtener(directorio_absoluto, a.nombre)
 
-    return a
+
+def actualizar_contenido(a: Archivo):
+    '''
+    Actualiza el contenido de un arhivo
+    '''
+    if not a:
+        return None
+
+    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
+    directorio_absoluto = a.directorio_absoluto(dir_base)
+
+    archivos_util.borrar(directorio_absoluto, a.nombre)
+    archivos_util.crear(directorio_absoluto, a.nombre, a.contenido)

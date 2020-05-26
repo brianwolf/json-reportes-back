@@ -1,11 +1,11 @@
 from enum import Enum
 from typing import List
 
-import apps.utils.archivos_util as archivos_util
 from apps.configs.variables.lector import Variable, dame
 from apps.models.errores import AppException
-from apps.models.modelos import Archivo, Modelo, TipoArchivo
-from apps.repositories import archivo_repository, modelo_repository
+from apps.models.modelos import Archivo, Modelo
+from apps.repositories import modelo_repository
+from apps.services import archivo_service
 
 
 class Errores(Enum):
@@ -30,16 +30,17 @@ def crear(m: Modelo) -> Modelo:
         raise AppException(Errores.NOMBRE_EN_USO, mensaje)
 
     m = modelo_repository.crear(m)
-    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
 
+    archivos_insertados = []
     for a in m.archivos:
-        directorio_absoluto = a.directorio_absoluto(dir_base)
-        archivos_util.crear(directorio_absoluto, a.nombre, a.contenido)
+        a.id_modelo = m.id
+        archivos_insertados.append(archivo_service.crear(a))
 
+    m.archivos = archivos_insertados
     return m
 
 
-def actualizar(m: Modelo) -> None:
+def actualizar(m: Modelo) -> Modelo:
     '''
     Actualiza una modelo en la base de datos y en el sistema de archivos
     '''
@@ -59,15 +60,15 @@ def actualizar(m: Modelo) -> None:
 
     m = modelo_repository.actualizar(m)
 
-    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-
     for a in archivos_a_borrar:
-        directorio_absoluto = a.directorio_absoluto(dir_base)
-        archivos_util.borrar(directorio_absoluto, a.nombre)
+        archivo_service.borrar(a)
 
+    archivos_nuevos = []
     for archivo in archivos_a_crear:
-        directorio_absoluto = a.directorio_absoluto(dir_base)
-        archivos_util.crear(dir_base, a.nombre, a.contenido)
+        archivos_nuevos.append(archivo_service.crear(a))
+
+    m.archivos = archivos_nuevos
+    return m
 
 
 def borrar_por_nombre(nombre: str):
@@ -81,9 +82,8 @@ def borrar_por_nombre(nombre: str):
 
     modelo_repository.borrar(m.id)
 
-    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
     for a in m.archivos:
-        archivos_util.borrar(a.directorio_absoluto(dir_base), a.nombre)
+        archivo_service.borrar(a)
 
 
 def obtener_por_nombre(nombre: str, contenidos_tambien: bool = False) -> Modelo:
@@ -91,8 +91,10 @@ def obtener_por_nombre(nombre: str, contenidos_tambien: bool = False) -> Modelo:
     Obtiene una modelo de la base de datos y del sistema de archivos
     '''
     m = modelo_repository.buscar_por_nombre(nombre)
+
     if contenidos_tambien:
-        m.archivos = [_cargar_contenido(a) for a in m.archivos]
+        for a in m.archivos:
+            a.contenido = archivo_service.obtener_contenido(a)
 
     return m
 
@@ -102,19 +104,9 @@ def obtener(id: int, contenidos_tambien: bool = False) -> Modelo:
     Obtiene una modelo de la base de datos y del sistema de archivos
     '''
     m = modelo_repository.buscar(id)
+
     if contenidos_tambien:
-        m.archivos = [_cargar_contenido(a) for a in m.archivos]
+        for a in m.archivos:
+            a.contenido = archivo_service.obtener_contenido(a)
 
     return m
-
-
-def _cargar_contenido(a: Archivo) -> Archivo:
-    '''
-    Obtiene los contenidos de los arhivos
-    '''
-    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-
-    directorio_absoluto = a.directorio_absoluto(dir_base)
-    a.contenido = archivos_util.obtener(directorio_absoluto, a.nombre)
-
-    return a

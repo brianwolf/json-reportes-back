@@ -6,9 +6,9 @@ from typing import Tuple
 
 from flask import Blueprint, jsonify, request, send_file
 
-import apps.services.archivo_service as archivo_service
 from apps.models.errores import AppException
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
+from apps.services import archivo_service, modelo_service
 
 blue_print = Blueprint('archivos',
                        __name__,
@@ -17,21 +17,19 @@ blue_print = Blueprint('archivos',
 
 class Errores(Enum):
     ARCHIVO_NO_EXISTE = 'ARCHIVO_NO_EXISTE'
-
-
-class Errores(Enum):
+    MODELO_NO_EXISTE = 'MODELO_NO_EXISTE'
     ARCHIVO_YA_EXISTENTE = 'ARCHIVO_YA_EXISTENTE'
 
 
 @blue_print.route('', methods=['GET'])
-def listar_todas_los_archivos(nombre_modelo):
+def listar_todos_los_archivos(nombre_modelo):
 
     nombres_carpetas = archivo_service.listado_archivos(nombre_modelo)
     return jsonify(nombres_carpetas)
 
 
 @blue_print.route('/<nombre_archivo>', methods=['GET'])
-def obtener_archivo(nombre_modelo, nombre_archivo):
+def obtener(nombre_modelo, nombre_archivo):
 
     contenidos_tambien = request.args.get('base64') == 'true'
 
@@ -42,7 +40,7 @@ def obtener_archivo(nombre_modelo, nombre_archivo):
 
 
 @blue_print.route('/<nombre_archivo>/contenido', methods=['GET'])
-def obtener_contenido_archivo(nombre_modelo, nombre_archivo):
+def obtener_contenido(nombre_modelo, nombre_archivo):
 
     a = archivo_service.obtener_por_nombre(
         nombre_modelo, nombre_archivo, contenidos_tambien=True)
@@ -80,69 +78,36 @@ def obtener_contenido_base64_archivo(nombre_modelo, nombre_archivo):
     return a.contenido_base64(), 200
 
 
-# @blue_print.route('/<nombre_archivo>/contenido', methods=['PUT'])
-# def reemplazar_contenido_archivo(nombre_modelo, nombre_archivo):
+@blue_print.route('/<nombre_archivo>/contenido', methods=['PUT'])
+def actualizar_contenido(nombre_modelo, nombre_archivo):
 
-#     archivo_nuevo = Archivo(nombre_archivo, request.get_data())
+    a = archivo_service.obtener_por_nombre(nombre_modelo, nombre_archivo)
+    if not a:
+        mensaje = f'El archivo con nombre {nombre_archivo} y modelo llamado {nombre_modelo} no fue encontrado'
+        raise AppException(Errores.ARCHIVO_NO_EXISTE, mensaje)
 
-#     carpeta, _ = _obtener_carpeta_y_archivo(nombre_modelo, nombre_archivo)
-#     archivo_service.reemplazar_archivo(carpeta, archivo_nuevo)
+    a.contenido = request.data
+    archivo_service.actualizar_contenido(a)
 
-#     return ''
-
-
-# @blue_print.route('/<nombre_archivo>/contenido', methods=['POST'])
-# def nuevo_contenido_archivo(nombre_modelo, nombre_archivo):
-
-#     carpeta = carpeta_service.obtener_por_nombre(nombre_modelo, False)
-#     archivo = carpeta.buscar_archivo(nombre_archivo)
-
-#     if archivo != None:
-#         mensaje = f'El archivo con nombre {nombre_archivo}, ya existe'
-#         raise AppException(Errores.ARCHIVO_YA_EXISTENTE, mensaje)
-
-#     archivo_nuevo = Archivo(nombre_archivo, request.get_data())
-#     carpeta.agregar_archivo(archivo_nuevo)
-
-#     carpeta_service.actualizar(carpeta)
-
-#     return '', HTTPStatus.CREATED
+    return '', 200
 
 
-# @blue_print.route('/<nombre_archivo>/contenido', methods=['DELETE'])
-# def borrar_contenido_archivo(nombre_modelo, nombre_archivo):
+@blue_print.route('/<nombre_archivo>/contenido', methods=['POST'])
+def nuevo_contenido(nombre_modelo, nombre_archivo):
 
-#     carpeta, archivo = _obtener_carpeta_y_archivo(nombre_modelo,
-#                                                   nombre_archivo)
+    m = modelo_service.obtener_por_nombre(nombre_modelo)
+    if not m:
+        mensaje = f'El modelo con nombre {nombre_modelo} no fue encontrado'
+        raise AppException(Errores.MODELO_NO_EXISTE, mensaje)
+    if m.buscar_archivo(nombre_archivo):
+        mensaje = f'El nombre {nombre_modelo} ya esta en uso'
+        raise AppException(Errores.ARCHIVO_YA_EXISTENTE, mensaje)
 
-#     archivo_nuevo = Archivo(nombre_archivo, request.get_data())
-#     carpeta.borrar_archivo(archivo_nuevo)
+    a = Archivo(nombre_archivo, m.directorio_relativo(
+        TipoArchivo.MODELO), TipoArchivo.MODELO)
+    a.contenido = request.data
+    a.id_modelo = m.id
 
-#     carpeta_service.actualizar(carpeta)
+    archivo_service.crear(a)
 
-#     return ''
-
-
-# def _obtener_contenido(nombre_modelo: str, nombre_archivo: str) -> bytes:
-#     '''
-#     Obtiene el contenido del archivo
-#     '''
-#     carpeta, _ = _obtener_carpeta_y_archivo(nombre_modelo, nombre_archivo)
-
-#     return archivo_service.obtener_contenido_por_nombre(
-#         carpeta, nombre_archivo)
-
-
-# def _obtener_carpeta_y_archivo(nombre_modelo: str,
-#                                nombre_archivo: str) -> Tuple[Carpeta, Archivo]:
-#     '''
-#     Obtiene la carpeta y el archivo correspondiente
-#     '''
-#     carpeta = carpeta_service.obtener_por_nombre(nombre_modelo, False)
-#     archivo = carpeta.buscar_archivo(nombre_archivo)
-
-#     if not archivo:
-#         mensaje = f'La carpeta {nombre_modelo} no posee el archivo {nombre_archivo}'
-#         raise AppException('ARCHIVO_NO_ENCONTRADO', mensaje)
-
-#     return carpeta, archivo
+    return '', 200
