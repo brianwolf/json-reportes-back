@@ -1,0 +1,14 @@
+.gitignore
+README.md
+
+# directorio base
+./docs
+./scripts
+./postman
+./.circleci
+
+# src
+./src/env
+./src/logs
+./src/ejemplo_template
+./src/db/sqlite.db

@@ -40,12 +40,17 @@ RUN pip install -r requirements.txt
 RUN rm requirements.txt
 
 
+# RECURSOS
+COPY ./src/resources ./resources
+COPY ./src/config ./config
+COPY ./src/db ./db
+
+
 # COMPILACION
 COPY ./src/apps ./src/apps
 COPY ./src/app.py ./src
+COPY ./src/setup.py ./src
 
 RUN python -m compile -b -f -o ./dist ./src
 RUN mv -f ./dist/src/* .
-
-COPY ./src/resources ./resources
 RUN rm -fr ./src ./dist
