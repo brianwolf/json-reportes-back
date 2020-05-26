@@ -5,12 +5,12 @@ from apps.configs.sqlite import sqlite
 from apps.configs.variables.claves import Variable
 from apps.configs.variables.lector import dame
 
-_logger = obtener_logger('setup')
+_logger = obtener_logger()
 
 
 def db_iniciada() -> bool:
     try:
-        if sqlite.select('SELECT 1 FROM MODELOS'):
+        if sqlite.select('SELECT NAME FROM sqlite_master'):
             return True
     except Exception:
         return False
