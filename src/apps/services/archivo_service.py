@@ -4,7 +4,7 @@ from typing import List
 import apps.utils.archivos_util as archivos_util
 from apps.configs.variables.lector import Variable, dame
 from apps.errors.app_errors import AppException
-from apps.errors.modelos_errors import ArchivoErrors
+from apps.errors.modelos_errors import ArchivoErrors, ModelosErrors
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
 from apps.repositories import archivo_repository, modelo_repository
 
@@ -34,7 +34,7 @@ def crear(a: Archivo) -> Archivo:
     a = archivo_repository.crear(a)
 
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    archivos_util.crear(dir_base, a.uuid_guardado, a.contenido)
+    archivos_util.crear(dir_base, str(a.uuid_guardado), a.contenido)
 
     return a
 
@@ -52,10 +52,10 @@ def actualizar(a: Archivo) -> Archivo:
     archivos_util.borrar(dir_base, a_viejo.uuid_guardado)
 
     a = archivo_repository.actualizar(a)
-    archivos_util.crear(dir_base, a.uuid_guardado)
+    archivos_util.crear(dir_base, str(a.uuid_guardado))
 
 
-def borrar(id: Archivo):
+def borrar(id: any):
     """
     Borra un archivo en la base de datos y en el sistema de archivos buscando por nombre
     """
@@ -67,7 +67,7 @@ def borrar(id: Archivo):
     archivo_repository.borrar(id)
 
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    archivos_util.borrar(dir_base, a.uuid_guardado)
+    archivos_util.borrar(dir_base, str(a.uuid_guardado))
 
 
 def obtener_por_nombre(nombre_modelo: str, nombre_archivo: str, contenidos_tambien: bool = False) -> Archivo:
@@ -77,9 +77,12 @@ def obtener_por_nombre(nombre_modelo: str, nombre_archivo: str, contenidos_tambi
     m = modelo_repository.buscar_por_nombre(nombre_modelo)
     if not m:
         mensaje = f'El nombre modelo con nombre {nombre_modelo} no fue encontrado'
-        raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
+        raise AppException(ModelosErrors.MODELO_NO_EXISTE, mensaje)
 
     a = m.buscar_archivo(nombre_archivo)
+    if not a:
+        mensaje = f'El archivo con nombre {nombre_archivo} no fue encontrado'
+        raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
     if contenidos_tambien:
         a.contenido = obtener_contenido(a)
@@ -105,7 +108,7 @@ def obtener_contenido(a: Archivo) -> bytes:
         return None
 
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    return archivos_util.obtener(dir_base, a.uuid_guardado)
+    return archivos_util.obtener(dir_base, str(a.uuid_guardado))
 
 
 def actualizar_contenido(a: Archivo):
@@ -117,5 +120,5 @@ def actualizar_contenido(a: Archivo):
 
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
 
-    archivos_util.borrar(dir_base, a.uuid_guardado)
-    archivos_util.crear(dir_base, a.uuid_guardado, a.contenido)
+    archivos_util.borrar(dir_base, str(a.uuid_guardado))
+    archivos_util.crear(dir_base, str(a.uuid_guardado), a.contenido)

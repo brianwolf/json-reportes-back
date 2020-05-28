@@ -57,7 +57,7 @@ def actualizar(m: Modelo) -> Modelo:
     m = modelo_repository.actualizar(m)
 
     for a in archivos_a_borrar:
-        archivo_service.borrar(a)
+        archivo_service.borrar(a.id)
 
     archivos_nuevos = []
     for archivo in archivos_a_crear:
@@ -79,7 +79,7 @@ def borrar_por_nombre(nombre: str):
     modelo_repository.borrar(m.id)
 
     for a in m.archivos:
-        archivo_service.borrar(a)
+        archivo_service.borrar(a.id)
 
 
 def obtener_por_nombre(nombre: str, contenidos_tambien: bool = False) -> Modelo:

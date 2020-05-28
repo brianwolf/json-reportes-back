@@ -19,7 +19,7 @@ class Archivo:
     nombre: str
     tipo: TipoArchivo
     contenido: bytes = bytes('', 'utf-8')
-    uuid_guardado: UUID = uuid4()
+    uuid_guardado: UUID = field(default_factory=uuid4)
     fecha_creacion: datetime = datetime.now()
     id_modelo: int = None
     id: int = None

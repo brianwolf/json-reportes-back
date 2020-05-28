@@ -44,17 +44,6 @@ def actualizar(m: Modelo) -> Modelo:
     parametros = [m.nombre, m.fecha_creacion, m.descripcion, m.id]
     sqlite.ejecutar(consulta, parametros=parametros, commit=True)
 
-    # archivos_viejos = archivo_repository.buscar_por_filtros(
-    #     {'ID_MODELO': m.id})
-    # for av in archivos_viejos:
-    #     archivo_repository.borrar(av.id)
-
-    # archivos_nuevos = []
-    # for a in m.archivos:
-    #     a.id_modelo = m.id
-    #     archivos_nuevos.append(archivo_repository.crear(a))
-
-    # m.archivos = archivos_nuevos
     return m
 
 
@@ -68,6 +57,9 @@ def buscar(id: any) -> Modelo:
         WHERE ID = ?
     '''
     r = sqlite.select(consulta, parametros=[id])
+    if not r:
+        return None
+    r = r[0]
     m = Modelo(id=r[0], nombre=r[1], fecha_creacion=r[2], descripcion=[3])
 
     m.archivos = archivo_repository.buscar_por_filtros({'ID_MODELO': m.id})
@@ -119,6 +111,3 @@ def borrar(id: any):
         WHERE ID = ?
     '''
     r = sqlite.ejecutar(consulta, parametros=[id], commit=True)
-
-    for a in archivo_repository.buscar_por_filtros({'ID_MODELO': id}):
-        archivo_repository.borrar(a.id)

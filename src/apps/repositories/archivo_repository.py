@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import List
+from uuid import UUID
 
 from apps.configs.sqlite import sqlite
 from apps.errors.app_errors import AppException
@@ -26,7 +27,7 @@ def crear(a: Archivo) -> Archivo:
         VALUES (?,?,?,?,?)
     '''
     parametros = [a.nombre, a.fecha_creacion,
-                  a.uuid_guardado, a.tipo.value, a.id_modelo]
+                  str(a.uuid_guardado), a.tipo.value, a.id_modelo]
 
     a.id = sqlite.insert(consulta, parametros=parametros)
     return a
@@ -57,8 +58,11 @@ def buscar(id: any) -> Archivo:
         WHERE ID = ?
     '''
     r = sqlite.select(consulta, parametros=[id])
+    if not r:
+        return None
+    r = r[0]
     a = Archivo(id=r[0], nombre=r[1], fecha_creacion=r[2],
-                uuid_guardado=r[3], tipo=TipoArchivo[r[4]], id_modelo=r[5])
+                uuid_guardado=UUID(r[3]), tipo=TipoArchivo[r[4]], id_modelo=r[5])
     return a
 
 
