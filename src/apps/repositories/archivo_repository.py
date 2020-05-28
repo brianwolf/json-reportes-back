@@ -22,11 +22,11 @@ def crear(a: Archivo) -> Archivo:
     Crea un Archivo con sus archivos en la base de datos
     '''
     consulta = f'''
-        INSERT INTO {_TABLA} (NOMBRE, FECHA_CREACION, DIRECTORIO_RELATIVO, TIPO, ID_MODELO)
+        INSERT INTO {_TABLA} (NOMBRE, FECHA_CREACION, UUID_GUARDADO, TIPO, ID_MODELO)
         VALUES (?,?,?,?,?)
     '''
     parametros = [a.nombre, a.fecha_creacion,
-                  a.directorio_relativo, a.tipo.value, a.id_modelo]
+                  a.uuid_guardado, a.tipo.value, a.id_modelo]
 
     a.id = sqlite.insert(consulta, parametros=parametros)
     return a
@@ -38,11 +38,11 @@ def actualizar(a: Archivo) -> Archivo:
     '''
     consulta = f'''
         UPDATE {_TABLA}
-        SET NOMBRE=?, FECHA_CREACION=?, DIRECTORIO_RELATIVO=?, TIPO=?, ID_MODELO=?
+        SET NOMBRE=?, FECHA_CREACION=?, UUID_GUARDADO=?, TIPO=?, ID_MODELO=?
         WHERE ID = ?
     '''
     parametros = [a.nombre, a.fecha_creacion,
-                  a.directorio_relativo, a.tipo.value, a.id_modelo, a.id]
+                  a.uuid_guardado, a.tipo.value, a.id_modelo, a.id]
     sqlite.ejecutar(consulta, parametros=parametros, commit=True)
     return a
 
@@ -58,7 +58,7 @@ def buscar(id: any) -> Archivo:
     '''
     r = sqlite.select(consulta, parametros=[id])
     a = Archivo(id=r[0], nombre=r[1], fecha_creacion=r[2],
-                directorio_relativo=r[3], tipo=TipoArchivo[r[4]], id_modelo=r[5])
+                uuid_guardado=r[3], tipo=TipoArchivo[r[4]], id_modelo=r[5])
     return a
 
 
@@ -82,7 +82,7 @@ def buscar_por_filtros(filtros: dict = None) -> List[Archivo]:
     archivos = []
     for r in resultados:
         archivos.append(Archivo(id=r[0], nombre=r[1], fecha_creacion=r[2],
-                                directorio_relativo=r[3], tipo=TipoArchivo[r[4]], id_modelo=r[5]))
+                                uuid_guardado=r[3], tipo=TipoArchivo[r[4]], id_modelo=r[5]))
 
     return archivos
 

@@ -1,7 +1,5 @@
 # APP
-logs/
-resources/templates/
-db/sqlite.db
+exports/
 
 
 # IDES

@@ -4,6 +4,9 @@ from datetime import datetime
 from enum import Enum
 from os import path
 from typing import List
+from uuid import UUID, uuid4
+
+from apps.configs.variables.lector import Variable, dame
 
 
 class TipoArchivo(Enum):
@@ -14,9 +17,9 @@ class TipoArchivo(Enum):
 @dataclass
 class Archivo:
     nombre: str
-    directorio_relativo: str
     tipo: TipoArchivo
     contenido: bytes = bytes('', 'utf-8')
+    uuid_guardado: UUID = uuid4()
     fecha_creacion: datetime = datetime.now()
     id_modelo: int = None
     id: int = None
@@ -26,7 +29,7 @@ class Archivo:
             return False
         if self.id and value.id:
             return self.id == value.id
-        return self.nombre == value.nombre and self.directorio_relativo == value.directorio_relativo
+        return self.nombre == value.nombre and self.uuid_guardado == value.uuid_guardado
 
     def contenido_base64(self) -> str:
         if not self.contenido:
@@ -41,16 +44,14 @@ class Archivo:
 
         return ''
 
-    def directorio_absoluto(self, ruta_base: str) -> str:
-        return path.join(ruta_base, self.directorio_relativo)
-
-    def ruta_absoluta(self, ruta_base: str) -> str:
+    def ruta_absoluta(self) -> str:
+        ruta_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
         return path.join(self.directorio_absoluto(ruta_base), self.nombre)
 
     def to_json(self, contenidos_tambien: bool = False) -> dict:
         d = {
             'nombre': self.nombre,
-            'directorio_relativo': self.directorio_relativo,
+            'uuid_guardado': str(self.uuid_guardado),
             'tipo': self.tipo.value,
             'fecha_creacion': self.fecha_creacion,
             'id_modelo': self.id_modelo,

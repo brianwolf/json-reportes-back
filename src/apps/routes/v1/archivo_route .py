@@ -100,8 +100,7 @@ def nuevo_contenido(nombre_modelo, nombre_archivo):
         mensaje = f'El nombre {nombre_modelo} ya esta en uso'
         raise AppException(ArchivoErrors.ARCHIVO_YA_EXISTENTE, mensaje)
 
-    a = Archivo(nombre_archivo, m.directorio_relativo(
-        TipoArchivo.MODELO), TipoArchivo.MODELO)
+    a = Archivo(nombre_archivo, TipoArchivo.MODELO)
     a.contenido = request.data
     a.id_modelo = m.id
 

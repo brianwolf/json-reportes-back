@@ -35,6 +35,8 @@ def iniciar_db():
     conn = sqlite3.connect(ruta_db_sqlite)
 
     c = conn.cursor()
+    _logger.info(
+        f'iniciar_db() -> Ejecutando script en la base de datos')
     c.executescript(contenido_script)
 
     conn.commit()

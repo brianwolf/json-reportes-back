@@ -34,8 +34,7 @@ def crear(a: Archivo) -> Archivo:
     a = archivo_repository.crear(a)
 
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    directorio_absoluto = a.directorio_absoluto(dir_base)
-    archivos_util.crear(directorio_absoluto, a.nombre, a.contenido)
+    archivos_util.crear(dir_base, a.uuid_guardado, a.contenido)
 
     return a
 
@@ -50,10 +49,10 @@ def actualizar(a: Archivo) -> Archivo:
         raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    archivos_util.borrar(a_viejo.directorio_absoluto(dir_base), a_viejo.nombre)
+    archivos_util.borrar(dir_base, a_viejo.uuid_guardado)
 
     a = archivo_repository.actualizar(a)
-    archivos_util.crear(a.directorio_absoluto(dir_base), a.nombre)
+    archivos_util.crear(dir_base, a.uuid_guardado)
 
 
 def borrar(id: Archivo):
@@ -68,7 +67,7 @@ def borrar(id: Archivo):
     archivo_repository.borrar(id)
 
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    archivos_util.borrar(a.directorio_absoluto(dir_base), a.nombre)
+    archivos_util.borrar(dir_base, a.uuid_guardado)
 
 
 def obtener_por_nombre(nombre_modelo: str, nombre_archivo: str, contenidos_tambien: bool = False) -> Archivo:
@@ -106,9 +105,7 @@ def obtener_contenido(a: Archivo) -> bytes:
         return None
 
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-
-    directorio_absoluto = a.directorio_absoluto(dir_base)
-    return archivos_util.obtener(directorio_absoluto, a.nombre)
+    return archivos_util.obtener(dir_base, a.uuid_guardado)
 
 
 def actualizar_contenido(a: Archivo):
@@ -119,7 +116,6 @@ def actualizar_contenido(a: Archivo):
         return None
 
     dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    directorio_absoluto = a.directorio_absoluto(dir_base)
 
-    archivos_util.borrar(directorio_absoluto, a.nombre)
-    archivos_util.crear(directorio_absoluto, a.nombre, a.contenido)
+    archivos_util.borrar(dir_base, a.uuid_guardado)
+    archivos_util.crear(dir_base, a.uuid_guardado, a.contenido)
