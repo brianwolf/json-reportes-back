@@ -32,7 +32,8 @@ def obtener_logger(nombre: str = 'app') -> logging.Logger:
     sh.setLevel(nivel_logs)
     sh.setFormatter(formatter)
 
-    fh = logging.FileHandler(directorio_logs + f'{nombre}.log')
+    ruta_log = os.path.join(directorio_logs, f'{nombre}.log')
+    fh = logging.FileHandler(ruta_log)
     fh.setLevel(nivel_logs)
     fh.setFormatter(formatter)
     logger.addHandler(sh)

@@ -7,7 +7,7 @@ from apps.configs.variables.claves import Variable, _no_mostrar
 __version__ = '1.2.1'
 
 _variables_predefinidas = {}
-_ruta_archivo_variables_predefinidas = 'imports/config/variables_predefinidas.yml'
+_ruta_archivo_variables_predefinidas = 'imports/config/variables_predefinidas.env'
 
 
 def dame(variable: Variable) -> str:
@@ -36,14 +36,23 @@ def cargar_variables_predefinidas():
     '''
     global _variables_predefinidas
 
-    if not os.path.exists(_ruta_archivo_variables_predefinidas):
-        raise Exception(
-            f'cargar_variables_predefinidas() -> yml de configuracion {_ruta_archivo_variables_predefinidas} no encontrado')
+    with open(_ruta_archivo_variables_predefinidas, 'r') as archivo:
+        renglones_archivo = archivo.readlines()
 
-    with open(_ruta_archivo_variables_predefinidas) as params_yaml_archivo:
-        params_yaml = yaml.safe_load(params_yaml_archivo)
+    for renglon in renglones_archivo:
 
-    _variables_predefinidas = parsear_variables_de_ambiente(params_yaml)
+        if renglon.startswith('#') or renglon == '\n':
+            continue
+
+        clave, valor = renglon.split('=')
+
+        if '#' in valor:
+            valor = valor[:valor.index('#')].strip()
+
+        _variables_predefinidas[clave] = valor.replace('\n', '')
+
+    _variables_predefinidas = parsear_variables_de_ambiente(
+        _variables_predefinidas)
 
 
 cargar_variables_predefinidas()

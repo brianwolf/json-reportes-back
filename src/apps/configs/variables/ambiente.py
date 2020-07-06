@@ -1,7 +1,8 @@
 import os
 import re
 
-_REGEX_AMBIENTE = '\\$[^\\}]+(:[^\\}])*\\}'
+_REGEX_EXTRAER_VARIABLE = r'\$\{[^\}]+\:*[^\}]*\}'
+_REGEX_TIENE_VARIABLE = r'[^\$]*' + _REGEX_EXTRAER_VARIABLE + r'[^\$]*'
 
 
 def parsear_variables_de_ambiente(elemento: dict) -> dict:
@@ -29,7 +30,7 @@ def _es_variable_de_ambiente(variable: str) -> bool:
     Debuelve verdadero si la variable tiene el formato 
     de una variable de ambiente
     '''
-    return re.match(_REGEX_AMBIENTE, str(variable)) != None
+    return re.match(_REGEX_TIENE_VARIABLE, str(variable)) != None
 
 
 def _parsear_variable_de_ambiente(variable: str) -> str:
@@ -39,13 +40,19 @@ def _parsear_variable_de_ambiente(variable: str) -> str:
     if not _es_variable_de_ambiente(variable):
         return variable
 
-    variables = variable.replace(
-        '${', '').replace('}', '').split(':', 1)
+    for variables_ambientes in re.findall(_REGEX_EXTRAER_VARIABLE, variable):
 
-    var_ambiente = variables[0]
-    val_default = variables[1] if len(variables) > 1 else ''
+        var_y_default = variables_ambientes.replace(
+            '${', '').replace('}', '').split(':', 1)
 
-    return obtener_valor(var_ambiente, val_default)
+        var_ambiente = var_y_default[0]
+        val_default = var_y_default[1] if len(var_y_default) > 1 else ''
+
+        valor_final = obtener_valor(var_ambiente, val_default)
+
+        variable = variable.replace(variables_ambientes, valor_final)
+
+    return variable
 
 
 def obtener_valor(variable: str, valor_predefinido: str = '') -> str:
