@@ -19,7 +19,8 @@ blue_print = Blueprint('archivos',
 @blue_print.route('', methods=['GET'])
 def listar_todos_los_archivos(nombre_modelo):
 
-    nombres_carpetas = archivo_service.listado_archivos(nombre_modelo)
+    nombres_carpetas = archivo_service.listado_archivos(
+        nombre_modelo, TipoArchivo.MODELO)
     return jsonify(nombres_carpetas)
 
 

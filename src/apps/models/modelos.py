@@ -6,8 +6,6 @@ from os import path
 from typing import List
 from uuid import UUID, uuid4
 
-from apps.configs.variables.lector import Variable, dame
-
 
 class TipoArchivo(Enum):
     MODELO = 'MODELO'
@@ -43,10 +41,6 @@ class Archivo:
             return self.contenido.decode('utf-8')
 
         return ''
-
-    def ruta_absoluta(self) -> str:
-        ruta_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-        return path.join(self.directorio_absoluto(ruta_base), self.nombre)
 
     def to_json(self, contenidos_tambien: bool = False) -> dict:
         d = {
@@ -88,12 +82,6 @@ class Modelo:
 
     def borrar_archivo(self, archivo: Archivo):
         self.archivos.remove(archivo)
-
-    def directorio_relativo(self, tipo_archivo: TipoArchivo) -> str:
-        return path.join(self.nombre, tipo_archivo.value)
-
-    def directorio_absoluto(self, tipo_archivo: TipoArchivo, ruta_base: str) -> str:
-        return path.join(ruta_base, self.directorio_relativo(tipo_archivo))
 
     def to_json(self, contenidos_tambien: bool = False) -> dict:
         return {

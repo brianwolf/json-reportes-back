@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List
 
-import apps.utils.archivos_util as archivos_util
+import apps.services.sistema_de_archivos_service as fs
 from apps.configs.variables.lector import Variable, dame
 from apps.errors.app_errors import AppException
 from apps.errors.modelos_errors import ArchivoErrors, ModelosErrors
@@ -9,7 +9,7 @@ from apps.models.modelos import Archivo, Modelo, TipoArchivo
 from apps.repositories import archivo_repository, modelo_repository
 
 
-def listado_archivos(nombre_modelo: str) -> List[str]:
+def listado_archivos(nombre_modelo: str, tipo: TipoArchivo) -> List[str]:
     '''
     Devuelve una lista con los nombres de todos los archivos de un modelo en la app
     '''
@@ -20,7 +20,7 @@ def listado_archivos(nombre_modelo: str) -> List[str]:
         raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
     id_modelo = resultado_modelo[0].id
-    return archivo_repository.listado_archivos(id_modelo)
+    return archivo_repository.listado_archivos(id_modelo, tipo)
 
 
 def crear(a: Archivo) -> Archivo:
@@ -32,9 +32,7 @@ def crear(a: Archivo) -> Archivo:
         raise AppException(ArchivoErrors.ARCHIVO_YA_EXISTENTE, mensaje)
 
     a = archivo_repository.crear(a)
-
-    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    archivos_util.crear(dir_base, str(a.uuid_guardado), a.contenido)
+    fs.crear(a)
 
     return a
 
@@ -48,11 +46,10 @@ def actualizar(a: Archivo) -> Archivo:
         mensaje = f'El archivo con id {id} no fue encontrado'
         raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
-    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    archivos_util.borrar(dir_base, a_viejo.uuid_guardado)
+    fs.borrar(a_viejo)
 
     a = archivo_repository.actualizar(a)
-    archivos_util.crear(dir_base, str(a.uuid_guardado))
+    fs.crear(a)
 
 
 def borrar(id: any):
@@ -66,8 +63,7 @@ def borrar(id: any):
 
     archivo_repository.borrar(id)
 
-    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    archivos_util.borrar(dir_base, str(a.uuid_guardado))
+    fs.borrar(a)
 
 
 def obtener_por_nombre(nombre_modelo: str, nombre_archivo: str, contenidos_tambien: bool = False) -> Archivo:
@@ -107,8 +103,7 @@ def obtener_contenido(a: Archivo) -> bytes:
     if not a:
         return None
 
-    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-    return archivos_util.obtener(dir_base, str(a.uuid_guardado))
+    return fs.obtener(a)
 
 
 def actualizar_contenido(a: Archivo):
@@ -118,7 +113,5 @@ def actualizar_contenido(a: Archivo):
     if not a:
         return None
 
-    dir_base = dame(Variable.DIRECTORIO_SISTEMA_ARCHIVOS)
-
-    archivos_util.borrar(dir_base, str(a.uuid_guardado))
-    archivos_util.crear(dir_base, str(a.uuid_guardado), a.contenido)
+    fs.borrar(a)
+    fs.crear(a)
