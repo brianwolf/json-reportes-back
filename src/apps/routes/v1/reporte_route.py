@@ -76,6 +76,9 @@ def obtener_contenido_base64_archivo(nombre_modelo, nombre_reporte):
 @blue_print.route('/<nombre_reporte>/extension/<extension_reporte>/archivo_origen/<nombre_archivo>/extension/<extension_archivo>', methods=['POST'])
 def nuevo_contenido(nombre_modelo, nombre_reporte, extension_reporte, nombre_archivo, extension_archivo):
 
+    guardar = not request.args.get('guardar') or str(
+        request.args.get('guardar')).lower() == 'true'
+
     m = modelo_service.obtener_por_nombre(nombre_modelo)
     if not m:
         mensaje = f'El modelo con nombre {nombre_modelo} no fue encontrado'
@@ -103,7 +106,8 @@ def nuevo_contenido(nombre_modelo, nombre_reporte, extension_reporte, nombre_arc
         raise AppException(ExtencionesErrors.EXTENSION_NO_VALIDA, mensaje)
 
     r = Archivo(nombre_reporte, TipoArchivo.REPORTE)
-    r = reporte_service.crear(a, r, request.json, e_archivo, e_reporte)
+    r = reporte_service.crear(
+        a, r, request.json, e_archivo, e_reporte, guardar)
 
     return send_file(BytesIO(r.contenido),
                      mimetype='application/octet-stream',
