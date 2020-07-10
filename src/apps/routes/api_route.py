@@ -4,7 +4,7 @@ from apps.configs.logger.logger import obtener_logger
 from apps.configs.variables.lector import variables_cargadas
 
 blue_print = Blueprint('api', __name__, url_prefix='',
-                       template_folder='imports/web/', static_folder='imports/web/')
+                       template_folder='consume/static/web/', static_folder='consume/static/web/')
 
 _logger = obtener_logger()
 

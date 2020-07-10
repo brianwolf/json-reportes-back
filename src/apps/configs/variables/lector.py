@@ -7,7 +7,7 @@ from apps.configs.variables.claves import Variable, _no_mostrar
 __version__ = '1.2.1'
 
 _variables_predefinidas = {}
-_ruta_archivo_variables_predefinidas = 'imports/config/variables_predefinidas.env'
+_ruta_archivo_variables_predefinidas = 'consume/config/variables_predefinidas.env'
 
 
 def dame(variable: Variable) -> str:
