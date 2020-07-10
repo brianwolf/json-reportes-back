@@ -5,12 +5,10 @@ import pdfkit
 from jinja2 import Template
 
 import apps.utils.archivos_util as archivos_util
-from apps.configs.logger.logger import obtener_logger
-from apps.configs.variables.claves import Variable
-from apps.configs.variables.lector import dame
+from apps.configs.variables.lector import Variable, dame
 
 
-def html_a_pdf(html_jinja: str, datos: dict) -> bytes:
+def html_a_pdf(html_jinja: bytes, datos: dict) -> bytes:
     '''
     Genera un reporte en pdf aplicando jinja con los datos al archivo html_jinja.
     Devuelve el contenido del archivo generado.
@@ -34,7 +32,7 @@ def html_a_pdf(html_jinja: str, datos: dict) -> bytes:
     return contenido_pdf
 
 
-def texto_a_texto(archivo_jinja: str, datos: dict) -> bytes:
+def texto_a_texto(archivo_jinja: bytes, datos: dict) -> bytes:
     '''
     Genera un reporte aplicando jinja con los datos al archivo archivo_jinja.
     Devuelve el contenido del archivo generado
@@ -42,7 +40,7 @@ def texto_a_texto(archivo_jinja: str, datos: dict) -> bytes:
     return _renderizar_archivo(archivo_jinja, datos)
 
 
-def _renderizar_archivo(contenido_jinja: str, datos: dict) -> bytes:
-
-    template_renderizado = Template(contenido_jinja).render(datos)
+def _renderizar_archivo(contenido_jinja: bytes, datos: dict) -> bytes:
+    str_jinja = contenido_jinja.decode('utf-8')
+    template_renderizado = Template(str_jinja).render(datos)
     return bytes(template_renderizado, 'utf-8')

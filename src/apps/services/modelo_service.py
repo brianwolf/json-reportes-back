@@ -95,6 +95,13 @@ def obtener_por_nombre(nombre: str, contenidos_tambien: bool = False) -> Modelo:
     return m
 
 
+def buscar_por_filtros(filtros: dict = None) -> List[Modelo]:
+    '''
+    Busca modelos que cumplan con el filtro
+    '''
+    return modelo_repository.buscar_por_filtros(filtros)
+
+
 def obtener(id: int, contenidos_tambien: bool = False) -> Modelo:
     '''
     Obtiene una modelo de la base de datos y del sistema de archivos

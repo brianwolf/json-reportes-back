@@ -6,14 +6,15 @@ from apps.configs.variables.lector import Variable, dame
 from apps.errors.app_errors import AppException
 from apps.errors.modelos_errors import ArchivoErrors, ModelosErrors
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
-from apps.repositories import archivo_repository, modelo_repository
+from apps.repositories import archivo_repository
+from apps.services import modelo_service
 
 
 def listado_archivos(nombre_modelo: str, tipo: TipoArchivo) -> List[str]:
     '''
     Devuelve una lista con los nombres de todos los archivos de un modelo en la app
     '''
-    resultado_modelo = modelo_repository.buscar_por_filtros(
+    resultado_modelo = modelo_service.buscar_por_filtros(
         {'NOMBRE': nombre_modelo})
     if not resultado_modelo:
         mensaje = f'El nombre modelo con nombre {nombre_modelo} no fue encontrado'
@@ -70,9 +71,9 @@ def obtener_por_nombre(nombre_modelo: str, nombre_archivo: str, contenidos_tambi
     '''
     Obtiene un archivo de la base de datos y del sistema de archivos
     '''
-    m = modelo_repository.buscar_por_nombre(nombre_modelo)
+    m = modelo_service.obtener_por_nombre(nombre_modelo)
     if not m:
-        mensaje = f'El nombre modelo con nombre {nombre_modelo} no fue encontrado'
+        mensaje = f'El modelo con nombre {nombre_modelo} no fue encontrado'
         raise AppException(ModelosErrors.MODELO_NO_EXISTE, mensaje)
 
     a = m.buscar_archivo(nombre_archivo)

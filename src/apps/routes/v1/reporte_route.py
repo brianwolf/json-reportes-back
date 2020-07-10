@@ -1,119 +1,111 @@
-# from enum import Enum
-# from io import BytesIO
+import base64
+from io import BytesIO
 
-# from flask import Blueprint, request, send_file
+from flask import Blueprint, jsonify, request, send_file
 
-# import apps.services.archivo_service as archivo_service
-# import apps.services.carpeta_service as carpeta_service
-# import apps.services.conversor_service as conversor_service
-# from apps.models.carpeta import TipoCarpeta
-# from apps.errors.app_errors import AppException
-# from apps.utils.archivos_util import nombre_con_extension
+from apps.errors.app_errors import AppException
+from apps.errors.conversores_errors import ExtencionesErrors
+from apps.errors.modelos_errors import ArchivoErrors, ModelosErrors
+from apps.models.conversores import ExtensionArchivo
+from apps.models.modelos import Archivo, Modelo, TipoArchivo
+from apps.services import modelo_service, reporte_service
 
-# blue_print = Blueprint('reportes', __name__, url_prefix='/api/v1/reportes')
-
-
-# class Errores(Enum):
-#     CARPETA_NO_EXISTE = 'CARPETA_NO_EXISTE'
-#     TIPO_CARPETA_NO_VALIDO = 'TIPO_CARPETA_NO_VALIDO'
-#     BORRADO_DE_MODELO_NO_PERMITIDO = 'BORRADO_DE_MODELO_NO_PERMITIDO'
+blue_print = Blueprint('reportes',
+                       __name__,
+                       url_prefix='/api/v1/modelos/<nombre_modelo>/reportes')
 
 
-# @blue_print.route('/carpeta/<carpeta_nombre>/<tipo_carpeta_nombre>/<archivo_nombre>',
-#                   methods=['GET'])
-# def obtener_archivo(carpeta_nombre: str, tipo_carpeta_nombre: str, archivo_nombre: str):
-#     try:
-#         tipo_carpeta = TipoCarpeta.desde_str(tipo_carpeta_nombre)
+@blue_print.route('', methods=['GET'])
+def listar_todos_los_reportes(nombre_modelo):
 
-#     except Exception:
-#         mensaje = f'No se reconoce el tipo de carpeta {tipo_carpeta_nombre}'
-#         raise AppException(Errores.TIPO_CARPETA_NO_VALIDO, mensaje)
-
-#     carpeta_existe = carpeta_service.obtener_por_nombre(carpeta_nombre, False)
-#     if not carpeta_existe:
-#         mensaje = f'La carpeta {carpeta_nombre} NO existe'
-#         raise AppException(Errores.CARPETA_NO_EXISTE, mensaje)
-
-#     contenido = archivo_service.obtener_contenido_por_tipo_y_nombre(
-#         tipo_carpeta, carpeta_nombre, archivo_nombre)
-
-#     return send_file(BytesIO(contenido),
-#                      mimetype='application/octet-stream',
-#                      as_attachment=True,
-#                      attachment_filename=archivo_nombre)
+    nombres_carpetas = reporte_service.listado_archivos(
+        nombre_modelo, TipoArchivo.REPORTE)
+    return jsonify(nombres_carpetas), 200
 
 
-# @blue_print.route('/carpeta/<cnombre_archivo_entradao_carpenombre_archivo_salidao_nombre>',
-#                   methods=['DELETE'])
-# def borrar_contenido(carpeta_nombre: str, tipo_carpeta_nombre: str, archivo_nombre: str):
-#     try:
-#         tipo_carpeta = TipoCarpeta.desde_str(tipo_carpeta_nombre)
+@blue_print.route('/<nombre_reporte>', methods=['GET'])
+def obtener(nombre_modelo, nombre_reporte):
 
-#     except Exception:
-#         mensaje = f'No se reconoce el tipo de carpeta {tipo_carpeta_nombre}'
-#         raise AppException(Errores.TIPO_CARPETA_NO_VALIDO, mensaje)
+    contenidos_tambien = request.args.get('base64') == 'true'
 
-#     if tipo_carpeta == TipoCarpeta.MODELO:
-#         mensaje = f'No esta permitido el borrado manual de los archivos del tipo MODELO'
-#         raise AppException(Errores.BORRADO_DE_MODELO_NO_PERMITIDO, mensaje)
+    archivo = reporte_service.obtener_por_nombre(
+        nombre_modelo, nombre_reporte, contenidos_tambien=contenidos_tambien)
 
-#     carpeta_existe = carpeta_service.obtener_por_nombre(carpeta_nombre, False)
-#     if not carpeta_existe:
-#         mensaje = f'La carpeta {carpeta_nombre} NO existe'
-#         raise AppException(Errores.CARPETA_NO_EXISTE, mensaje)
-
-#     archivo_service.borrar_contenido_por_tipo(tipo_carpeta, carpeta_nombre,
-#                                               archivo_nombre)
-#     return ''
+    return jsonify(archivo.to_json(contenidos_tambien)), 200
 
 
-# @blue_print.route(
-#     '/carpeta/<nombre_carpeta>/html/<nombre_html>/pdf/<nombre_pdf>',
-#     methods=['POST'])
-# def html_a_pdf(nombre_carpeta, nombre_html, nombre_pdf):
+@blue_print.route('/<nombre_reporte>/contenido', methods=['GET'])
+def obtener_contenido(nombre_modelo, nombre_reporte):
 
-#     json_body = request.json
+    a = reporte_service.obtener_por_nombre(
+        nombre_modelo, nombre_reporte, contenidos_tambien=True)
+    if not a:
+        mensaje = f'El modelo con nombre {nombre_modelo} no tiene el archivo llamado {nombre_reporte}'
+        raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
-#     nombre_html = nombre_con_extension(nombre_html, 'html')
-#     nombre_pdf = nombre_con_extension(nombre_pdf, 'pdf')
-
-#     modelo = carpeta_service.obtener_por_nombre(nombre_carpeta, True)
-
-#     contenido_pdf = conversor_service.html_a_pdf(modelo, json_body,
-#                                                  nombre_html, nombre_pdf)
-
-#     guardar_pdf = request.args.get('guardar') == 'true'
-#     if not guardar_pdf:
-#         archivo_service.borrar_contenido_por_tipo(TipoCarpeta.PDF,
-#                                                   nombre_carpeta, nombre_pdf)
-
-#     return send_file(BytesIO(contenido_pdf),
-#                      mimetype='application/octet-stream',
-#                      as_attachment=True,
-#                      attachment_filename=nombre_pdf)
+    return send_file(BytesIO(a.contenido),
+                     mimetype='application/octet-stream',
+                     as_attachment=True,
+                     attachment_filename=nombre_reporte)
 
 
-# @blue_print.route(
-#     '/carpeta/<nombre_carpeta>/md/<nombre_entrada>/md/<nombre_salida>',
-#     methods=['POST'])
-# def md_a_md(nombre_carpeta, nombre_entrada, nombre_salida):
+@blue_print.route('/<nombre_reporte>/texto', methods=['GET'])
+def obtener_contenido_texto_archivo(nombre_modelo, nombre_reporte):
 
-#     json_body = request.json
+    a = reporte_service.obtener_por_nombre(
+        nombre_modelo, nombre_reporte, contenidos_tambien=True)
+    if not a:
+        mensaje = f'El modelo con nombre {nombre_modelo} no tiene el archivo llamado {nombre_reporte}'
+        raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
-#     nombre_entrada = nombre_con_extension(nombre_entrada, 'md')
-#     nombre_salida = nombre_con_extension(nombre_salida, 'md')
+    return a.contenido.decode('utf-8'), 200
 
-#     carpeta = carpeta_service.obtener_por_nombre(nombre_carpeta, True)
 
-#     contenido_resultado = conversor_service.texto_a_texto(carpeta, json_body,
-#                                                           nombre_entrada, nombre_salida)
+@blue_print.route('/<nombre_reporte>/base64', methods=['GET'])
+def obtener_contenido_base64_archivo(nombre_modelo, nombre_reporte):
 
-#     guardar_resultado = request.args.get('guardar') == 'true'
-#     if not guardar_resultado:
-#         archivo_service.borrar_contenido_por_tipo(TipoCarpeta.MD,
-#                                                   nombre_carpeta, nombre_salida)
+    a = reporte_service.obtener_por_nombre(
+        nombre_modelo, nombre_reporte, contenidos_tambien=True)
+    if not a:
+        mensaje = f'El modelo con nombre {nombre_modelo} no tiene el archivo llamado {nombre_reporte}'
+        raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
-#     return send_file(BytesIO(contenido_resultado),
-#                      mimetype='application/octet-stream',
-#                      as_attachment=True,
-#                      attachment_filename=nombre_salida)
+    return a.contenido_base64(), 200
+
+
+@blue_print.route('/<nombre_reporte>/extension/<extension_reporte>/archivo_origen/<nombre_archivo>/extension/<extension_archivo>', methods=['POST'])
+def nuevo_contenido(nombre_modelo, nombre_reporte, extension_reporte, nombre_archivo, extension_archivo):
+
+    m = modelo_service.obtener_por_nombre(nombre_modelo)
+    if not m:
+        mensaje = f'El modelo con nombre {nombre_modelo} no fue encontrado'
+        raise AppException(ModelosErrors.MODELO_NO_EXISTE, mensaje)
+
+    if m.buscar_archivo(nombre_reporte):
+        mensaje = f'El nombre {nombre_reporte} ya esta en uso'
+        raise AppException(ArchivoErrors.ARCHIVO_YA_EXISTENTE, mensaje)
+
+    a = m.buscar_archivo(nombre_archivo)
+    if not a:
+        mensaje = f'El archivo con nombre {nombre_archivo} no existe'
+        raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
+
+    try:
+        e_archivo = ExtensionArchivo[str(extension_archivo).upper()]
+    except Exception:
+        mensaje = f'La extension con nombre {extension_archivo} no es valida'
+        raise AppException(ExtencionesErrors.EXTENSION_NO_VALIDA, mensaje)
+
+    try:
+        e_reporte = ExtensionArchivo[str(extension_reporte).upper()]
+    except Exception:
+        mensaje = f'La extension con nombre {extension_reporte} no es valida'
+        raise AppException(ExtencionesErrors.EXTENSION_NO_VALIDA, mensaje)
+
+    r = Archivo(nombre_reporte, TipoArchivo.REPORTE)
+    r = reporte_service.crear(a, r, request.json, e_archivo, e_reporte)
+
+    return send_file(BytesIO(r.contenido),
+                     mimetype='application/octet-stream',
+                     as_attachment=True,
+                     attachment_filename=r.nombre)
