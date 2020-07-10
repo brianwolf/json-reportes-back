@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 from typing import List
 
@@ -60,7 +61,8 @@ def buscar(id: any) -> Modelo:
     if not r:
         return None
     r = r[0]
-    m = Modelo(id=r[0], nombre=r[1], fecha_creacion=r[2], descripcion=[3])
+    m = Modelo(id=r[0], nombre=r[1], fecha_creacion=datetime.fromisoformat(
+        r[2]), descripcion=[3])
 
     m.archivos = archivo_repository.buscar_por_filtros({'ID_MODELO': m.id})
     return m
@@ -83,8 +85,9 @@ def buscar_por_filtros(filtros: dict = None) -> List[Modelo]:
     consulta = consulta[:-len(' AND ')]
     resultados = sqlite.select(consulta, parametros=parametros)
 
-    modelos = [Modelo(id=r[0], nombre=r[1], fecha_creacion=r[2],
-                      descripcion=r[3]) for r in resultados]
+    modelos = [Modelo(id=r[0], nombre=r[1], fecha_creacion=datetime.fromisoformat(
+        r[2]),
+        descripcion=r[3]) for r in resultados]
     for m in modelos:
         m.archivos = archivo_repository.buscar_por_filtros(
             {'ID_MODELO': m.id})
