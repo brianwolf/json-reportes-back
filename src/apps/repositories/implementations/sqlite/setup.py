@@ -8,7 +8,7 @@ from apps.configs.variables.lector import dame
 _logger = obtener_logger()
 
 
-def db_iniciada() -> bool:
+def _db_iniciada() -> bool:
     try:
         if sqlite.select('SELECT NAME FROM sqlite_master'):
             return True
@@ -21,6 +21,8 @@ def iniciar_db():
     '''
     Crea la base de datos de SQLite mediante el script
     '''
+    if _db_iniciada():
+        return
 
     ruta_script = dame(Variable.DB_SQLITE_SCRIPT)
     _logger.info(

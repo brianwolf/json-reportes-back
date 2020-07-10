@@ -40,6 +40,6 @@ def obtener_directorio_relativo(a: Archivo) -> str:
     Obtiene el directorio relativo en donde esta guardado el archivo en el sistema de archivos
     '''
     dir_relativo = str(a.fecha_creacion.year)
-    dir_relativo = path.join(dir_relativo, str(a.fecha_creacion.month))
-    dir_relativo = path.join(dir_relativo, str(a.fecha_creacion.day))
+    dir_relativo = path.join(dir_relativo, f'{a.fecha_creacion.month:02}')
+    dir_relativo = path.join(dir_relativo, f'{a.fecha_creacion.day:02}')
     return dir_relativo

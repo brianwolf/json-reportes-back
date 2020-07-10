@@ -11,6 +11,7 @@ class Variable(Enum):
     DIRECTORIO_TEMP = 'DIRECTORIO_TEMP'
     DB_SQLITE_SCRIPT = 'DB_SQLITE_SCRIPT'
     DB_SQLITE_RUTA = 'DB_SQLITE_RUTA'
+    DB_TIPO = 'DB_TIPO'
 
 
 _no_mostrar = []
