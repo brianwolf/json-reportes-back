@@ -4,6 +4,7 @@ from enum import Enum
 from flask import jsonify
 
 HTTP_STATUS_ERROR_NEGOCIO = 409
+HTTP_STATUS_ERROR_DESCONOCIDO = 500
 
 
 @dataclass
@@ -30,3 +31,15 @@ class AppException(Exception):
 
     def respuesta_json(self) -> (dict, int):
         return jsonify(self.to_json()), HTTP_STATUS_ERROR_NEGOCIO
+
+
+@dataclass
+class UnknownException(Exception):
+    error: Exception
+
+    def to_json(self) -> dict:
+        d = {'causa': str(self.error)}
+        return d
+
+    def respuesta_json(self) -> (dict, int):
+        return jsonify(self.to_json()), HTTP_STATUS_ERROR_DESCONOCIDO

@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request
 from werkzeug.exceptions import HTTPException
 
 from apps.configs.logger.logger import obtener_logger
-from apps.errors.app_errors import AppException
+from apps.errors.app_errors import AppException, UnknownException
 
 __version__ = '1.1.0'
 
@@ -19,9 +19,9 @@ def handle_exception(httpe):
 
 
 @error_handler_bp.app_errorhandler(Exception)
-def handle_exception(e):
+def handle_exception(e: Exception):
     _logger.exception(e)
-    return '', HTTPStatus.INTERNAL_SERVER_ERROR
+    return UnknownException(e).respuesta_json()
 
 
 @error_handler_bp.app_errorhandler(AppException)
