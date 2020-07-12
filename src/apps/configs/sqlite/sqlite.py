@@ -1,20 +1,32 @@
+import os
 import sqlite3
-from os import path
 from typing import Iterable, List
 
 from apps.configs.variables.lector import Variable, dame
+
+
+def _crear_arbol_de_directorios(ruta_archivo_sqlite: str):
+    '''
+    Crea el arbol de directorios necesario para que sqlite cree su archivo .db
+    '''
+    if os.path.exists(ruta_archivo_sqlite):
+        return
+
+    directorio = ruta_archivo_sqlite
+    if ruta_archivo_sqlite.endswith('.db'):
+        directorio = os.path.dirname(ruta_archivo_sqlite)
+
+    os.makedirs(directorio, exist_ok=True)
 
 
 def obtener_conexion() -> sqlite3.Connection:
     '''
     Obtiene la conexion con la base de datos SQLite
     '''
-    ruta_archivo_sql = dame(Variable.DB_SQLITE_RUTA)
-    if not path.exists(ruta_archivo_sql):
-        mensaje = f'El arbol de directorios para crear el archivo {ruta_archivo_sql} no existe'
-        raise Exception(mensaje)
+    ruta_archivo_sqlite = dame(Variable.DB_SQLITE_RUTA)
+    _crear_arbol_de_directorios(ruta_archivo_sqlite)
 
-    return sqlite3.connect(ruta_archivo_sql, check_same_thread=False)
+    return sqlite3.connect(ruta_archivo_sqlite, check_same_thread=False)
 
 
 def select(consulta: str, parametros: Iterable = [], conexion: sqlite3.Connection = obtener_conexion()) -> List[any]:
