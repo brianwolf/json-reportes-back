@@ -1,5 +1,6 @@
 from typing import List
 
+from apps.errors.app_errors import AppException
 from apps.models.conversores import ExtensionArchivo
 from apps.models.modelos import Archivo, TipoArchivo
 from apps.services import archivo_service, conversor_service

@@ -22,8 +22,8 @@ def html_a_pdf(html_jinja: bytes, datos: dict) -> bytes:
     contenido_html = _renderizar_archivo(html_jinja, datos)
     archivos_util.crear(dir_temp, nombre_html_temp, contenido_html)
 
-    ruta_html = os.path(dir_temp, nombre_html_temp)
-    ruta_pdf = os.path(dir_temp, nombre_pdf_temp)
+    ruta_html = os.path.join(dir_temp, nombre_html_temp)
+    ruta_pdf = os.path.join(dir_temp, nombre_pdf_temp)
 
     pdfkit.from_file(ruta_html, ruta_pdf)
     contenido_pdf = archivos_util.obtener(dir_temp, nombre_pdf_temp)

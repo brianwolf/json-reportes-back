@@ -63,7 +63,6 @@ def borrar(id: any):
         raise AppException(ArchivoErrors.ARCHIVO_NO_EXISTE, mensaje)
 
     archivo_repository.borrar(id)
-
     fs.borrar(a)
 
 
