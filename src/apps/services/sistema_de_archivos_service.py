@@ -17,14 +17,14 @@ def borrar(a: Archivo):
     """
     Borra un archivo en el sistema de archivos
     """
-    archivos_util.borrar(obtener_directorio_absoluto(a), a.uuid_guardado)
+    archivos_util.borrar(obtener_directorio_absoluto(a), str(a.uuid_guardado))
 
 
 def obtener(a: Archivo) -> bytes:
     '''
     Obtiene un archivo de la base de datos y del sistema de archivos
     '''
-    return archivos_util.obtener(obtener_directorio_absoluto(a), a.uuid_guardado)
+    return archivos_util.obtener(obtener_directorio_absoluto(a), str(a.uuid_guardado))
 
 
 def obtener_directorio_absoluto(a: Archivo) -> str:

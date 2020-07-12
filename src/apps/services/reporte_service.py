@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import List
 
 from apps.models.conversores import ExtensionArchivo
 from apps.models.modelos import Archivo, TipoArchivo
@@ -19,7 +19,8 @@ def crear(a_origen: Archivo, a_destino: Archivo, datos: dict, e_origen: Extensio
     if not a_origen.contenido:
         a_origen.contenido = archivo_service.obtener_contenido(a_origen)
 
-    funcion_conversora = _funcion_conversora(e_origen, e_destino)
+    funcion_conversora = conversor_service.funcion_conversora(
+        e_origen, e_destino)
 
     a_destino.contenido = funcion_conversora(a_origen.contenido, datos)
     a_destino.tipo = TipoArchivo.REPORTE
@@ -67,13 +68,3 @@ def actualizar_contenido(r: Archivo):
     Actualiza el contenido de un reporte
     '''
     archivo_service.actualizar_contenido(r)
-
-
-def _funcion_conversora(e_origen: ExtensionArchivo, e_destino: ExtensionArchivo) -> Any:
-    if e_origen == ExtensionArchivo.HTML and e_destino == ExtensionArchivo.PDF:
-        return conversor_service.html_a_pdf
-
-    if e_origen == ExtensionArchivo.MD and e_destino == ExtensionArchivo.MD:
-        return conversor_service.texto_a_texto
-
-    return conversor_service.texto_a_texto

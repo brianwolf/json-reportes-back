@@ -54,6 +54,10 @@ def borrar(directorio: str, nombre: str):
     '''
     Borra un archivo ubicada en la ruta enviada
     '''
-    crear = os.path.join(directorio, nombre)
-    if os.path.exists(crear):
-        os.remove(crear)
+    ruta_archivo = os.path.join(directorio, nombre)
+    if os.path.exists(ruta_archivo):
+        os.remove(ruta_archivo)
+
+    esta_vacio = len(os.listdir(directorio)) == 0
+    if esta_vacio:
+        os.removedirs(directorio)
