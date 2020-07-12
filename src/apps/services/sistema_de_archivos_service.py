@@ -9,22 +9,21 @@ def crear(a: Archivo):
     '''
     Crea un archivo en el sistema de archivos
     '''
-    archivos_util.crear(obtener_directorio_absoluto(a),
-                        str(a.uuid_guardado), a.contenido)
+    archivos_util.crear(obtener_directorio_absoluto(a), a.nombre, a.contenido)
 
 
 def borrar(a: Archivo):
     """
     Borra un archivo en el sistema de archivos
     """
-    archivos_util.borrar(obtener_directorio_absoluto(a), str(a.uuid_guardado))
+    archivos_util.borrar(obtener_directorio_absoluto(a), a.nombre)
 
 
 def obtener(a: Archivo) -> bytes:
     '''
     Obtiene un archivo de la base de datos y del sistema de archivos
     '''
-    return archivos_util.obtener(obtener_directorio_absoluto(a), str(a.uuid_guardado))
+    return archivos_util.obtener(obtener_directorio_absoluto(a), a.nombre)
 
 
 def obtener_directorio_absoluto(a: Archivo) -> str:
@@ -39,7 +38,4 @@ def obtener_directorio_relativo(a: Archivo) -> str:
     '''
     Obtiene el directorio relativo en donde esta guardado el archivo en el sistema de archivos
     '''
-    dir_relativo = str(a.fecha_creacion.year)
-    dir_relativo = path.join(dir_relativo, f'{a.fecha_creacion.month:02}')
-    dir_relativo = path.join(dir_relativo, f'{a.fecha_creacion.day:02}')
-    return dir_relativo
+    return path.join(str(a.tipo.value).lower(), str(a.id_modelo))

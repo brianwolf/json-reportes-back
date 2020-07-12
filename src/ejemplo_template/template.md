@@ -8,5 +8,5 @@
 ### :open_file_folder: {{job.nombre}} - {{job.anio}}
 
 ### :heavy_check_mark: {{job.puesto}}
-*{{task.descripcion}}*
+*{{job.descripcion}}*
 {% endfor %}

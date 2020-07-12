@@ -5,8 +5,9 @@ from flask import Blueprint, jsonify, request, send_file
 
 from apps.errors.app_errors import AppException
 from apps.errors.conversores_errors import ExtencionesErrors
-from apps.errors.modelos_errors import ModelosErrors, ReporteErrors
-from apps.models.conversores import ExtensionArchivo
+from apps.errors.modelos_errors import (ArchivoErrors, ModelosErrors,
+                                        ReporteErrors)
+from apps.models.conversores import ExtensionArchivo, ParametrosCrearReporte
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
 from apps.services import modelo_service, reporte_service
 from apps.utils import archivos_util
@@ -116,7 +117,7 @@ def nuevo_contenido(nombre_modelo, nombre_reporte, extension_reporte, nombre_arc
 
     if m.buscar_archivo(nombre_reporte):
         mensaje = f'El nombre {nombre_reporte} ya esta en uso'
-        raise AppException(ReporteErrors.ARCHIVO_YA_EXISTENTE, mensaje)
+        raise AppException(ArchivoErrors.ARCHIVO_YA_EXISTENTE, mensaje)
 
     a = m.buscar_archivo(nombre_archivo)
     if not a:
@@ -124,8 +125,12 @@ def nuevo_contenido(nombre_modelo, nombre_reporte, extension_reporte, nombre_arc
         raise AppException(ReporteErrors.REPORTE_NO_EXISTE, mensaje)
 
     r = Archivo(nombre_reporte, TipoArchivo.REPORTE)
-    r = reporte_service.crear(
-        a, r, request.json, e_archivo, e_reporte, guardar)
+    r = reporte_service.crear(ParametrosCrearReporte(a_origen=a,
+                                                     e_origen=e_archivo,
+                                                     a_destino=r,
+                                                     e_destino=e_reporte,
+                                                     datos=request.json,
+                                                     guardar=guardar))
 
     return send_file(BytesIO(r.contenido),
                      mimetype='application/octet-stream',
