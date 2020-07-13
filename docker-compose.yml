@@ -8,7 +8,7 @@ services:
         container_name: json-reportes-back
         restart: on-failure:3
         env_file:
-            - ./config/ambiente.env
+            - ./docker/config/ambiente.env
         volumes: 
             - json-reportes-back:/usr/src/produces:rw
         ports:
