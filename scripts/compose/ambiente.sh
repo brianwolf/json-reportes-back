@@ -1,0 +1,1 @@
+COMPOSE_RUTA_ARCHIVO=./docker/docker-compose.yml

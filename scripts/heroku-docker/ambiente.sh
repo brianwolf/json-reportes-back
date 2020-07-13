@@ -12,7 +12,7 @@ export HEROKU_REGISTRY=registry.heroku.com
 export DOCKER_NAMESPACE=${DOCKER_NAMESPACE:-brianwolf94}
 
 export CIRCLE_SHA1_SHORT=${CIRCLE_SHA1:0:7}
-export DOCKER_TAG=${CIRCLE_SHA1_SHORT:-local}
+export VERSION=${CIRCLE_SHA1_SHORT:-local}
 
 
 # forma para que virtualenv no me sustituya algunas variables

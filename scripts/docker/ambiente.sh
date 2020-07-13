@@ -15,7 +15,7 @@ export DOCKER_ARCHIVO_AMBIENTE=./docker/config/ambiente.env
 export DOCKER_DOCKERFILE=./docker/Dockerfile
 
 export CIRCLE_SHA1_SHORT=${CIRCLE_SHA1:0:7}
-export DOCKER_TAG=${CIRCLE_SHA1_SHORT:-local}
+export VERSION=${CIRCLE_SHA1_SHORT:-local}
 
 export DOCKER_NETWORK=docker-red
 
