@@ -1,8 +1,8 @@
-from apps.configs.logger.logger import obtener_logger
+from apps.configs.logger.logger import logger
 from apps.configs.variables.lector import Variable, dame
 from apps.repositories.models.setup_model import ImplementationRouter, TipoDB
 
-_logger = obtener_logger()
+_logger = logger()
 
 
 _tipo_db: TipoDB = TipoDB.SQLITE

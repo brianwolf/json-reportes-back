@@ -2,13 +2,10 @@
 Herramienta que carga de formma dinamica los blueprints de flask recursivamente
 que se encuentren en un directorio
 '''
-import re
 from importlib.util import module_from_spec, spec_from_file_location
 from os import listdir, path
 
 from flask import Flask
-
-__version__ = '1.2.1'
 
 
 def _nombre_archivo(ruta: str):

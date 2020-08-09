@@ -7,7 +7,7 @@ from apps.configs.variables.claves import Variable, _no_mostrar
 __version__ = '1.2.1'
 
 _variables_predefinidas = {}
-_ruta_archivo_variables_predefinidas = 'consume/config/variables_predefinidas.env'
+_ruta_archivo_predefinidas = 'consume/config/variables_predefinidas.env'
 
 
 def dame(variable: Variable) -> str:
@@ -30,13 +30,13 @@ def variables_cargadas() -> dict:
     }
 
 
-def cargar_variables_predefinidas():
+def cargar_variables_predefinidas(ruta_archivo: str = _ruta_archivo_predefinidas):
     '''
     Carga el diccionario de variables predefinidas de un archivo .yml
     '''
     global _variables_predefinidas
 
-    with open(_ruta_archivo_variables_predefinidas, 'r') as archivo:
+    with open(ruta_archivo, 'r') as archivo:
         renglones_archivo = archivo.readlines()
 
     for renglon in renglones_archivo:

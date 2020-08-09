@@ -1,11 +1,11 @@
 import sqlite3
 
-from apps.configs.logger.logger import obtener_logger
+from apps.configs.logger.logger import logger
 from apps.configs.sqlite import sqlite
 from apps.configs.variables.claves import Variable
 from apps.configs.variables.lector import dame
 
-_logger = obtener_logger()
+_logger = logger()
 
 
 def _db_iniciada() -> bool:

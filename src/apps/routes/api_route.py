@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify, render_template
 
-from apps.configs.logger.logger import obtener_logger
+from apps.configs.logger.logger import logger
 from apps.configs.variables.lector import variables_cargadas
 
 blue_print = Blueprint('api', __name__, url_prefix='',
                        template_folder='consume/static/web/', static_folder='consume/static/web/')
 
-_logger = obtener_logger()
+_logger = logger()
 
 
 @blue_print.route('/variables')
