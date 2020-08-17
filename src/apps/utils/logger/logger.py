@@ -1,43 +1,30 @@
 '''
-Crea logs para la aplicacion
+Logger
+-------
+v2.0.0
+
+Crea logs de la aplicacion
 '''
 import logging
-import os
 
-from apps.utils.logger.init import _directorio_logs, _nivel_logs
+from apps.utils.logger.src.archivo import crear_log
+from apps.utils.logger.src.config import (_DIRECTORIO_LOGS, _LOGGERS,
+                                          _NIVEL_LOGS)
 
-_loggers = {}
+
+def iniciar(directorio: str, nivel: str):
+    '''
+    Configura el logger para el proyecto
+    '''
+    _DIRECTORIO_LOGS = directorio
+    _NIVEL_LOGS = nivel
 
 
 def log(nombre: str = 'app') -> logging.Logger:
     '''
     Devuelve un objeto logger por un nombre, en caso de que no exista lo crea
     '''
-    global _loggers
+    if nombre not in _LOGGERS:
+        _LOGGERS[nombre] = crear_log(nombre)
 
-    if nombre in _loggers:
-        return _loggers[nombre]
-
-    if not os.path.exists(_directorio_logs):
-        os.makedirs(_directorio_logs, exist_ok=True)
-
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s')
-
-    sh = logging.StreamHandler()
-    sh.setLevel(_nivel_logs)
-    sh.setFormatter(formatter)
-
-    ruta_log = os.path.join(_directorio_logs, f'{nombre}.log')
-    fh = logging.FileHandler(ruta_log)
-    fh.setLevel(_nivel_logs)
-    fh.setFormatter(formatter)
-
-    logger = logging.getLogger(nombre)
-    logger.setLevel(_nivel_logs)
-    logger.addHandler(sh)
-    logger.addHandler(fh)
-
-    _loggers[nombre] = logger
-
-    return logger
+    return _LOGGERS[nombre]
