@@ -1,7 +1,12 @@
 from enum import Enum
+from typing import List
+
+ruta_archivo: str = 'consume/config/variables_predefinidas.env'
+
+no_mostrar: List[str] = ['NIVEL_LOGS']
 
 
-class Variable(Enum):
+class Variables(Enum):
     VERSION = 'VERSION'
     PYTHON_HOST = 'PYTHON_HOST'
     PYTHON_PORT = 'PYTHON_PORT'
@@ -12,6 +17,3 @@ class Variable(Enum):
     DB_SQLITE_SCRIPT = 'DB_SQLITE_SCRIPT'
     DB_SQLITE_RUTA = 'DB_SQLITE_RUTA'
     DB_TIPO = 'DB_TIPO'
-
-
-_no_mostrar = []

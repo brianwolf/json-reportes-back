@@ -4,20 +4,9 @@ Crea logs para la aplicacion
 import logging
 import os
 
+from apps.utils.logger.init import _directorio_logs, _nivel_logs
+
 _loggers = {}
-
-_directorio_logs = 'produce/logs'
-_nivel_logs = 'INFO'
-
-
-def config(directorio: str, nivel: str):
-    '''
-    Configura el logger para el proyecto
-    '''
-    global _directorio_logs, nivel_logs
-
-    _directorio_logs = directorio
-    _nivel_logs = nivel
 
 
 def log(nombre: str = 'app') -> logging.Logger:
