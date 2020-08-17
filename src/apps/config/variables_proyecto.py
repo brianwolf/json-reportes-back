@@ -6,7 +6,7 @@ ruta_archivo: str = 'consume/config/variables_predefinidas.env'
 no_mostrar: List[str] = ['NIVEL_LOGS']
 
 
-class Variables(Enum):
+class Variable(Enum):
     VERSION = 'VERSION'
     PYTHON_HOST = 'PYTHON_HOST'
     PYTHON_PORT = 'PYTHON_PORT'

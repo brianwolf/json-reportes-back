@@ -30,7 +30,7 @@ def iniciar(modulos: List[Any]):
         nuevas_variables = crear_diccionario_de_variables(clase.ruta_archivo)
         _VARIABLES_PREDEFINIDAS.update(nuevas_variables)
 
-        _LISTA_ENUMS.extend(clase.Variables)
+        _LISTA_ENUMS.extend(clase.Variable)
         _NO_MOSTRAR.extend(clase.no_mostrar)
 
 
