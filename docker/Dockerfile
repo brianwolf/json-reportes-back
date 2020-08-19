@@ -2,7 +2,7 @@ FROM python:3.8.3-slim
 
 ARG ARG_VERSION=local
 
-WORKDIR /usr/src/
+WORKDIR /lobezzzno
 
 
 # VARIABLES PREDEFINIDAS
@@ -43,9 +43,10 @@ COPY ./src/consume ./consume
 
 
 # COMPILACION
-COPY ./src/apps ./src/apps
-COPY ./src/app.py ./src
+COPY ./src/src ./a_pre_compilar/src
+COPY ./src/app.py ./a_pre_compilar
 
-RUN python -m compile -b -f -o ./dist ./src
-RUN mv -f ./dist/src/* .
-RUN rm -fr ./src ./dist
+
+RUN python -m compile -b -f -o ./dist ./a_pre_compilar
+RUN mv -f ./dist/a_pre_compilar/* .
+RUN rm -fr ./a_pre_compilar ./dist
