@@ -1,7 +1,7 @@
 from os import path
 
 import apps.utils.archivos_util as archivos_util
-from apps.config.variables import Variable
+from apps.configs.variables import Variable
 from apps.utils.variables.variables import dame
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
 

@@ -2,7 +2,7 @@ from enum import Enum
 from typing import List
 
 import apps.services.sistema_de_archivos_service as fs
-from apps.config.variables import Variable
+from apps.configs.variables import Variable
 from apps.errors.modelos_errors import ArchivoErrors, ModelosErrors
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
 from apps.repositories import archivo_repository

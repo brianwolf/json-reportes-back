@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List
 
-from apps.config.variables import Variable
+from apps.configs.variables import Variable
 from apps.utils.variables.variables import dame
 from apps.utils.excepcion.excepcion import AppException
 from apps.errors.modelos_errors import ModelosErrors

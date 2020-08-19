@@ -1,14 +1,13 @@
-import sqlite3
-
-from apps.configs.logger.logger import logger
+from apps.configs.variables import Variable
+from apps.utils.logger.logger import log
 from apps.utils.sqlite import sqlite
-from apps.configs.variables.claves import Variable
-from apps.configs.variables.lector import dame
-
-_logger = logger()
+from apps.utils.variables.variables import dame
 
 
-def _db_iniciada() -> bool:
+def _db_ya_fue_creada() -> bool:
+    '''
+    Hace una consulta basica para saber si la base de datos ya fue creada anteriormente
+    '''
     try:
         if sqlite.select('SELECT NAME FROM sqlite_master'):
             return True
@@ -17,35 +16,35 @@ def _db_iniciada() -> bool:
     return False
 
 
+def _crear_db_por_primera_vez():
+    '''
+    Crea la base de datos por primera vez ejecutando un script que crea las tablas requeridas
+    '''
+    ruta_script = dame(Variable.DB_SQLITE_SCRIPT)
+    log().info(
+        f'iniciar_db() -> Ejecutando script SQL ubicado en {ruta_script}')
+
+    sqlite.ejecutar_script(ruta_script, True)
+
+    log().info(
+        f'iniciar_db() -> Terminado')
+
+
 def iniciar_db():
     '''
-    Crea la base de datos de SQLite mediante el script
+    Crea la base de datos de SQLite
     '''
-    if _db_iniciada():
-        return
-
-    ruta_script = dame(Variable.DB_SQLITE_SCRIPT)
-    _logger.info(
-        f'iniciar_db() -> Cargando script SQL ubicado en {ruta_script}')
-
-    with open(ruta_script, mode='r') as script_archivo:
-        contenido_script = script_archivo.read()
-
     ruta_db_sqlite = dame(Variable.DB_SQLITE_RUTA)
-    _logger.info(
-        f'iniciar_db() -> Conectando con la base de datos SQLite ubicado en {ruta_db_sqlite}')
-    conn = sqlite3.connect(ruta_db_sqlite)
 
-    c = conn.cursor()
-    _logger.info(
-        f'iniciar_db() -> Ejecutando script en la base de datos')
-    c.executescript(contenido_script)
+    sqlite.iniciar(ruta_db_sqlite)
+    log().info(
+        f'iniciar_db() -> Conectando con la base de datos SQLite ubicada en {ruta_db_sqlite}')
 
-    conn.commit()
-    conn.close()
+    from apps.utils.sqlite.src.config import _RUTA_DB_PREDEFINIDA
+    log().info(_RUTA_DB_PREDEFINIDA)
 
-    _logger.info(
-        f'iniciar_db() -> Terminado')
+    if not _db_ya_fue_creada():
+        _crear_db_por_primera_vez()
 
 
 if __name__ == "__main__":

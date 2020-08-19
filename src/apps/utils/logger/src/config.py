@@ -1,4 +1,4 @@
-_LOGGERS = {}
+LOGGERS = {}
 
-_DIRECTORIO_LOGS = 'produce/logs'
-_NIVEL_LOGS = 'INFO'
+DIRECTORIO_LOGS = 'logs'
+NIVEL_LOGS = 'INFO'

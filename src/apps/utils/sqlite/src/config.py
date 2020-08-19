@@ -1,1 +1,1 @@
-_RUTA_DB = 'db/sqlite.db'
+RUTA_DB_PREDEFINIDA: 'db/sqlite.db'

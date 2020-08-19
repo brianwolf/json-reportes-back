@@ -1,25 +1,22 @@
-from apps.repositories.models.setup_model import ImplementationRouter, TipoDB
-
-_tipo_db: TipoDB = TipoDB.SQLITE
-_router: ImplementationRouter = ImplementationRouter()
+from apps.repositories.models.setup_model import TipoDB, tipo_db_usado
+from apps.utils.logger.logger import log
 
 
-def _loggear_tipo_db_usado(tipo_db: TipoDB):
-    _logger.info(f'Base de datos en uso -> {tipo_db.value}')
+def _iniciar_sqlite():
+    from apps.repositories.implementations.sqlite import setup
+    setup.iniciar_db()
+
+
+def _iniciar_mongodb():
+    pass
 
 
 def iniciar_db():
-    global _tipo_db, _router
-    _tipo_db = TipoDB[dame(Variable.DB_TIPO).upper()]
-    _loggear_tipo_db_usado(_tipo_db)
 
-    if _tipo_db == TipoDB.MONGODB:
-        pass
+    log().info(f'Base de datos en uso -> {tipo_db_usado()}')
 
-    if _tipo_db == TipoDB.SQLITE:
-        from apps.repositories.implementations.sqlite import archivo_repository, modelo_repository, setup
+    if tipo_db_usado() == TipoDB.MONGODB:
+        _iniciar_mongodb()
+        return
 
-    _router.archivo_repository = archivo_repository
-    _router.modelo_repository = modelo_repository
-
-    setup.iniciar_db()
+    _iniciar_sqlite()

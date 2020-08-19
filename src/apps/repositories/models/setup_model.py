@@ -1,6 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
-from typing import Any
+
+from apps.configs.variables import Variable
+from apps.utils.variables.variables import dame
 
 
 class TipoDB(Enum):
@@ -8,7 +9,8 @@ class TipoDB(Enum):
     MONGODB = 'MONGODB'
 
 
-@dataclass
-class ImplementationRouter:
-    archivo_repository: Any = None
-    modelo_repository: Any = None
+def tipo_db_usado() -> TipoDB:
+    '''
+    Devuelve el tipo de la base de datos usado
+    '''
+    return TipoDB[dame(Variable.DB_TIPO).upper()]

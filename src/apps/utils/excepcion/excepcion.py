@@ -10,8 +10,7 @@ from enum import Enum
 
 from flask import jsonify
 
-from apps.utils.excepcion.src.config import (_HTTP_STATUS_ERROR_DESCONOCIDO,
-                                             _HTTP_STATUS_ERROR_NEGOCIO)
+from apps.utils.excepcion.src import config
 
 
 @dataclass
@@ -37,7 +36,7 @@ class AppException(Exception):
         return d
 
     def respuesta_json(self) -> (dict, int):
-        return jsonify(self.to_json()), _HTTP_STATUS_ERROR_NEGOCIO
+        return jsonify(self.to_json()), config.HTTP_STATUS_ERROR_NEGOCIO
 
 
 @dataclass
@@ -49,4 +48,4 @@ class UnknownException(Exception):
         return d
 
     def respuesta_json(self) -> (dict, int):
-        return jsonify(self.to_json()), _HTTP_STATUS_ERROR_DESCONOCIDO
+        return jsonify(self.to_json()), config.HTTP_STATUS_ERROR_DESCONOCIDO

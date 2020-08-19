@@ -10,8 +10,7 @@ import os
 from enum import Enum
 from typing import Any, Dict, List
 
-from apps.utils.variables.src.config import (_LISTA_ENUMS, _NO_MOSTRAR,
-                                             _VARIABLES_PREDEFINIDAS)
+from apps.utils.variables.src import config
 
 
 def iniciar(modulos: List[Any]):
@@ -27,10 +26,10 @@ def iniciar(modulos: List[Any]):
         from apps.utils.variables.src.archivo import crear_diccionario_de_variables
 
         nuevas_variables = crear_diccionario_de_variables(clase.ruta_archivo)
-        _VARIABLES_PREDEFINIDAS.update(nuevas_variables)
+        config._VARIABLES_PREDEFINIDAS.update(nuevas_variables)
 
-        _LISTA_ENUMS.extend(clase.Variable)
-        _NO_MOSTRAR.extend(clase.no_mostrar)
+        config._LISTA_ENUMS.extend(clase.Variable)
+        config._NO_MOSTRAR.extend(clase.no_mostrar)
 
 
 def dame(variable: Enum) -> str:
@@ -38,7 +37,7 @@ def dame(variable: Enum) -> str:
     Obtiene el valor de la variable de entorno correspondiente, en caso de no obtenerla,
     la saca del diccionario de variables predefinidas
     '''
-    valor_de_diccionario = _VARIABLES_PREDEFINIDAS.get(variable.value)
+    valor_de_diccionario = config._VARIABLES_PREDEFINIDAS.get(variable.value)
     return os.environ.get(variable.value, valor_de_diccionario)
 
 
@@ -48,6 +47,6 @@ def variables_cargadas() -> Dict[str, str]:
     '''
     return {
         clave.value: dame(clave)
-        for clave in _LISTA_ENUMS
-        if clave.value not in _NO_MOSTRAR
+        for clave in config._LISTA_ENUMS
+        if clave.value not in config._NO_MOSTRAR
     }
