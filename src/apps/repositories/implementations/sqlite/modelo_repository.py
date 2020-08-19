@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List
 
-from apps.configs.sqlite import sqlite
+from apps.utils.sqlite import sqlite
 from apps.utils.excepcion.excepcion import AppException
 from apps.models.modelos import Archivo, Modelo
 from apps.repositories import archivo_repository
@@ -113,4 +113,4 @@ def borrar(id: any):
         DELETE FROM {_TABLA}
         WHERE ID = ?
     '''
-    r = sqlite.ejecutar(consulta, parametros=[id], commit=True)
+    sqlite.ejecutar(consulta, parametros=[id], commit=True)

@@ -3,9 +3,9 @@ from enum import Enum
 from typing import List
 from uuid import UUID
 
-from apps.configs.sqlite import sqlite
-from apps.utils.excepcion.excepcion import AppException
 from apps.models.modelos import Archivo, TipoArchivo
+from apps.utils.excepcion.excepcion import AppException
+from apps.utils.sqlite import sqlite
 
 _TABLA = 'ARCHIVOS'
 

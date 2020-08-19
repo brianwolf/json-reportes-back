@@ -15,7 +15,6 @@ def crear(m: Modelo) -> Modelo:
     '''
     Crea un modelo con sus archivos en la base de datos
     '''
-
     return _router.modelo_repository.crear(m)
 
 

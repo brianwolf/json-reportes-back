@@ -1,32 +1,29 @@
+'''
+SQLite
+------
+
+Contiene metodos basicos para el uso de un sqlite
+'''
 import os
 import sqlite3
 from typing import Iterable, List
 
-from apps.config.variables import Variable
-from apps.utils.variables.variables import dame
+from apps.utils.sqlite.src.config import _RUTA_DB
+from apps.utils.sqlite.src.sistema_archivos import _crear_arbol_de_directorios
 
 
-def _crear_arbol_de_directorios(ruta_archivo_sqlite: str):
+def iniciar(ruta_archivo_sqlite: str):
     '''
     Crea el arbol de directorios necesario para que sqlite cree su archivo .db
     '''
-    if os.path.exists(ruta_archivo_sqlite):
-        return
-
-    directorio = ruta_archivo_sqlite
-    if ruta_archivo_sqlite.endswith('.db'):
-        directorio = os.path.dirname(ruta_archivo_sqlite)
-
-    os.makedirs(directorio, exist_ok=True)
+    _RUTA_DB = ruta_archivo_sqlite
 
 
-def obtener_conexion() -> sqlite3.Connection:
+def obtener_conexion(ruta_archivo_sqlite: str = _RUTA_DB) -> sqlite3.Connection:
     '''
     Obtiene la conexion con la base de datos SQLite
     '''
-    ruta_archivo_sqlite = dame(Variable.DB_SQLITE_RUTA)
     _crear_arbol_de_directorios(ruta_archivo_sqlite)
-
     return sqlite3.connect(ruta_archivo_sqlite, check_same_thread=False)
 
 

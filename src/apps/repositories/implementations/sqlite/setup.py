@@ -1,7 +1,7 @@
 import sqlite3
 
 from apps.configs.logger.logger import logger
-from apps.configs.sqlite import sqlite
+from apps.utils.sqlite import sqlite
 from apps.configs.variables.claves import Variable
 from apps.configs.variables.lector import dame
 
