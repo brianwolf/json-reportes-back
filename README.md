@@ -4,21 +4,27 @@
 
 ![alt text](docs/img/reports.gif)
 
+## :zap: Instalacion Rapida
+
+* Ejecutar `docker-compose up`
+
+## :tada: Uso
+
+* Para ver si todo esta funcionando entrar con el navegador a la url [http://localhost:5000/](http://localhost:5000/), tambien se puede hacer un curl a [http://localhost:5000/vivo](http://localhost:5000/vivo)
+
+A falta de un front se deja una **coleccion de Postman** ubicado en: `postman/json_reportes.postman_collection.json`
+
+**Se deja como ejemplo** un *template html con css*, otro con *md* y un *json de datos* en la carpeta `/src/ejemplo_template/`
+
 ---
 
 ## :open_book: Documentacion adicional
 
+* [Instalacion con Docker-Compose](docs/docker-compose.md) *(recomendado)*
 * [Instalacion con Docker](docs/docker.md)
 * [Instalacion con Python](docs/python.md)
 
 ---
-
-## :tada: Uso
-
-* La prueba mas simple para saber si la instalacion resulto es ejecutar una llamada REST de tipo GET con la url `http://localhost:5000/vivo`
-* A falta de un front, **solo se puede usar haciendo llamadas rest** desde una herramienta que lo facilite, para ello se deja una **coleccion de Postman** ubicado en: `src/json_reportes.postman_collection.json`
-* **Leer las descripciones de las request de Postman** que indican como python toma las variables de los request
-* **Se deja como ejemplo** un *template html con css* y un *json de datos* en la ruta `/src/ejemplo_template/`
 
 ## :scroll: Scripts
 

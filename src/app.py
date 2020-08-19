@@ -1,19 +1,26 @@
+from os import path
+
 from flask import Flask
 
-from apps.configs.error_handlers import error_handler_bp
-from apps.configs.flask import CustomJSONEncoder
-from apps.configs.lector_variables import dame
-from apps.configs.variables import Variable
-from apps.utils.carga_dinamica_blue_prints import registrar_blue_prints
+from src.app.configs import variables as variables_proyecto
+from src.app.repositories.setup import iniciar_db
+from src.libs.logger import logger
+from src.libs.rest import rest
+from src.libs.variables import variables
 
-_PYTHON_HOST = dame(Variable.PYTHON_HOST)
-_PYTHON_PORT = int(dame(Variable.PYTHON_PORT))
+variables.iniciar([variables_proyecto])
+
+directorio_logs = variables.dame(variables_proyecto.Variable.DIRECTORIO_LOGS)
+nivel_logs = variables.dame(variables_proyecto.Variable.NIVEL_LOGS)
+logger.iniciar(directorio_logs, nivel_logs)
 
 app = Flask(__name__)
-app.register_blueprint(error_handler_bp)
-app.json_encoder = CustomJSONEncoder
+rest.iniciar(app, 'src/app/routes')
 
-registrar_blue_prints(app, 'apps/routes')
+iniciar_db()
 
 if __name__ == "__main__":
-    app.run(host=_PYTHON_HOST, port=_PYTHON_PORT, debug=True)
+    flask_host = variables.dame(variables_proyecto.Variable.PYTHON_HOST)
+    flask_port = int(variables.dame(variables_proyecto.Variable.PYTHON_PORT))
+
+    app.run(host=flask_host, port=flask_port, debug=True)

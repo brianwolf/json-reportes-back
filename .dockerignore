@@ -1,0 +1,15 @@
+.gitignore
+README.md
+docker-compose.yml
+
+# directorio base
+./docs
+./scripts
+./postman
+./.circleci
+
+# src
+./src/env
+./src/logs
+./src/ejemplo_template
+./src/produces

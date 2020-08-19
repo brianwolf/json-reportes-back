@@ -1,17 +1,13 @@
 # APP
-/resources/logs/
-/resources/templates/
-
+produce/
 
 # IDES
 .vscode/
-
 
 # PYTHON
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
 *$py.class
 
 # C extensions
@@ -134,4 +130,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
