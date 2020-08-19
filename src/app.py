@@ -5,7 +5,7 @@ from flask import Flask
 from apps.config import variables_proyecto
 from apps.repositories.setup import iniciar_db
 from apps.utils.logger import logger
-from apps.utils.rest.init import init as rest_init
+from apps.utils.rest import rest
 from apps.utils.variables import variables
 
 variables.iniciar([variables_proyecto])
@@ -15,7 +15,7 @@ nivel_logs = variables.dame(variables_proyecto.Variable.NIVEL_LOGS)
 logger.iniciar(directorio_logs, nivel_logs)
 
 app = Flask(__name__)
-# rest_init(app, 'apps/routes')
+rest.iniciar(app, 'apps/routes')
 
 # iniciar_db()
 

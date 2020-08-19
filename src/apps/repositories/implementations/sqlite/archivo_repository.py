@@ -4,7 +4,7 @@ from typing import List
 from uuid import UUID
 
 from apps.configs.sqlite import sqlite
-from apps.errors.app_errors import AppException
+from apps.utils.excepcion.excepcion import AppException
 from apps.models.modelos import Archivo, TipoArchivo
 
 _TABLA = 'ARCHIVOS'

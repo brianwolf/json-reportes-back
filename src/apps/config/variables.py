@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List
 
-ruta_archivo: str = 'consume/config/variables_predefinidas.env'
+ruta_archivo: str = 'consume/config/variables.env'
 
 no_mostrar: List[str] = ['NIVEL_LOGS']
 

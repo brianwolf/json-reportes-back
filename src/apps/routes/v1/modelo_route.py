@@ -3,7 +3,7 @@ from io import BytesIO
 from flask import Blueprint, jsonify, request, send_file
 
 import apps.services.modelo_service as modelo_service
-from apps.errors.app_errors import AppException
+from apps.utils.excepcion.excepcion import AppException
 from apps.models.modelos import Archivo, Modelo, TipoArchivo
 from apps.services import reporte_service
 

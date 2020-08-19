@@ -3,7 +3,7 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 from werkzeug.exceptions import HTTPException
 
-from apps.errors.app_errors import AppException, UnknownException
+from apps.utils.excepcion.excepcion import AppException, UnknownException
 from apps.utils.logger.logger import log
 
 error_handler_bp = Blueprint('handlers', __name__)

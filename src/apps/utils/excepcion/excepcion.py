@@ -1,10 +1,17 @@
+'''
+Exception
+---------
+
+Objetos genericos para manejo de exepciones en los proyectos
+'''
+
 from dataclasses import dataclass
 from enum import Enum
 
 from flask import jsonify
 
-HTTP_STATUS_ERROR_NEGOCIO = 409
-HTTP_STATUS_ERROR_DESCONOCIDO = 500
+from apps.utils.excepcion.src.config import (_HTTP_STATUS_ERROR_DESCONOCIDO,
+                                             _HTTP_STATUS_ERROR_NEGOCIO)
 
 
 @dataclass
@@ -30,7 +37,7 @@ class AppException(Exception):
         return d
 
     def respuesta_json(self) -> (dict, int):
-        return jsonify(self.to_json()), HTTP_STATUS_ERROR_NEGOCIO
+        return jsonify(self.to_json()), _HTTP_STATUS_ERROR_NEGOCIO
 
 
 @dataclass
@@ -42,4 +49,4 @@ class UnknownException(Exception):
         return d
 
     def respuesta_json(self) -> (dict, int):
-        return jsonify(self.to_json()), HTTP_STATUS_ERROR_DESCONOCIDO
+        return jsonify(self.to_json()), _HTTP_STATUS_ERROR_DESCONOCIDO
