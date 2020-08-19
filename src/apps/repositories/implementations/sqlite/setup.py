@@ -40,9 +40,6 @@ def iniciar_db():
     log().info(
         f'iniciar_db() -> Conectando con la base de datos SQLite ubicada en {ruta_db_sqlite}')
 
-    from apps.utils.sqlite.src.config import _RUTA_DB_PREDEFINIDA
-    log().info(_RUTA_DB_PREDEFINIDA)
-
     if not _db_ya_fue_creada():
         _crear_db_por_primera_vez()
 

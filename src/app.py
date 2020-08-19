@@ -17,7 +17,7 @@ logger.iniciar(directorio_logs, nivel_logs)
 app = Flask(__name__)
 rest.iniciar(app, 'apps/routes')
 
-# iniciar_db()
+iniciar_db()
 
 if __name__ == "__main__":
     flask_host = variables.dame(variables_proyecto.Variable.PYTHON_HOST)
