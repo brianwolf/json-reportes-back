@@ -2,7 +2,7 @@ from os import path
 
 from flask import Flask
 
-from apps.config import variables_proyecto
+from apps.config import variables as variables_proyecto
 from apps.repositories.setup import iniciar_db
 from apps.utils.logger import logger
 from apps.utils.rest import rest

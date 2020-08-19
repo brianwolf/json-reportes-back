@@ -1,7 +1,8 @@
 from enum import Enum
 from typing import List
 
-from apps.configs.variables.lector import Variable, dame
+from apps.config.variables import Variable
+from apps.utils.variables.variables import dame
 from apps.utils.excepcion.excepcion import AppException
 from apps.errors.modelos_errors import ModelosErrors
 from apps.models.modelos import Archivo, Modelo

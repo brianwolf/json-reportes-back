@@ -2,7 +2,8 @@ import os
 import sqlite3
 from typing import Iterable, List
 
-from apps.configs.variables.lector import Variable, dame
+from apps.config.variables import Variable
+from apps.utils.variables.variables import dame
 
 
 def _crear_arbol_de_directorios(ruta_archivo_sqlite: str):

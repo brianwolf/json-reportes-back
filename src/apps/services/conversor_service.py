@@ -6,7 +6,8 @@ import pdfkit
 from jinja2 import Template
 
 import apps.utils.archivos_util as archivos_util
-from apps.configs.variables.lector import Variable, dame
+from apps.config.variables import Variable
+from apps.utils.variables.variables import dame
 from apps.models.conversores import ExtensionArchivo, ParametrosCrearReporte
 from apps.services import sistema_de_archivos_service as fs
 
