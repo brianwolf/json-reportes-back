@@ -43,10 +43,10 @@ COPY ./src/consume ./consume
 
 
 # COMPILACION
-COPY ./src/src ./a_pre_compilar/src
-COPY ./src/app.py ./a_pre_compilar
+COPY ./src/logic ./src/logic
+COPY ./src/app.py ./src
 
 
-RUN python -m compile -b -f -o ./dist ./a_pre_compilar
-RUN mv -f ./dist/a_pre_compilar/* .
-RUN rm -fr ./a_pre_compilar ./dist
+RUN python -m compile -b -f -o ./dist ./src
+RUN mv -f ./dist/src/* .
+RUN rm -fr ./src ./dist
