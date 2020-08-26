@@ -1,7 +1,7 @@
-'''
+"""
 Herramienta que carga de formma dinamica los blueprints de flask recursivamente
 que se encuentren en un directorio
-'''
+"""
 from importlib.util import module_from_spec, spec_from_file_location
 from os import listdir, path
 
@@ -9,17 +9,17 @@ from flask import Flask
 
 
 def _nombre_archivo(ruta: str):
-    '''
+    """
     Devuelve el nombre del archivo al final de la ruta sin la extension
-    '''
+    """
     return path.basename(ruta).split(".")[0]
 
 
 def _cargar_rutas_de_archivos(ruta_base: str):
-    '''
+    """
     Obtiene las rutas de todos los archivos .py dentro del directorio parametro, 
     es recursivo por lo que si hay carpetas dentro tambien busca ahi
-    '''
+    """
     sub_rutas = listdir(ruta_base)
     if '__pycache__' in sub_rutas:
         sub_rutas.remove('__pycache__')
@@ -42,7 +42,7 @@ def _cargar_rutas_de_archivos(ruta_base: str):
 
 
 def carga_dinamica_de_bps(app: Flask, directorio_rutas: str):
-    '''
+    """
     Registra los archivos dentro de `directorio_rutas` recursivamente como Blueprints para Flask,
     pera esto es necesario que se defina un atributo llamado `blue_print` en cada archivo python. \n
     Ejemplo:
@@ -51,7 +51,7 @@ def carga_dinamica_de_bps(app: Flask, directorio_rutas: str):
     from flask import Blueprint
     blue_print = Blueprint('nombre_unico_de_ruta', __name__, url_prefix='/api/v1/ejemplos')
     ```
-    '''
+    """
     rutas = _cargar_rutas_de_archivos(directorio_rutas)
 
     for ruta_archivo in rutas:

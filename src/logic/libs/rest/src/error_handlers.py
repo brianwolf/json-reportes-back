@@ -1,6 +1,4 @@
-from http import HTTPStatus
-
-from flask import Blueprint, jsonify, request
+from flask import Blueprint
 from werkzeug.exceptions import HTTPException
 
 from logic.libs.excepcion.excepcion import AppException, UnknownException

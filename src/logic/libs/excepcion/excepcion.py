@@ -1,9 +1,9 @@
-'''
+"""
 Exception
 ---------
 
 Objetos genericos para manejo de exepciones en los proyectos
-'''
+"""
 
 from dataclasses import dataclass
 from enum import Enum
@@ -15,7 +15,7 @@ from logic.libs.excepcion.src import config
 
 @dataclass
 class AppException(Exception):
-    '''
+    """
     Clase de error basico para manejar errores de negocio o errores dentro de la aplicacion
     que son esperados sus atributos son:
 
@@ -24,7 +24,7 @@ class AppException(Exception):
 
     mensaje: contiene informacion extra en formato texto para una mayor informacion, esto es para quien use la api,
     un ejemplo puede ser: 'el usuario ya existe en la base de datos'
-    '''
+    """
     codigo: Enum
     mensaje: str = None
     error: Exception = None

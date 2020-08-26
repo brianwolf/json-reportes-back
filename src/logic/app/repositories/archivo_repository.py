@@ -5,9 +5,9 @@ from logic.app.repositories.models.setup_model import TipoDB, tipo_db_usado
 
 
 def listado_archivos(id_modelo: any, tipo: TipoArchivo = TipoArchivo.MODELO) -> List[str]:
-    '''
+    """
     Muestra los nombres de los archivos de ese modelo
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -16,9 +16,9 @@ def listado_archivos(id_modelo: any, tipo: TipoArchivo = TipoArchivo.MODELO) -> 
 
 
 def crear(a: Archivo) -> Archivo:
-    '''
+    """
     Crea un Archivo con sus archivos en la base de datos
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -27,9 +27,9 @@ def crear(a: Archivo) -> Archivo:
 
 
 def actualizar(a: Archivo) -> Archivo:
-    '''
+    """
     Actualiza un Archivo en la base de datos
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -38,9 +38,9 @@ def actualizar(a: Archivo) -> Archivo:
 
 
 def buscar(id: any) -> Archivo:
-    '''
+    """
     Busca un Archivo por id
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -49,9 +49,9 @@ def buscar(id: any) -> Archivo:
 
 
 def buscar_por_filtros(filtros: dict = None) -> List[Archivo]:
-    '''
+    """
     Busca Archivos que cumplan con el filtro
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -60,9 +60,9 @@ def buscar_por_filtros(filtros: dict = None) -> List[Archivo]:
 
 
 def borrar(id: any):
-    '''
+    """
     Borra un Archivo por id
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 

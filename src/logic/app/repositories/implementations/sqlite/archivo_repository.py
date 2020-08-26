@@ -11,22 +11,22 @@ _TABLA = 'ARCHIVOS'
 
 
 def listado_archivos(id_modelo: any, tipo: TipoArchivo = TipoArchivo.MODELO) -> List[str]:
-    '''
+    """
     Muestra los nombres de los archivos de ese modelo
-    '''
+    """
     consulta = f'SELECT NOMBRE FROM {_TABLA} WHERE ID_MODELO = ? AND TIPO = ?'
     resultado = sqlite.select(consulta, parametros=[id_modelo, tipo.value])
     return [r[0] for r in resultado]
 
 
 def crear(a: Archivo) -> Archivo:
-    '''
+    """
     Crea un Archivo con sus archivos en la base de datos
-    '''
-    consulta = f'''
+    """
+    consulta = f"""
         INSERT INTO {_TABLA} (NOMBRE, FECHA_CREACION, UUID_GUARDADO, TIPO, ID_MODELO)
         VALUES (?,?,?,?,?)
-    '''
+    """
     parametros = [a.nombre, a.fecha_creacion,
                   str(a.uuid_guardado), a.tipo.value, a.id_modelo]
 
@@ -35,14 +35,14 @@ def crear(a: Archivo) -> Archivo:
 
 
 def actualizar(a: Archivo) -> Archivo:
-    '''
+    """
     Actualiza un Archivo en la base de datos
-    '''
-    consulta = f'''
+    """
+    consulta = f"""
         UPDATE {_TABLA}
         SET NOMBRE=?, FECHA_CREACION=?, UUID_GUARDADO=?, TIPO=?, ID_MODELO=?
         WHERE ID = ?
-    '''
+    """
     parametros = [a.nombre, a.fecha_creacion,
                   a.uuid_guardado, a.tipo.value, a.id_modelo, a.id]
     sqlite.ejecutar(consulta, parametros=parametros, commit=True)
@@ -50,14 +50,14 @@ def actualizar(a: Archivo) -> Archivo:
 
 
 def buscar(id: any) -> Archivo:
-    '''
+    """
     Busca un Archivo por id
-    '''
-    consulta = f'''
+    """
+    consulta = f"""
         SELECT *
         FROM {_TABLA}
         WHERE ID = ?
-    '''
+    """
     r = sqlite.select(consulta, parametros=[id])
     if not r:
         return None
@@ -68,12 +68,12 @@ def buscar(id: any) -> Archivo:
 
 
 def buscar_por_filtros(filtros: dict = None) -> List[Archivo]:
-    '''
+    """
     Busca Archivos que cumplan con el filtro
-    '''
-    consulta = f'''
+    """
+    consulta = f"""
         SELECT * FROM {_TABLA}
-    '''
+    """
     parametros = []
     if filtros:
         consulta += ' WHERE '
@@ -93,11 +93,11 @@ def buscar_por_filtros(filtros: dict = None) -> List[Archivo]:
 
 
 def borrar(id: any):
-    '''
+    """
     Borra un Archivo por id
-    '''
-    consulta = f'''
+    """
+    consulta = f"""
         DELETE FROM {_TABLA}
         WHERE ID = ?
-    '''
+    """
     r = sqlite.ejecutar(consulta, parametros=[id], commit=True)

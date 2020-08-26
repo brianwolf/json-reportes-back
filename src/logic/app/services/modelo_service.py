@@ -1,27 +1,24 @@
-from enum import Enum
 from typing import List
 
-from logic.libs.excepcion.excepcion import AppException
-from logic.libs.variables.variables import dame
-from logic.app.configs.variables import Variable
 from logic.app.errors.modelos_errors import ModelosErrors
-from logic.app.models.modelos import Archivo, Modelo
+from logic.app.models.modelos import Modelo
 from logic.app.repositories import modelo_repository
 from logic.app.services import archivo_service
+from logic.libs.excepcion.excepcion import AppException
 
 
 def listado_modelos() -> List[str]:
-    '''
+    """
     Devuelve una lista con los nombres de todas las modelos en la app
-    '''
+    """
     return modelo_repository.listado_modelos()
 
 
 def crear(m: Modelo) -> Modelo:
-    '''
+    """
     Crea un modelo en la base de datos y en el sistema de archivos,
     devuelve el id del modelo y los ids de los archivos generados
-    '''
+    """
     if modelo_repository.buscar_por_nombre(m.nombre):
         mensaje = f'El nombre {m.nombre} ya esta en uso'
         raise AppException(ModelosErrors.NOMBRE_EN_USO, mensaje)
@@ -38,9 +35,9 @@ def crear(m: Modelo) -> Modelo:
 
 
 def actualizar(m: Modelo) -> Modelo:
-    '''
+    """
     Actualiza una modelo en la base de datos y en el sistema de archivos
-    '''
+    """
     m_viejo = obtener(m.id)
     if not m_viejo:
         mensaje = f'El modelo con id {m.id} no fue encontrado'
@@ -62,7 +59,7 @@ def actualizar(m: Modelo) -> Modelo:
 
     archivos_nuevos = []
     for archivo in archivos_a_crear:
-        archivos_nuevos.append(archivo_service.crear(a))
+        archivos_nuevos.append(archivo_service.crear(archivo))
 
     m.archivos = archivos_nuevos
     return m
@@ -84,9 +81,9 @@ def borrar_por_nombre(nombre: str):
 
 
 def obtener_por_nombre(nombre: str, contenidos_tambien: bool = False) -> Modelo:
-    '''
+    """
     Obtiene una modelo de la base de datos y del sistema de archivos
-    '''
+    """
     m = modelo_repository.buscar_por_nombre(nombre)
 
     if contenidos_tambien:
@@ -97,17 +94,17 @@ def obtener_por_nombre(nombre: str, contenidos_tambien: bool = False) -> Modelo:
 
 
 def buscar_por_filtros(filtros: dict = None) -> List[Modelo]:
-    '''
+    """
     Busca modelos que cumplan con el filtro
-    '''
+    """
     return modelo_repository.buscar_por_filtros(filtros)
 
 
-def obtener(id: int, contenidos_tambien: bool = False) -> Modelo:
-    '''
+def obtener(id_modelo: int, contenidos_tambien: bool = False) -> Modelo:
+    """
     Obtiene una modelo de la base de datos y del sistema de archivos
-    '''
-    m = modelo_repository.buscar(id)
+    """
+    m = modelo_repository.buscar(id_modelo)
 
     if contenidos_tambien:
         for a in m.archivos:

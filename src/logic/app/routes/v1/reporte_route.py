@@ -1,16 +1,15 @@
-import base64
 from io import BytesIO
 
 from flask import Blueprint, jsonify, request, send_file
 
-from logic.libs.excepcion.excepcion import AppException
 from logic.app.errors.conversores_errors import ExtencionesErrors
 from logic.app.errors.modelos_errors import (ArchivoErrors, ModelosErrors,
-                                        ReporteErrors)
+                                             ReporteErrors)
 from logic.app.models.conversores import ExtensionArchivo, ParametrosCrearReporte
-from logic.app.models.modelos import Archivo, Modelo, TipoArchivo
+from logic.app.models.modelos import Archivo, TipoArchivo
 from logic.app.services import modelo_service, reporte_service
 from logic.app.utils import archivos_util
+from logic.libs.excepcion.excepcion import AppException
 
 blue_print = Blueprint('reportes',
                        __name__,
@@ -19,14 +18,12 @@ blue_print = Blueprint('reportes',
 
 @blue_print.route('', methods=['GET'])
 def listar_todos_los_reportes(nombre_modelo):
-
     nombres_carpetas = reporte_service.listado_reportes(nombre_modelo)
     return jsonify(nombres_carpetas), 200
 
 
 @blue_print.route('/<nombre_reporte>', methods=['GET'])
 def obtener(nombre_modelo, nombre_reporte):
-
     contenidos_tambien = request.args.get('base64') == 'true'
 
     archivo = reporte_service.obtener_por_nombre(
@@ -37,7 +34,6 @@ def obtener(nombre_modelo, nombre_reporte):
 
 @blue_print.route('/<nombre_reporte>/contenido', methods=['GET'])
 def obtener_contenido(nombre_modelo, nombre_reporte):
-
     a = reporte_service.obtener_por_nombre(
         nombre_modelo, nombre_reporte, contenidos_tambien=True)
     if not a:
@@ -52,7 +48,6 @@ def obtener_contenido(nombre_modelo, nombre_reporte):
 
 @blue_print.route('/<nombre_reporte>/texto', methods=['GET'])
 def obtener_contenido_texto_reporte(nombre_modelo, nombre_reporte):
-
     a = reporte_service.obtener_por_nombre(
         nombre_modelo, nombre_reporte, contenidos_tambien=True)
     if not a:
@@ -64,7 +59,6 @@ def obtener_contenido_texto_reporte(nombre_modelo, nombre_reporte):
 
 @blue_print.route('/<nombre_reporte>/base64', methods=['GET'])
 def obtener_contenido_base64_reporte(nombre_modelo, nombre_reporte):
-
     a = reporte_service.obtener_por_nombre(
         nombre_modelo, nombre_reporte, contenidos_tambien=True)
     if not a:
@@ -76,7 +70,6 @@ def obtener_contenido_base64_reporte(nombre_modelo, nombre_reporte):
 
 @blue_print.route('/<nombre_reporte>', methods=['DELETE'])
 def borrar_reporte(nombre_modelo, nombre_reporte):
-
     r = reporte_service.obtener_por_nombre(
         nombre_modelo, nombre_reporte, False)
     if not r:
@@ -87,9 +80,10 @@ def borrar_reporte(nombre_modelo, nombre_reporte):
     return '', 200
 
 
-@blue_print.route('/<nombre_reporte>/extension/<extension_reporte>/archivo_origen/<nombre_archivo>/extension/<extension_archivo>', methods=['POST'])
+@blue_print.route(
+    '/<nombre_reporte>/extension/<extension_reporte>/archivo_origen/<nombre_archivo>/extension/<extension_archivo>',
+    methods=['POST'])
 def nuevo_contenido(nombre_modelo, nombre_reporte, extension_reporte, nombre_archivo, extension_archivo):
-
     try:
         e_archivo = ExtensionArchivo[str(extension_archivo).upper()]
     except Exception:

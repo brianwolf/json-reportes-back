@@ -5,9 +5,9 @@ from logic.app.repositories.models.setup_model import TipoDB, tipo_db_usado
 
 
 def listado_modelos() -> List[str]:
-    '''
+    """
     Crea un modelo con sus archivos en la base de datos
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -16,9 +16,9 @@ def listado_modelos() -> List[str]:
 
 
 def crear(m: Modelo) -> Modelo:
-    '''
+    """
     Crea un modelo con sus archivos en la base de datos
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -27,9 +27,9 @@ def crear(m: Modelo) -> Modelo:
 
 
 def actualizar(m: Modelo) -> Modelo:
-    '''
+    """
     Actualiza un modelo en la base de datos
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -38,9 +38,9 @@ def actualizar(m: Modelo) -> Modelo:
 
 
 def buscar(id: any) -> Modelo:
-    '''
+    """
     Busca un modelo por id
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -49,9 +49,9 @@ def buscar(id: any) -> Modelo:
 
 
 def buscar_por_filtros(filtros: dict = None) -> List[Modelo]:
-    '''
+    """
     Busca modelos que cumplan con el filtro
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -60,9 +60,9 @@ def buscar_por_filtros(filtros: dict = None) -> List[Modelo]:
 
 
 def buscar_por_nombre(nombre: str) -> Modelo:
-    '''
+    """
     Busca un modelo por su nombre
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 
@@ -71,9 +71,9 @@ def buscar_por_nombre(nombre: str) -> Modelo:
 
 
 def borrar(id: any):
-    '''
+    """
     Borra un modelo por id
-    '''
+    """
     if tipo_db_usado == TipoDB.MONGODB:
         pass
 

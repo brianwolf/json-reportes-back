@@ -5,10 +5,9 @@ from logic.libs.logger.src import config
 
 
 def crear_log(nombre: str = 'app') -> logging.Logger:
-    '''
+    """
     Devuelve un objeto logger por un nombre, en caso de que no exista lo crea
-    '''
-
+    """
     if not os.path.exists(config.DIRECTORIO_LOGS):
         os.makedirs(config.DIRECTORIO_LOGS, exist_ok=True)
 

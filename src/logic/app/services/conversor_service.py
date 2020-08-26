@@ -6,18 +6,16 @@ import pdfkit
 from jinja2 import Template
 
 import logic.app.utils.archivos_util as archivos_util
-from logic.libs.variables.variables import dame
-from logic.app.configs.variables import Variable
 from logic.app.models.conversores import (ExtensionArchivo,
-                                           ParametrosCrearReporte)
+                                          ParametrosCrearReporte)
 from logic.app.services import sistema_de_archivos_service as fs
 
 
 def html_a_pdf(p: ParametrosCrearReporte) -> bytes:
-    '''
+    """
     Genera un reporte en pdf aplicando jinja con los datos al archivo html_jinja.
     Devuelve el contenido del archivo generado.
-    '''
+    """
     nombre_html_temp = f'{uuid4()}.html'
     nombre_pdf_temp = f'{uuid4()}.pdf'
 
@@ -39,10 +37,10 @@ def html_a_pdf(p: ParametrosCrearReporte) -> bytes:
 
 
 def texto_a_texto(p: ParametrosCrearReporte) -> bytes:
-    '''
+    """
     Genera un reporte aplicando jinja con los datos al archivo archivo_jinja.
     Devuelve el contenido del archivo generado
-    '''
+    """
     return _renderizar_archivo(p.a_origen.contenido, p.datos)
 
 

@@ -10,7 +10,7 @@ class TipoDB(Enum):
 
 
 def tipo_db_usado() -> TipoDB:
-    '''
+    """
     Devuelve el tipo de la base de datos usado
-    '''
+    """
     return TipoDB[dame(Variable.DB_TIPO).upper()]
